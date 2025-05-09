@@ -19,7 +19,10 @@ public class Listener implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent evt) {
         //player attacks
         this.g.requestFocusInWindow();
-        this.g.addProjectiles(this.g.getPlayer().attack((double)evt.getX(), (double)evt.getY()));
+        if (this.g.getPlayer().isLoaded()) {
+            this.g.addProjectiles(this.g.getPlayer().attack((double) evt.getX(), (double) evt.getY()));
+            this.g.getPlayer().resetReloadTimer();
+        }
         
 
     } // end mousePressed()

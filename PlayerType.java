@@ -9,7 +9,7 @@ public abstract class PlayerType {
     private final int size;
     private final int maxHealth; //maximum hp
     private final int speed; //movement speed
-    private final int reload; //delay between attacking
+    private final int reload; //delay between attacking ms
     private final AttackStats attackStats;
 
     public PlayerType(String name, int size, int maxHealth, int speed, int reload, AttackStats attackStats) {

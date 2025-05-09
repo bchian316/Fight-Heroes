@@ -3,6 +3,7 @@ import java.awt.Color;
 
 public class AttackStats {
     //attacks will be circles
+    //this class is purely just to organize attack statistics
     private final int damage;
     private final int size;
     private final int speed;

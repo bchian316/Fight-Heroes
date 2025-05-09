@@ -6,29 +6,13 @@ public class Projectile implements Drawable{
     private final AttackStats attk;
     private double distanceTraveled = 0;
 
-    public Projectile(double x, double y, double targetX, double targetY, AttackStats attk) {
+    public Projectile(double x, double y, double angle, AttackStats attk) {
         //x and y should be the center of the player, not his actual coords
         this.x = x - attk.size()/2;
         this.y = y - attk.size()/2;
+        this.velX = Math.cos(angle) * attk.speed();
+        this.velY = Math.sin(angle) * attk.speed();
         this.attk = attk;
-
-        //temporary variables to calculate projectile velocity
-        double diffX = (targetX - this.x);
-        double diffY = (targetY - this.y);
-        double magnitude = Math.sqrt(diffX * diffX + diffY * diffY);
-
-        if (magnitude != 0) {
-            diffX /= magnitude;
-            diffY /= magnitude;
-            //distance will now be 1
-            this.velX = diffX * this.attk.speed();
-            this.velY = diffY * this.attk.speed();
-            //scale velocities up to speed
-        } else {
-            //if player clicks on exact spot, shoot up
-            this.velX = -this.attk.speed();
-            this.velY = 0;
-        }
     }
     
     @Override
