@@ -48,7 +48,13 @@ public class Player implements canAttack, Drawable, hasHealth {
     public void resetReloadTimer() {
         this.reloadTimer = 0;
     }
+
+    @Override
+    public int getHealth() {
+        return this.health;
+    }
     
+    @Override
     public void getDamaged(int damage) {
         this.health -= damage;
     }
@@ -107,7 +113,8 @@ public class Player implements canAttack, Drawable, hasHealth {
     }
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
-        return this.playerType.createProjectiles(this.x, this.y, targetX, targetY);
+        //center x and center y
+        return this.playerType.createProjectiles(this.x + this.playerType.getSize()/2, this.y + this.playerType.getSize()/2, targetX, targetY);
     }
 
     @Override

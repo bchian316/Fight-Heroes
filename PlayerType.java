@@ -45,5 +45,6 @@ public abstract class PlayerType {
         return this.attackStats;
     }
 
+    //special method that doesn't take in attkstats cuz it uses the one attributed to the object already
     public abstract ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY); //returns projectiles to add to game list
 }

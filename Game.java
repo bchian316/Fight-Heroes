@@ -7,7 +7,7 @@ import javax.swing.Timer;
 public class Game extends JPanel {
     public static final double FPS = 30.0;
     private final Listener l = new Listener(this);
-    private final Player player = new Player(new WindMage(), 100, 100);
+    private final Player player = new Player(new PlasmaMage(), 100, 100);
     private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
     
     public Game() {
@@ -35,9 +35,13 @@ public class Game extends JPanel {
         repaint();
     }
     
-    public void removeProjectiles() {
+public void removeProjectiles() {
         for (int i = this.playerProjectiles.size() - 1; i >= 0; i--) {
-            if (this.playerProjectiles.get(i).shouldKillSelf()) {
+            Projectile currentProj = this.playerProjectiles.get(i);
+            if (currentProj.shouldKillSelf()) {
+                if (currentProj.canSplit()) {
+                    this.addProjectiles(currentProj.split());
+                }
                 this.playerProjectiles.remove(i);
             }
         }

@@ -13,6 +13,7 @@ public class GameRunner {
         window.setLocation(150,100);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
-		window.setResizable(true);
+        window.setResizable(true);
+        window.requestFocusInWindow();
     }
 }

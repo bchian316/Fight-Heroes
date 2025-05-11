@@ -1,18 +1,25 @@
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Projectile implements Drawable{
     private double x, y;
     private final double velX, velY;
     private final AttackStats attk;
     private double distanceTraveled = 0;
+    private SplitProjectileInterface split;
 
-    public Projectile(double x, double y, double angle, AttackStats attk) {
+    public Projectile(double x, double y, double angle, AttackStats attk, SplitProjectileInterface split) {
         //x and y should be the center of the player, not his actual coords
-        this.x = x - attk.size()/2;
-        this.y = y - attk.size()/2;
+        this.x = x - attk.size() / 2;
+        this.y = y - attk.size() / 2;
         this.velX = Math.cos(angle) * attk.speed();
         this.velY = Math.sin(angle) * attk.speed();
         this.attk = attk;
+        this.split = split;
+    }
+    
+    public Projectile(double x, double y, double angle, AttackStats attk) {
+        this(x, y, angle, attk, null);
     }
     
     @Override
@@ -33,5 +40,18 @@ public class Projectile implements Drawable{
             return true;
         }
         return this.x < 0 || this.x > GameRunner.SCREENWIDTH || this.y < 0 || this.y > GameRunner.SCREENHEIGHT;
+    }
+
+    public AttackStats getAttackStats() {
+        return this.attk;
+    }
+
+    public ArrayList<Projectile> split() {
+        //center x and center y
+        return this.split.split(this.x + this.attk.size()/2, this.y + this.attk.size()/2, this.velX, this.velY, this.attk.getSplitStats());
+    }
+
+    public boolean canSplit() {
+        return this.split != null;
     }
 }

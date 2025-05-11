@@ -9,13 +9,19 @@ public class AttackStats {
     private final int speed;
     private final int range;
     private final Color color;
+    private final AttackStats splitStats;
 
-    public AttackStats(int damage, int size, int speed, int range, Color color) {
+    public AttackStats(int damage, int size, int speed, int range, Color color, AttackStats splitStats) {
         this.damage = damage;
         this.size = size;
         this.speed = speed;
         this.range = range;
         this.color = color;
+        this.splitStats = splitStats;
+    }
+
+    public AttackStats(int damage, int size, int speed, int range, Color color) {
+        this(damage, size, speed, range, color, null);
     }
 
     public int damage() {
@@ -36,5 +42,9 @@ public class AttackStats {
     
     public Color color() {
         return this.color;
+    }
+
+    public AttackStats getSplitStats() {
+        return this.splitStats;
     }
 }

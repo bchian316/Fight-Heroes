@@ -11,7 +11,7 @@ public class IceMage extends PlayerType {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            newProjs.add(new Projectile(x + this.getSize()/2.0, y + this.getSize()/2.0, Game.getAngle(x + this.getSize()/2.0, y + this.getSize()/2.0, targetX, targetY) + Math.toRadians((i-2)*20), this.getAttackStats()));
+            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians((i-2)*10), this.getAttackStats()));
         }
         return newProjs;
     }

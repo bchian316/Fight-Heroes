@@ -10,7 +10,7 @@ public class LightningMage extends PlayerType {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x + this.getSize()/2.0, y + this.getSize()/2.0, Game.getAngle(x + this.getSize()/2.0, y + this.getSize()/2.0, targetX, targetY), this.getAttackStats()));
+        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), this.getAttackStats()));
         return newProjs;
     }
 
