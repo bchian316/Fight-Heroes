@@ -20,7 +20,7 @@ public class Listener implements MouseListener, KeyListener {
         //player attacks
         this.g.requestFocusInWindow();
         if (this.g.getPlayer().isLoaded()) {
-            this.g.addProjectiles(this.g.getPlayer().attack((double) evt.getX(), (double) evt.getY()));
+            Game.addProjectiles(this.g.getPlayerProjectiles(), this.g.getPlayer().attack((double) evt.getX(), (double) evt.getY()));
             this.g.getPlayer().resetReloadTimer();
         }
         

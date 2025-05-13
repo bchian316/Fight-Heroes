@@ -34,6 +34,22 @@ public class Projectile implements Drawable{
         this.distanceTraveled += Math.sqrt(this.velX * this.velX + this.velY * this.velY);
     }
 
+    public double getCenterX() {
+        return this.x + this.attk.size() / 2;
+    }
+
+    public double getCenterY() {
+        return this.y + this.attk.size() / 2;
+    }
+    
+    public int getSize() {
+        return this.attk.size();
+    }
+
+    public int getDamage() {
+        return this.attk.damage();
+    }
+
     public boolean shouldKillSelf() {
         //returns true if we should delete this projectile
         if (this.distanceTraveled > this.attk.range()) {
@@ -48,10 +64,14 @@ public class Projectile implements Drawable{
 
     public ArrayList<Projectile> split() {
         //center x and center y
-        return this.split.split(this.x + this.attk.size()/2, this.y + this.attk.size()/2, this.velX, this.velY, this.attk.getSplitStats());
+        return this.split.split(this.x + this.attk.size()/2, this.y + this.attk.size()/2, this.x + this.velX + this.attk.size()/2, this.y + this.velY + this.attk.size()/2, this.attk.getSplitStats());
     }
 
     public boolean canSplit() {
         return this.split != null;
+    }
+
+    public boolean splitsOnImpact() {
+        return this.attk.splitsOnImpact();
     }
 }

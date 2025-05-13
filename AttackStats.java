@@ -10,18 +10,20 @@ public class AttackStats {
     private final int range;
     private final Color color;
     private final AttackStats splitStats;
+    private final boolean splitsOnImpact;
 
-    public AttackStats(int damage, int size, int speed, int range, Color color, AttackStats splitStats) {
+    public AttackStats(int damage, int size, int speed, int range, Color color, boolean splitsOnImpact, AttackStats splitStats) {
         this.damage = damage;
         this.size = size;
         this.speed = speed;
         this.range = range;
         this.color = color;
+        this.splitsOnImpact = splitsOnImpact;
         this.splitStats = splitStats;
     }
 
     public AttackStats(int damage, int size, int speed, int range, Color color) {
-        this(damage, size, speed, range, color, null);
+        this(damage, size, speed, range, color, false, null);
     }
 
     public int damage() {
@@ -46,5 +48,9 @@ public class AttackStats {
 
     public AttackStats getSplitStats() {
         return this.splitStats;
+    }
+
+    public boolean splitsOnImpact() {
+        return this.splitsOnImpact;
     }
 }

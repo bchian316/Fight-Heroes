@@ -2,7 +2,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class LightningMage extends PlayerType {
+public class LightningMage extends Mage {
     public LightningMage() {
         super("Lightning Mage", 25, 50, 8, 2000, new AttackStats(20, 75, 15, 300, new Color(178, 78, 204)));
     }

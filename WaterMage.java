@@ -2,10 +2,10 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class PlasmaMage extends Mage {
-    public PlasmaMage() {
-        super("Plasma Mage", 50, 100, 5, 750, new AttackStats(5, 20, 10, 150, new Color(255, 115, 115), true,
-                new AttackStats(3, 10, 5, 75, new Color(255, 115, 115))));
+public class WaterMage extends Mage {
+    public WaterMage() {
+        super("Water Mage", 50, 75, 8, 500, new AttackStats(10, 30, 15, 150, new Color(0, 25, 217), false,
+                new AttackStats(5, 10, 15, 75, new Color(0, 25, 217))));
     }
 
     @Override
@@ -20,10 +20,12 @@ public class PlasmaMage extends Mage {
     //MAKE SURE THAT THE OFFSET IS OFF OF THE PROJECTILE NOT THE PLAYER
     public ArrayList<Projectile> createMoreProjectiles(double x, double y, double targetX, double targetY, AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            //split is independent of past angle (like spike)
-            newProjs.add(new Projectile(x, y, Math.toRadians(i*60.0), splitStats));
+        
+        for (int i = 0; i < 5; i++) {
+            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i-2) * 15.0), splitStats));
         }
+        
+        
         return newProjs;
     }
 

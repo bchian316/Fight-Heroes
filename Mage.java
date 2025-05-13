@@ -1,7 +1,7 @@
 
 import java.util.ArrayList;
 
-public abstract class PlayerType {
+public abstract class Mage {
     //PlayerTypes are prebuilt templates for playable classes eg knight, warrior, etc
     //template for building a playable character
     //MAKE SURE ALL PLAYER SIZES ARE THE RIGHT IMAGE SIZE TOO
@@ -12,7 +12,7 @@ public abstract class PlayerType {
     private final int reload; //delay between attacking ms
     private final AttackStats attackStats;
 
-    public PlayerType(String name, int size, int maxHealth, int speed, int reload, AttackStats attackStats) {
+    public Mage(String name, int size, int maxHealth, int speed, int reload, AttackStats attackStats) {
         this.name = name;
         this.size = size;
         this.maxHealth = maxHealth;

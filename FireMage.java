@@ -2,7 +2,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class FireMage extends PlayerType {
+public class FireMage extends Mage {
     public FireMage() {
         super("Fire Mage", 50, 100, 5, 250, new AttackStats(5, 20, 10, 150, new Color(255, 0, 0)));
     }

@@ -2,7 +2,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class EarthMage extends PlayerType {
+public class EarthMage extends Mage {
     public EarthMage() {
         super("Earth Mage", 75, 150, 7, 1500, new AttackStats(6, 40, 20, 200, new Color(125, 78, 16)));
     }

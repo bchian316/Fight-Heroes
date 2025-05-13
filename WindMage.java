@@ -2,7 +2,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class WindMage extends PlayerType {
+public class WindMage extends Mage {
     public WindMage() {
         super("Wind Mage", 60, 75, 10, 1500, new AttackStats(7, 40, 5, 200, new Color(125, 125, 125)));
     }
