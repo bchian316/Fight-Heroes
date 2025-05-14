@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class LightningMage extends Mage {
     public LightningMage() {
-        super("Lightning Mage", 25, 50, 8, 2000, new AttackStats(20, 75, 15, 300, new Color(178, 78, 204)));
+        super("Lightning Mage", 25, 35, 8, 2000, new AttackStats(80, 75, 15, 300, new Color(178, 78, 204)));
     }
 
     @Override

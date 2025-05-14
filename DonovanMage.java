@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class DonovanMage extends Mage {
     public DonovanMage() {
-        super("Donovan Mage", 75, 120, 10, 2000, new AttackStats(20, 30, 12, 100, new Color(214, 15, 15), false,
-                new AttackStats(10, 20, 12, 100, new Color(0, 0, 200), false,
+        super("Donovan Mage", 75, 120, 10, 2000, new AttackStats(20, 30, 12, 100, new Color(214, 15, 15), true,
+                new AttackStats(10, 20, 12, 100, new Color(0, 0, 200), true,
                         new AttackStats(5, 10, 12, 100, new Color(0, 200, 0)))));
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class EarthMage extends Mage {
     public EarthMage() {
-        super("Earth Mage", 75, 150, 7, 1500, new AttackStats(6, 40, 20, 200, new Color(125, 78, 16)));
+        super("Earth Mage", 75, 200, 7, 1500, new AttackStats(10, 40, 20, 200, new Color(125, 78, 16)));
     }
 
     @Override

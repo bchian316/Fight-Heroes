@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class IceMage extends Mage {
     public IceMage() {
-        super("Ice Mage", 50, 75, 3, 1000, new AttackStats(3, 20, 15, 300, new Color(0, 100, 200)));
+        super("Ice Mage", 50, 75, 3, 1000, new AttackStats(18, 20, 15, 300, new Color(0, 100, 200)));
     }
 
     @Override

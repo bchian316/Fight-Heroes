@@ -8,11 +8,12 @@ import javax.swing.Timer;
 public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
-    public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-100;
-    private final Player player = new Player(new DonovanMage(), PLAYERSTARTX, PLAYERSTARTY);
+    public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
+    private final Player player = new Player(new DarkMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Zombie(50.0, 50.0)}),
+            new Level(new Enemy[] { new Zombie(50.0, 50.0),
+                                    new ZombieHut(400, 200)}),
             new Level(new Enemy[] { new Zombie(50.0, 50.0),
                                     new Zombie(250.0, 50.0),
                                     new Zombie(550.0, 50.0) }),
@@ -24,17 +25,18 @@ public class Game extends JPanel {
                                     new Zombie(350.0, 250.0),
                                     new Ghost(200.0, 150.0),
                                     new Skeleton(700, 300),
-                                    new Skeleton(100, 300) }),
-            new Level(new Enemy[] { new Ghost(350.0, 450.0),
-                                    new Ghost(450.0, 450.0),
+                    new Skeleton(100, 300) }),
+            new Level(new Enemy[] { new Mummy(300.0, 100.0)}),
+            new Level(new Enemy[] { new Ghost(350.0, 250.0),
+                                    new Ghost(450.0, 250.0),
                                     new Zombie(100.0, 150.0),
                                     new Zombie(200.0, 150.0),
                                     new Zombie(600.0, 150.0),
                                     new Zombie(700.0, 150.0),                        
                                     new Skeleton(700, 300),
                                     new Skeleton(100, 300) }),
-            new Level(new Enemy[] { new Ghost(350.0, 450.0),
-                                    new Ghost(450.0, 450.0),
+            new Level(new Enemy[] { new Ghost(350.0, 50.0),
+                                    new Ghost(450.0, 50.0),
                                     new Ghost(400.0, 150.0),
                                     new Skeleton(300.0, 250.0),
                                     new Zombie(500.0, 250.0),
@@ -57,10 +59,12 @@ public class Game extends JPanel {
                                     new Zombie(700.0, 150.0),                        
                                     new SkeletonShaman(300, 300),
                                     new SkeletonShaman(100, 400),
-                                    new SkeletonShaman(200, 500)})
+                                    new SkeletonShaman(200, 500),
+                                    new Mummy(300.0, 100.0)})
                                     
             
-        };
+    };
+    private final Background bg = new Background(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
     
     private final Listener l = new Listener(this);
     private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
@@ -68,7 +72,7 @@ public class Game extends JPanel {
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> enemyProjectiles = new ArrayList<>();
 
-    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, 0);
+    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Background.WALLIMAGESIZE);
     
     public Game() {
         super();
@@ -88,7 +92,8 @@ public class Game extends JPanel {
         return this.player;
     }
 
-    public final void loadLevel(int levelNumber){
+    public final void loadLevel(int levelNumber) {
+        this.bg.setBackground();
         this.enemies.clear();
         this.enemies.addAll(Arrays.asList(LEVELS[levelNumber-1].getEnemies()));
     }
@@ -98,7 +103,7 @@ public class Game extends JPanel {
             System.out.println("YOU DIED!");
             System.exit(0);
         }
-        this.player.update(l.getPressedKeys());
+        this.player.update(l.getPressedKeys(), Background.WALLIMAGESIZE, Background.WALLIMAGESIZE, this.bg.getWallX(), this.bg.getWallY());
         this.checkPlayerProjectiles();
         Game.removeProjectiles(this.playerProjectiles);
         Game.updateProjectiles(this.playerProjectiles);
@@ -130,6 +135,7 @@ public class Game extends JPanel {
         this.loadLevel(this.player.getLevelNumber());
         this.portal.hide();
         this.player.setToStartCoords();
+        this.player.fullHeal();
     }
 
     public ArrayList<Projectile> getPlayerProjectiles() {
@@ -195,14 +201,14 @@ public class Game extends JPanel {
     
     public void updateEnemies() {
         for (Enemy e : this.enemies) {
-            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles);
+            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, Background.WALLIMAGESIZE, Background.WALLIMAGESIZE, this.bg.getWallX(), this.bg.getWallY());
         }
     }
 
     public void removeEnemies() {
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
-            if (enemies.get(i).getHealth() <= 0) {
+            if (enemies.get(i).isDead()) {
 
                 enemies.remove(i);
             }
@@ -225,6 +231,23 @@ public class Game extends JPanel {
     }
 
 
+    
+    
+    @Override
+    public void paintComponent(Graphics g) {//draw stuff
+        super.paintComponent(g);
+        
+        this.bg.draw(g);
+        
+        Game.drawProjectiles(g, this.playerProjectiles);
+        Game.drawProjectiles(g, this.enemyProjectiles);
+        
+        this.player.draw(g);
+        
+        this.drawEnemies(g);
+
+        this.portal.draw(g);
+    }
     public static void drawProjectiles(Graphics g, ArrayList<Projectile> projectiles) {
         for (Projectile p : projectiles) {
             p.draw(g);
@@ -236,21 +259,6 @@ public class Game extends JPanel {
             e.draw(g);
         }
     }
-
-
-    @Override
-    public void paintComponent(Graphics g) {//draw stuff
-        super.paintComponent(g);
-        //draw player
-        Game.drawProjectiles(g, this.playerProjectiles);
-        Game.drawProjectiles(g, this.enemyProjectiles);
-
-        this.player.draw(g);
-        this.drawEnemies(g);
-
-        this.portal.draw(g);
-    }
-
     
     public static double getAngle(double startX, double startY, double targetX, double targetY) {
         //returns angle IN RADIANS

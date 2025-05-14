@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.ImageIcon;
 
-public class Player implements canAttack, Drawable, hasHealth {
+public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private static final int BAROFFSETY = 5;
 
     //health bar width is the size of the player
+    private static final int BIGHEALTHBARHEIGHT = 15;
     private static final int HEALTHBARHEIGHT = 10;
     private static final Color HEALTHBAR_BGCOLOR = new Color(0, 0, 0);
     private static final Color HEALTHBAR_FGCOLOR = new Color(0, 255, 0); //display green over red
@@ -74,6 +75,10 @@ public class Player implements canAttack, Drawable, hasHealth {
     public int getHealth() {
         return this.health;
     }
+
+    public void fullHeal() {
+        this.health = this.mage.getMaxHealth();
+    }
     
     @Override
     public void getDamaged(int damage) {
@@ -100,7 +105,7 @@ public class Player implements canAttack, Drawable, hasHealth {
         return this.y + mage.getSize()/2.0;
     }
 
-    public void update(Set<Integer> pressedKeys) {
+    public void update(Set<Integer> pressedKeys, int borderX1, int borderY1, int borderX2, int borderY2) {
         double dx = 0;
         double dy = 0;
         if (pressedKeys.contains(KeyEvent.VK_W)) {
@@ -121,6 +126,7 @@ public class Player implements canAttack, Drawable, hasHealth {
             dy /= magnitude;
             this.x += dx * this.mage.getSpeed();
             this.y += dy * this.mage.getSpeed();
+            this.setBorders(borderX1, borderY1, borderX2, borderY2);
             //now the player moves at 1 pixel (bc we divided by the distance, and distance/distance = 1)
             //multiply to get to moveSpeed
         }
@@ -132,10 +138,37 @@ public class Player implements canAttack, Drawable, hasHealth {
             }
         }
     }
+
+    @Override
+    public boolean setBorders(int borderX1, int borderY1, int borderX2, int borderY2) {
+        if (this.x + this.mage.getSize() > borderX2) {
+            this.x = borderX2 - this.mage.getSize();
+            return true;
+        } else if (this.x < borderX1) {
+            this.x = borderX1;
+            return true;
+        }
+        if (this.y + this.mage.getSize() > borderY2) {
+            this.y = borderY2 - this.mage.getSize();
+            return true;
+        } else if (this.y < borderY1) {
+            this.y = borderY1;
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         //center x and center y
         return this.mage.createProjectiles(this.x + this.mage.getSize()/2, this.y + this.mage.getSize()/2, targetX, targetY);
+    }
+    @Override
+    public void draw(Graphics g) {
+        g.drawImage(this.image, (int) this.x, (int) this.y, null);
+        this.drawReloadBar(g);
+        this.drawHealthBar(g);
+        this.drawBigHealthBar(g);
     }
 
     @Override
@@ -148,11 +181,12 @@ public class Player implements canAttack, Drawable, hasHealth {
         g.fillRect((int)this.getCenterX() - this.mage.getSize()/2, (int)this.y + this.mage.getSize() + BAROFFSETY, (int)(this.mage.getSize() * ((double)this.health/this.mage.getMaxHealth())), HEALTHBARHEIGHT);
     }
 
-    @Override
-    public void draw(Graphics g) {
-        g.drawImage(this.image, (int) this.x, (int) this.y, null);
-        this.drawReloadBar(g);
-        this.drawHealthBar(g);
+
+    public void drawBigHealthBar(Graphics g) {
+        g.setColor(HEALTHBAR_BGCOLOR);
+        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH, Player.BIGHEALTHBARHEIGHT);
+        g.setColor(HEALTHBAR_FGCOLOR);
+        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.mage.getMaxHealth())), Player.BIGHEALTHBARHEIGHT);
     }
 
     public void drawReloadBar(Graphics g) {
