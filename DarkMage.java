@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class DarkMage extends Mage {
     public DarkMage() {
-        super("Dark Mage", 50, 25, 7, 1000, new AttackStats(35, 15, 40, 500, new Color(0, 0, 0)));
+        super("Dark Mage", 50, 25, 10, 7, 1000, new AttackStats(35, 15, 40, 500, new Color(0, 0, 0)));
     }
 
     @Override

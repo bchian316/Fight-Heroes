@@ -8,14 +8,16 @@ public abstract class Mage {
     private final String name;
     private final int size;
     private final int maxHealth; //maximum hp
+    private final int regen;
     private final int speed; //movement speed
     private final int reload; //delay between attacking ms
     private final AttackStats attackStats;
 
-    public Mage(String name, int size, int maxHealth, int speed, int reload, AttackStats attackStats) {
+    public Mage(String name, int size, int maxHealth, int regen, int speed, int reload, AttackStats attackStats) {
         this.name = name;
         this.size = size;
         this.maxHealth = maxHealth;
+        this.regen = regen;
         this.speed = speed;
         this.reload = reload;
         this.attackStats = attackStats;
@@ -31,6 +33,10 @@ public abstract class Mage {
 
     public int getMaxHealth() {
         return this.maxHealth;
+    }
+
+    public int getRegen() {
+        return this.regen;
     }
 
     public int getSpeed() {

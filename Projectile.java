@@ -50,12 +50,12 @@ public class Projectile implements Drawable{
         return this.attk.damage();
     }
 
-    public boolean shouldKillSelf() {
+    public boolean shouldKillSelf(Background bg) {
         //returns true if we should delete this projectile
         if (this.distanceTraveled > this.attk.range()) {
             return true;
         }
-        return this.x < 0 || this.x > GameRunner.SCREENWIDTH || this.y < 0 || this.y > GameRunner.SCREENHEIGHT;
+        return this.x < Background.WALLIMAGESIZE || this.x > bg.getWallX() || this.y < Background.WALLIMAGESIZE || this.y > bg.getWallY();
     }
 
     public AttackStats getAttackStats() {

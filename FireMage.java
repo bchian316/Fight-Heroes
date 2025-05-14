@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class FireMage extends Mage {
     public FireMage() {
-        super("Fire Mage", 50, 100, 5, 250, new AttackStats(5, 20, 10, 150, new Color(255, 0, 0)));
+        super("Fire Mage", 50, 100, 20, 5, 250, new AttackStats(5, 20, 10, 150, new Color(255, 0, 0)));
     }
 
     @Override

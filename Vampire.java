@@ -2,10 +2,10 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Skeleton extends Enemy {
+public class Vampire extends Enemy {
 
-    public Skeleton(double x, double y) {
-        super("Skeleton", x, y, 50, 35, 2, 1000, new AttackStats(10, 15, 20, 200, new Color(255, 255, 255)));
+    public Vampire(double x, double y) {
+        super("Vampire", x, y, 35, 50, 3, 3000, new AttackStats(30, 25, 20, 350, new Color(255, 18, 18)));
     }
 
 

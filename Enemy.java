@@ -142,8 +142,9 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
 
     public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, int borderX1, int borderY1, int borderX2, int borderY2) {
-        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed) {
-            //enemy has reached the spot, find new spot
+        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
+            || Game.getDistance(playerX, playerY, this.moveTargetX, this.moveTargetY) > this.attk.range()) {
+            //enemy has reached the spot or player has abandoned the spot, find new spot
             this.setMoveTarget(playerX, playerY);
         }
         //move to target

@@ -14,6 +14,8 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private static final int HEALTHBARHEIGHT = 10;
     private static final Color HEALTHBAR_BGCOLOR = new Color(0, 0, 0);
     private static final Color HEALTHBAR_FGCOLOR = new Color(0, 255, 0); //display green over red
+    private static final Color HEALTHBAR_REGENCOLOR = new Color(0, 150, 0); //display green over red
+
 
     private static final int RELOADBARWIDTH = 50;
     private static final int RELOADBARHEIGHT = 10;
@@ -27,6 +29,12 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private int health;
     private int levelNumber = 1;
     private double reloadTimer = 0; //player can shoot
+
+    private double regenTimer = 0; //when to regen
+    private static final double REGENTIME = 3000; //3secs for regen
+    private double regenTickTimer = 0;
+    private static final double REGENTICKTIME = 500;
+    private boolean isHealing = false; //if regening
     
 
     private final Image image;
@@ -39,6 +47,35 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
 
         this.image = new ImageIcon("assets/mages/" + this.mage.getName() + ".png").getImage()
                 .getScaledInstance(this.mage.getSize(), this.mage.getSize(), Image.SCALE_DEFAULT);
+    }
+
+    public void heal() {
+        if (this.isHealing){
+            this.regenTickTimer += Game.updateDelay();
+            if (this.regenTickTimer >= REGENTICKTIME) {
+                regenTickTimer = 0;
+                this.health += this.mage.getRegen();
+                if (this.health > this.mage.getMaxHealth()) {
+                    this.health = this.mage.getMaxHealth();
+                }
+            }   
+        }
+    }
+
+    
+    public void startHealing() {
+        if (!this.isHealing){
+            this.regenTimer += Game.updateDelay();
+            if (this.regenTimer >= REGENTIME) {
+                regenTimer = 0;
+                this.isHealing = true;
+            }   
+        }
+    }
+    
+    public void stopHealing() {
+        this.isHealing = false;
+        this.regenTimer = 0;
     }
 
     public boolean isDead() {
@@ -67,6 +104,10 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         this.reloadTimer = 0;
     }
 
+    public void load() {//instantly load reload timer
+        this.reloadTimer = this.mage.getReload();
+    }
+
     public int getSize() {
         return this.mage.getSize();
     }
@@ -82,6 +123,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     
     @Override
     public void getDamaged(int damage) {
+        this.stopHealing();
         this.health -= damage;
     }
 
@@ -102,7 +144,16 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     }
 
     public double getCenterY() {
-        return this.y + mage.getSize()/2.0;
+        return this.y + mage.getSize() / 2.0;
+    }
+
+    private void reload() {
+        
+        this.reloadTimer += Game.updateDelay();
+        if (this.reloadTimer > this.mage.getReload()) {
+            reloadTimer = this.mage.getReload();
+        }   
+        
     }
 
     public void update(Set<Integer> pressedKeys, int borderX1, int borderY1, int borderX2, int borderY2) {
@@ -131,12 +182,9 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
             //multiply to get to moveSpeed
         }
 
-        if (this.reloadTimer < this.mage.getReload()) {
-            this.reloadTimer += Game.updateDelay();
-            if (this.reloadTimer > this.mage.getReload()) {
-                this.reloadTimer = this.mage.getReload();
-            }
-        }
+        this.reload();
+        this.heal();
+        this.startHealing();
     }
 
     @Override
@@ -161,6 +209,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         //center x and center y
+        this.stopHealing();
         return this.mage.createProjectiles(this.x + this.mage.getSize()/2, this.y + this.mage.getSize()/2, targetX, targetY);
     }
     @Override
@@ -177,6 +226,11 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         g.setColor(HEALTHBAR_BGCOLOR);
         g.fillRect((int) this.getCenterX() - this.mage.getSize()/2, (int) this.y + this.mage.getSize() + BAROFFSETY,
                 this.mage.getSize(), HEALTHBARHEIGHT);
+        if (this.isHealing) {
+            g.setColor(HEALTHBAR_REGENCOLOR);
+            g.fillRect((int) this.getCenterX() - this.mage.getSize()/2, (int) this.y + this.mage.getSize() + BAROFFSETY,
+                this.mage.getSize(), HEALTHBARHEIGHT);
+        }
         g.setColor(HEALTHBAR_FGCOLOR);
         g.fillRect((int)this.getCenterX() - this.mage.getSize()/2, (int)this.y + this.mage.getSize() + BAROFFSETY, (int)(this.mage.getSize() * ((double)this.health/this.mage.getMaxHealth())), HEALTHBARHEIGHT);
     }
@@ -184,7 +238,13 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
 
     public void drawBigHealthBar(Graphics g) {
         g.setColor(HEALTHBAR_BGCOLOR);
-        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH, Player.BIGHEALTHBARHEIGHT);
+        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH,
+                Player.BIGHEALTHBARHEIGHT);
+        if (this.isHealing) {
+            g.setColor(HEALTHBAR_REGENCOLOR);
+            g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH,
+                Player.BIGHEALTHBARHEIGHT);
+        }
         g.setColor(HEALTHBAR_FGCOLOR);
         g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.mage.getMaxHealth())), Player.BIGHEALTHBARHEIGHT);
     }
