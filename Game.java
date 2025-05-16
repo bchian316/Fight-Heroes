@@ -9,13 +9,13 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
     public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new ExplodyMage(), PLAYERSTARTX, PLAYERSTARTY);
+    private final Player player = new Player(new EarthMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public static final Level[] LEVELS = {
             new Level(new Enemy[] { new Zombie(50.0, 50.0)}),
             new Level(new Enemy[] { new Zombie(50.0, 50.0),
                                     new Zombie(250.0, 50.0),
-                                    new Zombie(550.0, 50.0) }),
+                                    new Zombie(550.0, 50.0)}),
             new Level(new Enemy[] { new Zombie(400.0, 200.0),
                                     new Skeleton(200.0, 150.0),
                                     new Skeleton(300.0, 150.0) }),
@@ -33,7 +33,6 @@ public class Game extends JPanel {
                                     new Zombie(200.0, 150.0),                       
                                     new Skeleton(700, 300)}),
             new Level(new Enemy[] { new Vampire(350.0, 50.0),
-                                    new Vampire(450.0, 50.0),
                                     new Skeleton(500.0, 250.0),
                                     new Mummy(400.0, 250.0),
                                     new Zombie(500.0, 150.0),
@@ -42,10 +41,10 @@ public class Game extends JPanel {
                                     new Ghost(450.0, 50.0),
                                     new ZombieHut(300.0, 50.0),
                                     new Skeleton(500.0, 350.0),
-                                    new Vampire(300.0, 350.0),
+                                    new Vampire(300.0, 50.0),
                                     new Ghost(400.0, 200.0)}),
-            new Level(new Enemy[] { new Ghost(500.0, 350.0),
-                                    new Ghost(300.0, 350.0),
+            new Level(new Enemy[] { new Ghost(550.0, 150.0),
+                                    new Ghost(250.0, 250.0),
                                     new Vampire(400.0, 50.0),
                                     new Zombie(700.0, 150.0),                        
                                     new ZombieHut(200, 300),
@@ -69,10 +68,12 @@ public class Game extends JPanel {
                                     new ZombieHut(700.0, 150.0),                 
                                     new Vampire(500, 100)}),
             new Level(new Enemy[] { new SkeletonShaman(500.0, 350.0),
+                                    new ZombieHut(600.0, 100.0),
                                     new Mummy(200.0, 350.0),
-                                    new SkeletonShaman(200, 300),
                                     new Ghost(50.0, 50.0),
-                                    new Ghost(750.0, 50.0)})
+                                    new Ghost(750.0, 50.0),
+                                    new Ghoul(500.0, 200.0) }),
+            new Level(new Enemy[] { new Ben(400.0, 100.0)})
     };
     private final Background bg = new Background(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
     
@@ -97,9 +98,13 @@ public class Game extends JPanel {
         return 1000.0 / Game.FPS;
     }
 
-    
-    public Player getPlayer() {
-        return this.player;
+
+    public void attemptPlayerAttack(double targetX, double targetY) {
+        if (this.player.isLoaded()) {
+            Game.addProjectiles(this.getPlayerProjectiles(),
+                    this.player.attack(targetX, targetY));
+            this.player.resetReloadTimer();
+        }
     }
 
     public final void loadLevel(int levelNumber) {

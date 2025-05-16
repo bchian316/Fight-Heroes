@@ -48,16 +48,8 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
         return this.health <= 0;
     }
 
-    public double getX() {
-        return this.x;
-    }
-
     public final double getCenterX() {
         return this.x + this.size / 2;
-    }
-
-    public double getY() {
-        return this.y;
     }
 
     public final double getCenterY() {
@@ -134,7 +126,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(this.getImage(), (int) this.getX(), (int) this.getY(), null);
+        g.drawImage(this.getImage(), (int) this.x, (int) this.y, null);
         this.drawHealthBar(g);
     }
 

@@ -3,8 +3,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class SkeletonShaman extends Enemy implements canSpawn {
-    private final int reloadTime = 5000;
-    private int reloadTimer = (int)(Math.random() * reloadTime);
+    private final int spawnTime = 5000;
+    private int reloadTimer = (int)(Math.random() * spawnTime);
     public SkeletonShaman(double x, double y) {
         super("Skeleton Shaman", x, y, 65, 100, 3, 1000, new AttackStats(15, 25, 13, 200, new Color(200, 207, 8)));
     }
@@ -32,7 +32,7 @@ public class SkeletonShaman extends Enemy implements canSpawn {
 
     @Override
     public boolean spawnLoaded() {
-        return reloadTimer >= reloadTime;
+        return reloadTimer >= spawnTime;
     }
 
     @Override
