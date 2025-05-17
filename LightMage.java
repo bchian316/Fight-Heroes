@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class LightMage extends Mage {
     private static final int ATTKOFFSET = 25;
     public LightMage() {
-        super("Light Mage", 50, 50, 7, 5, 1000, new AttackStats(12, 20, 15, 250, new Color(200, 200, 0)));
+        super("Light Mage", 50, 50, 7, 5, 1000, new AttackStats(12, 20, 15, 250, 1, new Color(200, 200, 0)));
     }
 
     @Override

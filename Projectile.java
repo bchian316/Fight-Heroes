@@ -1,12 +1,14 @@
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Projectile implements Drawable{
     private double x, y;
     private final double velX, velY;
     private final AttackStats attk;
+    private final HashSet<hasHealth> hitEnemies;
     private double distanceTraveled = 0;
-    private SplitProjectileInterface split;
+    private SplitProjectileInterface split;//you actually can have a projectile that can pierce and split
 
     public Projectile(double x, double y, double angle, AttackStats attk, SplitProjectileInterface split) {
         //x and y should be the center of the player, not his actual coords
@@ -15,6 +17,7 @@ public class Projectile implements Drawable{
         this.velX = Math.cos(angle) * attk.speed();
         this.velY = Math.sin(angle) * attk.speed();
         this.attk = attk;
+        this.hitEnemies = new HashSet<>();
         this.split = split;
     }
     
@@ -50,8 +53,27 @@ public class Projectile implements Drawable{
         return this.attk.damage();
     }
 
+    public int getMaxPierce() {
+        return this.attk.maxPierce();
+    }
+
+    public void addHitEnemy(hasHealth h) {
+        this.hitEnemies.add(h);
+    }
+
+    public boolean donePierce() {
+        if (this.attk.maxPierce() == -1) {
+            return false;
+        }
+        return this.hitEnemies.size() >= this.attk.maxPierce();
+    }
+
+    public boolean damagedAlready(hasHealth h) {
+        return this.hitEnemies.contains(h);
+    }
+
     public boolean shouldKillSelf(Background bg) {
-        //returns true if we should delete this projectile
+        //only checks for range and going out of screen, not donePierce
         if (this.distanceTraveled > this.attk.range()) {
             return true;
         }

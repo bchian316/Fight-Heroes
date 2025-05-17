@@ -8,22 +8,24 @@ public class AttackStats {
     private final int size;
     private final int speed;
     private final int range;
+    private final int maxPierce; //-1 means can pierce everything
     private final Color color;
     private final AttackStats splitStats;
     private final boolean splitsOnImpact;
 
-    public AttackStats(int damage, int size, int speed, int range, Color color, boolean splitsOnImpact, AttackStats splitStats) {
+    public AttackStats(int damage, int size, int speed, int range, int maxPierce, Color color, boolean splitsOnImpact, AttackStats splitStats) {
         this.damage = damage;
         this.size = size;
         this.speed = speed;
         this.range = range;
+        this.maxPierce = maxPierce;
         this.color = color;
         this.splitsOnImpact = splitsOnImpact;
         this.splitStats = splitStats;
     }
 
-    public AttackStats(int damage, int size, int speed, int range, Color color) {
-        this(damage, size, speed, range, color, false, null);
+    public AttackStats(int damage, int size, int speed, int range, int maxPierce, Color color) {
+        this(damage, size, speed, range, maxPierce, color, false, null);
     }
 
     public int damage() {
@@ -40,6 +42,10 @@ public class AttackStats {
 
     public int range() {
         return this.range;
+    }
+
+    public int maxPierce() {
+        return this.maxPierce;
     }
     
     public Color color() {

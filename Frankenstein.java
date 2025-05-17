@@ -1,0 +1,34 @@
+
+import java.awt.Color;
+import java.util.ArrayList;
+
+public class Frankenstein extends Enemy {
+
+    public Frankenstein(double x, double y) {
+        super("Frankenstein", x, y, 125, 150, 2, 1750, 300, 3000, new AttackStats(20, 80, 20, 75, 1, new Color(142, 189, 0), false,
+                new AttackStats(6, 15, 10, 150, 2, new Color(55, 140, 90))));
+    }
+
+    @Override
+    public ArrayList<Projectile> attack(double targetX, double targetY) {
+        ArrayList<Projectile> newProjs = new ArrayList<>();
+        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
+                    Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
+                    this.getAttackStats(),
+                    (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+        return newProjs;
+    }
+
+    public ArrayList<Projectile> moreAttack(double x, double y, double targetX, double targetY,
+            AttackStats splitStats) {
+        ArrayList<Projectile> newProjs = new ArrayList<>();
+        // shoots twice from himself
+        for (int i = 0; i < 9; i++) {
+            newProjs.add(new Projectile(x, y,
+                    Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i-4)*40),
+                    splitStats));
+        }
+        return newProjs;
+    }
+
+}

@@ -6,7 +6,7 @@ public class SkeletonShaman extends Enemy implements canSpawn {
     private final int spawnTime = 5000;
     private int reloadTimer = (int)(Math.random() * spawnTime);
     public SkeletonShaman(double x, double y) {
-        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, new AttackStats(15, 25, 13, 200, new Color(200, 207, 8)));
+        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, 400, 2000, new AttackStats(15, 25, 13, 200, 1, new Color(200, 207, 8)));
     }
 
 

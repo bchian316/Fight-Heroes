@@ -6,7 +6,7 @@ public class ZombieHut extends Enemy implements canSpawn {
     private final int spawnTime = 3000;
     private int reloadTimer = (int)(Math.random() * spawnTime);
     public ZombieHut(double x, double y) {
-        super("Zombie Hut", x, y, 60, 150, 0, 0, new AttackStats(0, 0, 0, 0, new Color(0, 0, 0)));
+        super("Zombie Hut", x, y, 60, 100, 0, 0, 0, 0, new AttackStats(0, 0, 0, 0, 0, new Color(0, 0, 0)));
     }
 
 

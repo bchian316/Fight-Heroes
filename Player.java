@@ -189,21 +189,22 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
 
     @Override
     public boolean setBorders(int borderX1, int borderY1, int borderX2, int borderY2) {
+        boolean value = false;
         if (this.x + this.mage.getSize() > borderX2) {
             this.x = borderX2 - this.mage.getSize();
-            return true;
+            value = true;
         } else if (this.x < borderX1) {
             this.x = borderX1;
-            return true;
+            value = true;
         }
         if (this.y + this.mage.getSize() > borderY2) {
             this.y = borderY2 - this.mage.getSize();
-            return true;
+            value = true;
         } else if (this.y < borderY1) {
             this.y = borderY1;
-            return true;
+            value = true;
         }
-        return false;
+        return value;
     }
 
     @Override

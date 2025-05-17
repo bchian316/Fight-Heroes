@@ -9,10 +9,10 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
     public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new EarthMage(), PLAYERSTARTX, PLAYERSTARTY);
+    private final Player player = new Player(new DarkMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Zombie(50.0, 50.0)}),
+            new Level(new Enemy[] { new Wight(50.0, 50.0)}),
             new Level(new Enemy[] { new Zombie(50.0, 50.0),
                                     new Zombie(250.0, 50.0),
                                     new Zombie(550.0, 50.0)}),
@@ -31,7 +31,11 @@ public class Game extends JPanel {
             new Level(new Enemy[] { new Ghost(350.0, 100.0),
                                     new ZombieHut(100.0, 150.0),
                                     new Zombie(200.0, 150.0),                       
-                                    new Skeleton(700, 300)}),
+                                    new Skeleton(700, 300) }),
+            new Level(new Enemy[] { new Frankenstein(250.0, 200.0),
+                                    new ZombieHut(700.0, 150.0),
+                                    new Mummy(250, 100),
+                                    new Mummy(550, 100) }),
             new Level(new Enemy[] { new Vampire(350.0, 50.0),
                                     new Skeleton(500.0, 250.0),
                                     new Mummy(400.0, 250.0),
@@ -166,7 +170,7 @@ public class Game extends JPanel {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = projectiles.get(i);
             if (currentProj.shouldKillSelf(bg)) {
-                if (currentProj.canSplit()) {
+                if (currentProj.canSplit()) { //this is for splitting without impact (Gene)
                     Game.addProjectiles(projectiles, currentProj.split());
                 }
                 projectiles.remove(i);
@@ -185,17 +189,20 @@ public class Game extends JPanel {
         }
     }
 
-    public void checkPlayerProjectiles() {
+    public void checkPlayerProjectiles() {//removes player projectiles
         for (int i = playerProjectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = playerProjectiles.get(i);
             for (Enemy e : enemies) {
-                if (e.isHit(currentProj)) {
+                if (e.isHit(currentProj) && !currentProj.damagedAlready(e)) {
                     e.getDamaged(currentProj.getDamage());
+                    currentProj.addHitEnemy(e);
                     if (currentProj.splitsOnImpact()) {
                         Game.addProjectiles(playerProjectiles, currentProj.split());
                     }
-                    playerProjectiles.remove(i);
-                    break;
+                    if (currentProj.donePierce()) {//by piercing too many enemies
+                        playerProjectiles.remove(i);
+                        break;
+                    }
                 }
             }
             //if currentproj is colliding with enemy
@@ -204,12 +211,16 @@ public class Game extends JPanel {
     public void checkEnemyProjectiles() {
         for (int i = enemyProjectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = enemyProjectiles.get(i);
-            if (this.player.isHit(currentProj)) {
+            if (this.player.isHit(currentProj) && !currentProj.damagedAlready(this.player)) {
                 this.player.getDamaged(currentProj.getDamage());
+                currentProj.addHitEnemy(player);
                 if (currentProj.splitsOnImpact()) {
                     Game.addProjectiles(enemyProjectiles, currentProj.split());
                 }
-                enemyProjectiles.remove(i);
+                if (currentProj.donePierce()) {//pierce too many good guys
+                    enemyProjectiles.remove(i);
+                    break;
+                }
             }
             //if currentproj is colliding with enemy
         }

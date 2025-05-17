@@ -23,9 +23,13 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     private double moveTargetX, moveTargetY;
     private final AttackStats attk;
 
+    private int passiveRange; //should always stay within this range
+    private int passiveTimer; //timer for when he should dive in
+    private int passiveTime; //should dive in every movementTime seconds
+
     private final Image image;
 
-    public Enemy(String name, double x, double y, int size, int health, int speed, int reload,
+    public Enemy(String name, double x, double y, int size, int health, int speed, int reload, int passiveRange, int passiveTime,
             AttackStats attk) {
         this.x = x - size / 2;
         this.y = y - size / 2;
@@ -35,6 +39,9 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
         this.maxHealth = health;
         this.speed = speed;
         this.reload = reload;
+        this.passiveRange = passiveRange;
+        this.passiveTime = passiveTime;
+        this.passiveTimer = (int) (Math.random() * this.passiveTime);
         this.reloadTimer = (int)(Math.random() * this.reload);
         this.attk = attk;
         this.moveTargetX = this.getCenterX();
@@ -76,11 +83,14 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     }
 
     //so it can't be overridden
-    private void setMoveTarget(double playerX, double playerY) {
+    private void setMoveTarget(double playerX, double playerY, boolean passive){
         double randAngle = Math.random() * Math.PI * 2; //in radians
         double randMagnitude = Math.random() * this.attk.range();
-        this.moveTargetX = (int)(Game.getVectorX(randAngle, randMagnitude) + playerX);
-        this.moveTargetY = (int)(Game.getVectorY(randAngle, randMagnitude) + playerY);
+        if (passive) {
+            randMagnitude = Math.random() * this.passiveRange;
+        }
+        this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + playerX);
+        this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + playerY);
     }
 
     public int getSize() {
@@ -133,22 +143,35 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     @Override
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
 
-    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, int borderX1, int borderY1, int borderX2, int borderY2) {
+
+    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, int borderX1,
+            int borderY1, int borderX2, int borderY2) {
+        //set targets
         if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
-            || Game.getDistance(playerX, playerY, this.moveTargetX, this.moveTargetY) > this.attk.range()) {
-            //enemy has reached the spot or player has abandoned the spot, find new spot
-            this.setMoveTarget(playerX, playerY);
+            || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
+            //enemy has reached the spot or player has left the spot outside of passive range, find new spot
+            this.setMoveTarget(playerX, playerY, true);
         }
+        if (this.setBorders(borderX1, borderY1, borderX2, borderY2)) {
+            this.setMoveTarget(playerX, playerY, true);
+        }
+        if (this.passiveTimer < this.passiveTime) {
+            this.passiveTimer += Game.updateDelay();
+        }
+        if (this.passiveTimer >= this.passiveTime) {
+            this.setMoveTarget(playerX, playerY, false);
+            //actually dive in to attk player
+            this.passiveTimer = 0;
+        }
+        
         //move to target
         this.x += Game.getVectorX(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
         this.y += Game.getVectorY(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
 
-        if (this.setBorders(borderX1, borderY1, borderX2, borderY2)) {
-            this.setMoveTarget(playerX, playerY);
-        }
-        
+                
+        //reload and attack
         if (this.reloadTimer < this.reload) {
             this.reloadTimer += Game.updateDelay();
         }
@@ -156,6 +179,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
             Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.reloadTimer = 0;
         }
+        
     }
 
     public boolean isHit(Projectile p) {

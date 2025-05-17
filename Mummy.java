@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Mummy extends Enemy {
     public static final int ATTKOFFSET = 35;
     public Mummy(double x, double y) {
-        super("Mummy", x, y, 75, 100, 0, 750, new AttackStats(5, 30, 12, 400, new Color(145, 104, 0)));
+        super("Mummy", x, y, 75, 100, 0, 750, 0, 0, new AttackStats(5, 30, 12, 400, 1, new Color(145, 104, 0)));
     }
 
 

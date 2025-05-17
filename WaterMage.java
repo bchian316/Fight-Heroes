@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class WaterMage extends Mage {
     public WaterMage() {
-        super("Water Mage", 50, 75, 5, 8, 500, new AttackStats(20, 30, 15, 150, new Color(0, 25, 217), false,
-                new AttackStats(10, 10, 15, 100, new Color(0, 25, 217))));
+        super("Water Mage", 50, 75, 5, 8, 500, new AttackStats(20, 30, 15, 150, 1, new Color(0, 25, 217), false,
+                new AttackStats(10, 10, 15, 100, 1, new Color(0, 25, 217))));
     }
 
     @Override

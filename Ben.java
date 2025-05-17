@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Ben extends Enemy {
 
     public Ben(double x, double y) {
-        super("Ben", x, y, 200, 300, 3, 2000, new AttackStats(20, 50, 15, 500, new Color(222, 140, 15), false,
-                new AttackStats(5, 25, 10, 500, new Color(252, 170, 45))));
+        super("Ben", x, y, 200, 300, 3, 2000, 500, 4000, new AttackStats(20, 50, 15, 500, 1, new Color(222, 140, 15), false,
+                new AttackStats(5, 25, 10, 500, 2, new Color(252, 170, 45))));
     }
 
 

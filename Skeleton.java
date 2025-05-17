@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Skeleton extends Enemy {
 
     public Skeleton(double x, double y) {
-        super("Skeleton", x, y, 50, 35, 2, 1000, new AttackStats(10, 15, 20, 200, new Color(255, 255, 255)));
+        super("Skeleton", x, y, 50, 35, 2, 1000, 400, 1500, new AttackStats(10, 15, 20, 200, 1, new Color(255, 255, 255)));
     }
 
 
