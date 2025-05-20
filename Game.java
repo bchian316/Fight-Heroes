@@ -10,16 +10,16 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
     public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new WaveMage(), PLAYERSTARTX, PLAYERSTARTY);
+    private final Player player = new Player(new WaterMage(), PLAYERSTARTX, PLAYERSTARTY);
     
-    public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Ghoul(400, 100)}), //introduce zombie
+    private static final Level[] LEVELS = {
+            new Level(new Enemy[] { new Zombie(400, 100)}), //introduce zombie
             new Level(new Enemy[] { new Zombie(50, 50),
                                     new Zombie(250, 50),
                                     new Zombie(550, 50)}),
             new Level(new Enemy[] { new Zombie(400, 200), //introduce skeleton
                                     new Skeleton(200, 50),
-                                    new Skeleton(600, 50) }),
+                                    new Skeleton(600, 50)}),
             new Level(new Enemy[] { new Zombie(150, 250), //introduce ghost
                                     new Zombie(350, 250),
                                     new Ghost(200, 150),
@@ -28,54 +28,65 @@ public class Game extends JPanel {
                                     new Ghost(100, 100),
                                     new Skeleton(100, 100)}),
             new Level(new Enemy[] { new Ghost(350, 100), //introduce zombie hut
+                                    new Ghost(650, 100),
                                     new ZombieHut(100, 150),
-                                    new Zombie(200, 150),                       
-                                    new Skeleton(700, 300) }),
-            new Level(new Enemy[] { new Frankenstein(250, 100), //introduce frankenstein
+                                    new Mummy(200, 150)}),
+            new Level(new Enemy[] { new Ben(400, 150), //miniboss
+                                    new Mummy(200, 200),
+                                    new Mummy(600, 200) }),
+            new Level(new Enemy[] { new Frankenstein(400, 100),//introduce frankenstein
+                                    new Skeleton(100, 200),
+                                    new Skeleton(700, 200)}),
+            new Level(new Enemy[] { new Frankenstein(250, 100),
                                     new Skeleton(700, 150),
                                     new Zombie(300, 100),
-                                    new Mummy(250, 200)}),
+                                    new Mummy(250, 200) }),
             new Level(new Enemy[] { new Vampire(350, 50), //introduce vampire
-                                    new Mummy(400, 250),
                                     new Zombie(500, 150),
                                     new Zombie(700, 150),
-                                    new Zombie(300,150)}),
-            new Level(new Enemy[] { new Ghost(450, 50), //introduce ghoul
-                                    new ZombieHut(300, 50),
-                                    new Skeleton(500, 350),
+                                    new Frankenstein(300, 150) }),
+            new Level(new Enemy[] { new Vampire(50, 350), 
+                                    new Vampire(750, 350),
+                                    new ZombieHut(200, 150),
+                                    new Skeleton(400, 100)}),
+            new Level(new Enemy[] { new Ghoul(450, 50), //introduce ghoul
+                                    new Mummy(300, 50),
                                     new Vampire(300, 50),
                                     new Ghost(400, 200)}),
-            new Level(new Enemy[] { new Ghost(550, 150), //introduce wight
-                                    new Ghost(250, 250),
+            new Level(new Enemy[] { new Ghoul(550, 150),
+                                    new Ghoul(250, 250),
                                     new Vampire(400, 50),
-                                    new Zombie(700, 150),                        
-                                    new ZombieHut(200, 300),
-                                    new Skeleton(300, 100),
-                                    new Mummy(300, 100)}),
-            new Level(new Enemy[] { new Ghost(0, 550), //introduce wraith
-                                    new Zombie(100, 250),
-                                    new Zombie(550, 50),                        
-                                    new SkeletonShaman(200, 300),
-                                    new Mummy(300, 100) }),
-            new Level(new Enemy[] { new Mummy(500, 350),
-                                    new Mummy(300, 350),
-                                    new Zombie(700, 150),                 
-                                    new SkeletonShaman(200, 300)}),
-            new Level(new Enemy[] { new Mummy(400, 150),
+                                    new Zombie(700, 150),
+                                    new Skeleton(700, 50)}),
+            new Level(new Enemy[] { new Wight(50, 150), //introduce wight
+                                    new Zombie(400, 250),
+                                    new Zombie(550, 50), 
+                                    new Mummy(600, 100) }),
+            new Level(new Enemy[] { new Vampire(500, 250), 
+                                    new Zombie(300, 350),
+                                    new Ghost(700, 150),
+                                    new Ghost(500, 150),              
+                                    new Wight(200, 300)}),
+            new Level(new Enemy[] { new Frankenstein(400, 150), //introduce skeleton shaman
                                     new ZombieHut(200, 650),
                                     new Zombie(600, 50),
                                     new SkeletonShaman(200, 300) }),
-            new Level(new Enemy[] { new ZombieHut(500, 350),
-                                    new Mummy(300, 350),
-                                    new ZombieHut(700, 150),                 
+            new Level(new Enemy[] { new Ghoul(500, 150),
+                                    new Mummy(300, 250),
+                                    new SkeletonShaman(700, 150),                 
                                     new Vampire(500, 100)}),
-            new Level(new Enemy[] { new SkeletonShaman(500, 350),
-                                    new ZombieHut(600, 100),
-                                    new Mummy(200, 350),
-                                    new Ghost(50, 50),
-                                    new Ghost(750, 50),
-                                    new Ghoul(500, 200) }),
-            new Level(new Enemy[] { new Ben(400, 100)})
+            new Level(new Enemy[] { new Wraith(500, 50), //Introduce wraith
+                                    new Wight(600, 100),
+                                    new Zombie(200, 150),
+                                    new Skeleton(500, 200),
+                                    new Frankenstein(400, 100) }),
+            new Level(new Enemy[] { new Wraith(500, 150),
+                                    new ZombieHut(300, 100),
+                                    new SkeletonShaman(750, 200),
+                                    new Ghoul(100, 200),
+                                    new Wight(600, 50),
+                                    new Mummy(400, 300)}),
+            new Level(new Enemy[] { new Ben(400, 100)}) //final bosses
     };
     private final Background bg = new Background(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
     
@@ -103,19 +114,19 @@ public class Game extends JPanel {
 
     public void attemptPlayerAttack(double targetX, double targetY) {
         if (this.player.isLoaded()) {
-            Game.addProjectiles(this.getPlayerProjectiles(),
+            Game.addProjectiles(this.playerProjectiles,
                     this.player.attack(targetX, targetY));
             this.player.resetReloadTimer();
         }
     }
 
-    public final void loadLevel(int levelNumber) {
+    private final void loadLevel(int levelNumber) {
         this.bg.setBackground();
         this.enemies.clear();
         this.enemies.addAll(Arrays.asList(LEVELS[levelNumber-1].getEnemies()));
     }
     
-    public void update() {//update frame
+    private void update() {//update frame
         if (this.player.isDead()) {
             System.out.println("YOU DIED!");
             System.exit(0);
@@ -143,7 +154,7 @@ public class Game extends JPanel {
         repaint();
     }
 
-    public void passThroughPortal() {
+    private void passThroughPortal() {
         this.enemies.clear();
         this.playerProjectiles.clear();
         this.enemyProjectiles.clear();
@@ -156,15 +167,8 @@ public class Game extends JPanel {
         this.player.load();
     }
 
-    public ArrayList<Projectile> getPlayerProjectiles() {
-        return this.playerProjectiles;
-    }
-
-    public ArrayList<Projectile> getEnemyProjectiles() {
-        return this.enemyProjectiles;
-    }
     
-    public static void removeProjectiles(ArrayList<Projectile> projectiles, Background bg) {
+    private static void removeProjectiles(ArrayList<Projectile> projectiles, Background bg) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = projectiles.get(i);
             if (currentProj.shouldKillSelf(bg)) {
@@ -181,13 +185,13 @@ public class Game extends JPanel {
         projectiles.addAll(newProjectiles);
     }
     
-    public static void updateProjectiles(ArrayList<Projectile> projectiles) {
+    private static void updateProjectiles(ArrayList<Projectile> projectiles) {
         for (Projectile p : projectiles) {
             p.update();
         }
     }
 
-    public void checkPlayerProjectiles() {//removes player projectiles
+    private void checkPlayerProjectiles() {//removes player projectiles
         for (int i = playerProjectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = playerProjectiles.get(i);
             for (Enemy e : enemies) {
@@ -206,7 +210,7 @@ public class Game extends JPanel {
             //if currentproj is colliding with enemy
         }
     }
-    public void checkEnemyProjectiles() {
+    private void checkEnemyProjectiles() {
         for (int i = enemyProjectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = enemyProjectiles.get(i);
             if (this.player.isHit(currentProj) && !currentProj.damagedAlready(this.player)) {
@@ -224,13 +228,13 @@ public class Game extends JPanel {
         }
     }
     
-    public void updateEnemies() {
+    private void updateEnemies() {
         for (Enemy e : this.enemies) {
             e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, Background.WALLIMAGESIZE, Background.WALLIMAGESIZE, this.bg.getWallX(), this.bg.getWallY());
         }
     }
 
-    public void removeEnemies() {
+    private void removeEnemies() {
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
             if (enemies.get(i).isDead()) {
@@ -241,7 +245,7 @@ public class Game extends JPanel {
         }
     }
     
-    public void spawnEnemies() {
+    private void spawnEnemies() {
         //when enemies spawn more enemies
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
@@ -273,13 +277,13 @@ public class Game extends JPanel {
 
         this.portal.draw(g);
     }
-    public static void drawProjectiles(Graphics g, ArrayList<Projectile> projectiles) {
+    private static void drawProjectiles(Graphics g, ArrayList<Projectile> projectiles) {
         for (Projectile p : projectiles) {
             p.draw(g);
         }
     }
 
-    public void drawEnemies(Graphics g) {
+    private void drawEnemies(Graphics g) {
         for (Enemy e : this.enemies) {
             e.draw(g);
         }

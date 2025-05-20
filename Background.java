@@ -29,7 +29,7 @@ public class Background implements Drawable{
         return this.HEIGHT - WALLIMAGESIZE - GameRunner.HEIGHTOFFSET;
     }
   
-    public final void loadImages(){
+    private final void loadImages(){
         for (int i = 0; i < NUMWALLIMAGES; i++) {
             wallImages[i] = new ImageIcon("assets/terrain/w" + Integer.toString(i + 1) + ".png").getImage()
                     .getScaledInstance(WALLIMAGESIZE, WALLIMAGESIZE, Image.SCALE_DEFAULT);

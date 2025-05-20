@@ -27,7 +27,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private final Mage mage;
     private double x, y;
     private int health;
-    private int levelNumber = 1;
+    private int levelNumber = 20;
     private double reloadTimer = 0; //player can shoot
 
     private double regenTimer = 0; //when to regen
@@ -49,7 +49,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
                 .getScaledInstance(this.mage.getSize(), this.mage.getSize(), Image.SCALE_DEFAULT);
     }
 
-    public void heal() {
+    private void heal() {
         if (this.isHealing){
             this.regenTickTimer += Game.updateDelay();
             if (this.regenTickTimer >= REGENTICKTIME) {
@@ -63,7 +63,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     }
 
     
-    public void startHealing() {
+    private void startHealing() {
         if (!this.isHealing){
             this.regenTimer += Game.updateDelay();
             if (this.regenTimer >= REGENTIME) {
@@ -73,7 +73,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         }
     }
     
-    public void stopHealing() {
+    private void stopHealing() {
         this.isHealing = false;
         this.regenTimer = 0;
     }
@@ -131,16 +131,8 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(), this.getCenterY()) <= (p.getSize() + this.mage.getSize())/2.0;
     }
 
-    public double getX() {
-        return this.x;
-    }
-
     public double getCenterX() {
         return this.x + mage.getSize()/2.0;
-    }
-
-    public double getY() {
-        return this.y;
     }
 
     public double getCenterY() {
@@ -237,7 +229,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     }
 
 
-    public void drawBigHealthBar(Graphics g) {
+    private void drawBigHealthBar(Graphics g) {
         g.setColor(HEALTHBAR_BGCOLOR);
         g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH,
                 Player.BIGHEALTHBARHEIGHT);
@@ -250,7 +242,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.mage.getMaxHealth())), Player.BIGHEALTHBARHEIGHT);
     }
 
-    public void drawReloadBar(Graphics g) {
+    private void drawReloadBar(Graphics g) {
         g.setColor(Player.RELOADBAR_BGCOLOR);
         g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH/2, (int) this.y - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
                 Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);

@@ -3,9 +3,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Ben extends SpawnerEnemy {
+    public static int SPAWN_RANGE = 200;
     public Ben(int x, int y) {
-        super("Ben", x, y, 200, 300, 3, 2000, 500, 4000, new AttackStats(20, 50, 15, 500, 1, new Color(222, 140, 15), false,
-                new AttackStats(5, 25, 10, 500, 2, new Color(252, 170, 45))), 8000);
+        super("Ben", x, y, 200, 300, 2, 3500, 800, 5000, new AttackStats(16, 50, 13, 250, 1, new Color(222, 140, 15), false,
+                new AttackStats(5, 25, 10, 500, 2, new Color(252, 170, 45))), 12000);
     }
 
 
@@ -34,7 +35,11 @@ public class Ben extends SpawnerEnemy {
     public ArrayList<Enemy> spawn(double playerX, double playerY) {
         this.resetSpawnTimer();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
-        newEnemies.add(new Frankenstein((int) this.getCenterX(), (int) this.getCenterY()));
+        double randAngle = Math.random() * Math.PI * 2; // in radians
+        double randMagnitude = Math.random() * Ben.SPAWN_RANGE;
+        newEnemies.add(new Mummy(
+            (int)(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
+            (int)(this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
         return newEnemies;
     }
     

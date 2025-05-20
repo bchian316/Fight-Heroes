@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ExplodyMage extends Mage {
     public ExplodyMage() {
         super("Explody Mage", 80, 125, 8, 6, 1000, new AttackStats(5, 25, 10, 225, 1, new Color(227, 84, 18), true,
-                new AttackStats(10, 75, 1, 10, -1, new Color(194, 48, 0))));
+                new AttackStats(10, 125, 1, 10, -1, new Color(194, 48, 0))));
     }
 
     @Override
