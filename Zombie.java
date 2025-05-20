@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Zombie extends Enemy {
 
-    public Zombie(double x, double y) {
+    public Zombie(int x, int y) {
         super("Zombie", x, y, 50, 50, 3, 2000, 300, 2500, new AttackStats(5, 40, 20, 50, 2, new Color(0, 150, 0)));
     }
 

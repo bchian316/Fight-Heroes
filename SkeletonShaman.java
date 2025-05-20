@@ -2,11 +2,9 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class SkeletonShaman extends Enemy implements canSpawn {
-    private final int spawnTime = 5000;
-    private int reloadTimer = (int)(Math.random() * spawnTime);
-    public SkeletonShaman(double x, double y) {
-        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, 400, 2000, new AttackStats(15, 25, 13, 200, 1, new Color(200, 207, 8)));
+public class SkeletonShaman extends SpawnerEnemy {
+    public SkeletonShaman(int x, int y) {
+        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, 400, 2000, new AttackStats(15, 25, 13, 200, 1, new Color(200, 207, 8)), 5000);
     }
 
 
@@ -24,21 +22,9 @@ public class SkeletonShaman extends Enemy implements canSpawn {
 
     @Override
     public ArrayList<Enemy> spawn(double playerX, double playerY) {
-        this.reloadTimer = 0;
+        this.resetSpawnTimer();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
-        newEnemies.add(new Skeleton(this.getCenterX(), this.getCenterY()));
+        newEnemies.add(new Skeleton((int)this.getCenterX(), (int)this.getCenterY()));
         return newEnemies;
     }
-
-    @Override
-    public boolean spawnLoaded() {
-        return reloadTimer >= spawnTime;
-    }
-
-    @Override
-    public void update(double playerX, double playerY, ArrayList<Projectile> projectiles, int borderX1, int borderY1, int borderX2, int borderY2) {
-        super.update(playerX, playerY, projectiles, borderX1, borderY1, borderX2, borderY2);
-        this.reloadTimer += Game.updateDelay();
-    }
-    
 }

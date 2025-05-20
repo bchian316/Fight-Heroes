@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Frankenstein extends Enemy {
 
-    public Frankenstein(double x, double y) {
+    public Frankenstein(int x, int y) {
         super("Frankenstein", x, y, 125, 150, 2, 1750, 300, 3000, new AttackStats(20, 80, 20, 75, 1, new Color(142, 189, 0), false,
                 new AttackStats(6, 15, 10, 150, 2, new Color(55, 140, 90))));
     }

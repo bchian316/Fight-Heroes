@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class WindMage extends Mage {
     public WindMage() {
-        super("Wind Mage", 60, 75, 25, 10, 1500, new AttackStats(7, 40, 5, 200, -1, new Color(125, 125, 125)));
+        super("Wind Mage", 60, 75, 25, 10, 1500, new AttackStats(15, 40, 5, 200, -1, new Color(125, 125, 125)));
     }
 
     @Override

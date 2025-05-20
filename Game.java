@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -9,75 +10,72 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
     public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new DarkMage(), PLAYERSTARTX, PLAYERSTARTY);
+    private final Player player = new Player(new WaveMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Wight(50.0, 50.0)}),
-            new Level(new Enemy[] { new Zombie(50.0, 50.0),
-                                    new Zombie(250.0, 50.0),
-                                    new Zombie(550.0, 50.0)}),
-            new Level(new Enemy[] { new Zombie(400.0, 200.0),
-                                    new Skeleton(200.0, 150.0),
-                                    new Skeleton(300.0, 150.0) }),
-            new Level(new Enemy[] { new Zombie(150.0, 250.0),
-                                    new Zombie(350.0, 250.0),
-                                    new Ghost(200.0, 150.0),
-                                    new Ghost(700, 300),
+            new Level(new Enemy[] { new Ghoul(400, 100)}), //introduce zombie
+            new Level(new Enemy[] { new Zombie(50, 50),
+                                    new Zombie(250, 50),
+                                    new Zombie(550, 50)}),
+            new Level(new Enemy[] { new Zombie(400, 200), //introduce skeleton
+                                    new Skeleton(200, 50),
+                                    new Skeleton(600, 50) }),
+            new Level(new Enemy[] { new Zombie(150, 250), //introduce ghost
+                                    new Zombie(350, 250),
+                                    new Ghost(200, 150),
                                     new Skeleton(100, 300) }),
-            new Level(new Enemy[] { new Mummy(300.0, 100.0),
+            new Level(new Enemy[] { new Mummy(300, 150), //introduce mummy
                                     new Ghost(100, 100),
-                                    new Skeleton(100.0, 100.0),
-                                    new Skeleton(700.0, 100.0)}),
-            new Level(new Enemy[] { new Ghost(350.0, 100.0),
-                                    new ZombieHut(100.0, 150.0),
-                                    new Zombie(200.0, 150.0),                       
+                                    new Skeleton(100, 100)}),
+            new Level(new Enemy[] { new Ghost(350, 100), //introduce zombie hut
+                                    new ZombieHut(100, 150),
+                                    new Zombie(200, 150),                       
                                     new Skeleton(700, 300) }),
-            new Level(new Enemy[] { new Frankenstein(250.0, 200.0),
-                                    new ZombieHut(700.0, 150.0),
-                                    new Mummy(250, 100),
-                                    new Mummy(550, 100) }),
-            new Level(new Enemy[] { new Vampire(350.0, 50.0),
-                                    new Skeleton(500.0, 250.0),
-                                    new Mummy(400.0, 250.0),
-                                    new Zombie(500.0, 150.0),
-                                    new Zombie(700.0, 150.0)}),
-            new Level(new Enemy[] { new Ghost(350.0, 50.0),
-                                    new Ghost(450.0, 50.0),
-                                    new ZombieHut(300.0, 50.0),
-                                    new Skeleton(500.0, 350.0),
-                                    new Vampire(300.0, 50.0),
-                                    new Ghost(400.0, 200.0)}),
-            new Level(new Enemy[] { new Ghost(550.0, 150.0),
-                                    new Ghost(250.0, 250.0),
-                                    new Vampire(400.0, 50.0),
-                                    new Zombie(700.0, 150.0),                        
+            new Level(new Enemy[] { new Frankenstein(250, 100), //introduce frankenstein
+                                    new Skeleton(700, 150),
+                                    new Zombie(300, 100),
+                                    new Mummy(250, 200)}),
+            new Level(new Enemy[] { new Vampire(350, 50), //introduce vampire
+                                    new Mummy(400, 250),
+                                    new Zombie(500, 150),
+                                    new Zombie(700, 150),
+                                    new Zombie(300,150)}),
+            new Level(new Enemy[] { new Ghost(450, 50), //introduce ghoul
+                                    new ZombieHut(300, 50),
+                                    new Skeleton(500, 350),
+                                    new Vampire(300, 50),
+                                    new Ghost(400, 200)}),
+            new Level(new Enemy[] { new Ghost(550, 150), //introduce wight
+                                    new Ghost(250, 250),
+                                    new Vampire(400, 50),
+                                    new Zombie(700, 150),                        
                                     new ZombieHut(200, 300),
-                                    new Skeleton(300.0, 100.0),
-                                    new Mummy(300.0, 100.0)}),
-            new Level(new Enemy[] { new Ghost(0.0, 550.0),
-                                    new Zombie(100.0, 250.0),
-                                    new Zombie(550.0, 50.0),                        
+                                    new Skeleton(300, 100),
+                                    new Mummy(300, 100)}),
+            new Level(new Enemy[] { new Ghost(0, 550), //introduce wraith
+                                    new Zombie(100, 250),
+                                    new Zombie(550, 50),                        
                                     new SkeletonShaman(200, 300),
-                                    new Mummy(300.0, 100.0) }),
-            new Level(new Enemy[] { new Mummy(500.0, 350.0),
-                                    new Mummy(300.0, 350.0),
-                                    new Zombie(700.0, 150.0),                 
+                                    new Mummy(300, 100) }),
+            new Level(new Enemy[] { new Mummy(500, 350),
+                                    new Mummy(300, 350),
+                                    new Zombie(700, 150),                 
                                     new SkeletonShaman(200, 300)}),
-            new Level(new Enemy[] { new Mummy(400.0, 150.0),
-                                    new ZombieHut(200.0, 650.0),
-                                    new Zombie(600.0, 50.0),
+            new Level(new Enemy[] { new Mummy(400, 150),
+                                    new ZombieHut(200, 650),
+                                    new Zombie(600, 50),
                                     new SkeletonShaman(200, 300) }),
-            new Level(new Enemy[] { new ZombieHut(500.0, 350.0),
-                                    new Mummy(300.0, 350.0),
-                                    new ZombieHut(700.0, 150.0),                 
+            new Level(new Enemy[] { new ZombieHut(500, 350),
+                                    new Mummy(300, 350),
+                                    new ZombieHut(700, 150),                 
                                     new Vampire(500, 100)}),
-            new Level(new Enemy[] { new SkeletonShaman(500.0, 350.0),
-                                    new ZombieHut(600.0, 100.0),
-                                    new Mummy(200.0, 350.0),
-                                    new Ghost(50.0, 50.0),
-                                    new Ghost(750.0, 50.0),
-                                    new Ghoul(500.0, 200.0) }),
-            new Level(new Enemy[] { new Ben(400.0, 100.0)})
+            new Level(new Enemy[] { new SkeletonShaman(500, 350),
+                                    new ZombieHut(600, 100),
+                                    new Mummy(200, 350),
+                                    new Ghost(50, 50),
+                                    new Ghost(750, 50),
+                                    new Ghoul(500, 200) }),
+            new Level(new Enemy[] { new Ben(400, 100)})
     };
     private final Background bg = new Background(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
     
@@ -247,8 +245,8 @@ public class Game extends JPanel {
         //when enemies spawn more enemies
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
-            if (enemies.get(i) instanceof canSpawn) {
-                canSpawn spawnerEnemy = (canSpawn)(enemies.get(i));
+            if (enemies.get(i) instanceof SpawnerEnemy) {
+                SpawnerEnemy spawnerEnemy = (SpawnerEnemy)(enemies.get(i));
                 if (spawnerEnemy.spawnLoaded()) {
                     enemies.addAll(spawnerEnemy.spawn(this.player.getCenterX(), this.player.getCenterY()));
                 }

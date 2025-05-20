@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Ghost extends Enemy {
 
-    public Ghost(double x, double y) {
-        super("Ghost", x, y, 35, 30, 5, 1000, 150, 500, new AttackStats(8, 25, 10, 75, 2, new Color(134, 134, 134)));
+    public Ghost(int x, int y) {
+        super("Ghost", x, y, 35, 30, 5, 1000, 200, 500, new AttackStats(6, 25, 10, 75, 2, new Color(134, 134, 134)));
     }
 
 

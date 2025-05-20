@@ -29,10 +29,10 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
 
     private final Image image;
 
-    public Enemy(String name, double x, double y, int size, int health, int speed, int reload, int passiveRange, int passiveTime,
+    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int passiveTime,
             AttackStats attk) {
-        this.x = x - size / 2;
-        this.y = y - size / 2;
+        this.x = (double)(x - size / 2);
+        this.y = (double)(y - size / 2);
         this.name = name;
         this.size = size;
         this.health = health;
