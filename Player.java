@@ -27,7 +27,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private final Mage mage;
     private double x, y;
     private int health;
-    private int levelNumber = 20;
+    private int levelNumber = 1;
     private double reloadTimer = 0; //player can shoot
 
     private double regenTimer = 0; //when to regen
@@ -78,6 +78,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         this.regenTimer = 0;
     }
 
+    @Override
     public boolean isDead() {
         return this.health <= 0;
     }
@@ -112,11 +113,6 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         return this.mage.getSize();
     }
 
-    @Override
-    public int getHealth() {
-        return this.health;
-    }
-
     public void fullHeal() {
         this.health = this.mage.getMaxHealth();
     }
@@ -127,14 +123,18 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         this.health -= damage;
     }
 
+    @Override
     public boolean isHit(Projectile p) {
-        return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(), this.getCenterY()) <= (p.getSize() + this.mage.getSize())/2.0;
+        return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(),
+                this.getCenterY()) <= (p.getSize() + this.mage.getSize()) / 2.0;
     }
 
+    @Override
     public double getCenterX() {
-        return this.x + mage.getSize()/2.0;
+        return this.x + mage.getSize() / 2.0;
     }
 
+    @Override
     public double getCenterY() {
         return this.y + mage.getSize() / 2.0;
     }

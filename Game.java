@@ -31,9 +31,7 @@ public class Game extends JPanel {
                                     new Ghost(650, 100),
                                     new ZombieHut(100, 150),
                                     new Mummy(200, 150)}),
-            new Level(new Enemy[] { new Ben(400, 150), //miniboss
-                                    new Mummy(200, 200),
-                                    new Mummy(600, 200) }),
+            new Level(new Enemy[] { new Ben(400, 150)}),//miniboss
             new Level(new Enemy[] { new Frankenstein(400, 100),//introduce frankenstein
                                     new Skeleton(100, 200),
                                     new Skeleton(700, 200)}),
@@ -88,7 +86,9 @@ public class Game extends JPanel {
                                     new Mummy(400, 300)}),
             new Level(new Enemy[] { new Ben(400, 100)}) //final bosses
     };
-    private final Background bg = new Background(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
+    public final static int NUM_LEVELS = Game.LEVELS.length;
+
+    private final Map map = new Map(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
     
     private final Listener l = new Listener(this);
     private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
@@ -96,11 +96,11 @@ public class Game extends JPanel {
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> enemyProjectiles = new ArrayList<>();
 
-    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Background.WALLIMAGESIZE);
+    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Map.BORDERIMAGESIZE);
     
     public Game() {
         super();
-        ActionListener action = evt -> this.update(); //create an action listener using lambda expression
+        ActionListener action = _ -> this.update(); //create an action listener using lambda expression
         new Timer((int) (1000.0 / Game.FPS), action).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
         //no need reference to timer cuz it already does stuff itself
@@ -120,8 +120,8 @@ public class Game extends JPanel {
         }
     }
 
-    private final void loadLevel(int levelNumber) {
-        this.bg.setBackground();
+    private void loadLevel(int levelNumber) {
+        this.map.setMap();
         this.enemies.clear();
         this.enemies.addAll(Arrays.asList(LEVELS[levelNumber-1].getEnemies()));
     }
@@ -131,9 +131,9 @@ public class Game extends JPanel {
             System.out.println("YOU DIED!");
             System.exit(0);
         }
-        this.player.update(l.getPressedKeys(), Background.WALLIMAGESIZE, Background.WALLIMAGESIZE, this.bg.getWallX(), this.bg.getWallY());
+        this.player.update(l.getPressedKeys(), Map.BORDERIMAGESIZE, Map.BORDERIMAGESIZE, this.map.getWallX(), this.map.getWallY());
         this.checkPlayerProjectiles();
-        Game.removeProjectiles(this.playerProjectiles, this.bg);
+        Game.removeProjectiles(this.playerProjectiles, this.map);
         Game.updateProjectiles(this.playerProjectiles);
         //bad guys
         this.checkEnemyProjectiles();
@@ -141,7 +141,7 @@ public class Game extends JPanel {
         this.removeEnemies();
         this.spawnEnemies();
 
-        Game.removeProjectiles(this.enemyProjectiles, this.bg);
+        Game.removeProjectiles(this.enemyProjectiles, this.map);
         Game.updateProjectiles(this.enemyProjectiles);
 
         if (this.enemies.isEmpty()) {
@@ -168,10 +168,10 @@ public class Game extends JPanel {
     }
 
     
-    private static void removeProjectiles(ArrayList<Projectile> projectiles, Background bg) {
+    private static void removeProjectiles(ArrayList<Projectile> projectiles, Map map) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = projectiles.get(i);
-            if (currentProj.shouldKillSelf(bg)) {
+            if (currentProj.shouldKillSelf(map)) {
                 if (currentProj.canSplit()) { //this is for splitting without impact (Gene)
                     Game.addProjectiles(projectiles, currentProj.split());
                 }
@@ -230,7 +230,7 @@ public class Game extends JPanel {
     
     private void updateEnemies() {
         for (Enemy e : this.enemies) {
-            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, Background.WALLIMAGESIZE, Background.WALLIMAGESIZE, this.bg.getWallX(), this.bg.getWallY());
+            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, Map.BORDERIMAGESIZE, Map.BORDERIMAGESIZE, this.map.getWallX(), this.map.getWallY());
         }
     }
 
@@ -266,7 +266,7 @@ public class Game extends JPanel {
     public void paintComponent(Graphics g) {//draw stuff
         super.paintComponent(g);
         
-        this.bg.draw(g);
+        this.map.draw(g);
         
         Game.drawProjectiles(g, this.playerProjectiles);
         Game.drawProjectiles(g, this.enemyProjectiles);

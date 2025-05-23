@@ -23,16 +23,16 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     private double moveTargetX, moveTargetY;
     private final AttackStats attk;
 
-    private int passiveRange; //should always stay within this range
+    private final int passiveRange; //should always stay within this range
     private int passiveTimer; //timer for when he should dive in
-    private int passiveTime; //should dive in every movementTime seconds
+    private final int passiveTime; //should dive in every movementTime seconds
 
     private final Image image;
 
     public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int passiveTime,
             AttackStats attk) {
-        this.x = (double)(x - size / 2);
-        this.y = (double)(y - size / 2);
+        this.x = (double) (x - size / 2);
+        this.y = (double) (y - size / 2);
         this.name = name;
         this.size = size;
         this.health = health;
@@ -42,7 +42,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
         this.passiveRange = passiveRange;
         this.passiveTime = passiveTime;
         this.passiveTimer = (int) (Math.random() * this.passiveTime);
-        this.reloadTimer = (int)(Math.random() * this.reload);
+        this.reloadTimer = (int) (Math.random() * this.reload);
         this.attk = attk;
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
@@ -51,14 +51,17 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
                 .getScaledInstance(this.size, this.size, Image.SCALE_DEFAULT);
     }
     
+    @Override
     public boolean isDead() {
         return this.health <= 0;
     }
 
+    @Override
     public final double getCenterX() {
         return this.x + this.size / 2;
     }
 
+    @Override
     public final double getCenterY() {
         return this.y + this.size / 2;
     }
@@ -106,11 +109,6 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     }
 
     @Override
-    public int getHealth() {
-        return health;
-    }
-
-    @Override
     public void getDamaged(int damage) {
         this.health -= damage;
     }
@@ -148,7 +146,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
             int borderY1, int borderX2, int borderY2) {
         //set targets
         if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
-            || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
+                || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
             //enemy has reached the spot or player has left the spot outside of passive range, find new spot
             this.setMoveTarget(playerX, playerY, true);
         }
@@ -163,14 +161,13 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
             //actually dive in to attk player
             this.passiveTimer = 0;
         }
-        
+
         //move to target
         this.x += Game.getVectorX(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
         this.y += Game.getVectorY(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
 
-                
         //reload and attack
         if (this.reloadTimer < this.reload) {
             this.reloadTimer += Game.updateDelay();
@@ -179,9 +176,10 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
             Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.reloadTimer = 0;
         }
-        
+
     }
 
+    @Override
     public boolean isHit(Projectile p) {
         if (this.isDead()) {
             return false;

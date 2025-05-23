@@ -72,12 +72,12 @@ public class Projectile implements Drawable{
         return this.hitEnemies.contains(h);
     }
 
-    public boolean shouldKillSelf(Background bg) {
+    public boolean shouldKillSelf(Map bg) {
         //only checks for range and going out of screen, not donePierce
         if (this.distanceTraveled > this.attk.range()) {
             return true;
         }
-        return this.x < Background.WALLIMAGESIZE || this.x > bg.getWallX() || this.y < Background.WALLIMAGESIZE || this.y > bg.getWallY();
+        return this.x < Map.BORDERIMAGESIZE || this.x > bg.getWallX() || this.y < Map.BORDERIMAGESIZE || this.y > bg.getWallY();
     }
 
     public AttackStats getAttackStats() {
