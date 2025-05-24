@@ -24,8 +24,6 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     private final AttackStats attk;
 
     private final int passiveRange; //should always stay within this range
-    private int passiveTimer; //timer for when he should dive in
-    private final int passiveTime; //should dive in every movementTime seconds
 
     private final Image image;
 
@@ -40,8 +38,6 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
         this.speed = speed;
         this.reload = reload;
         this.passiveRange = passiveRange;
-        this.passiveTime = passiveTime;
-        this.passiveTimer = (int) (Math.random() * this.passiveTime);
         this.reloadTimer = (int) (Math.random() * this.reload);
         this.attk = attk;
         this.moveTargetX = this.getCenterX();
@@ -67,31 +63,49 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     }
 
     @Override
-    public boolean setBorders(int borderX1, int borderY1, int borderX2, int borderY2) {
-        if (this.x + this.size > borderX2) {
-            this.x = borderX2 - this.size;
-            return true;
-        } else if (this.x < borderX1) {
-            this.x = borderX1;
-            return true;
+    public Tile returnWallX(Tile[][] walls, double dx) {
+        double lowestX = this.getCenterX() - (this.getSize() / 2);
+        double highestX = this.getCenterX() + (this.getSize() / 2);
+        double lowestY = this.getCenterY() - (this.getSize() / 2);
+        double highestY = this.getCenterY() + (this.getSize() / 2);
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                Tile currentTile = walls[i][j];
+                if (!currentTile.isDead()
+                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
+                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
+                    return currentTile;
+                }
+            }
         }
-        if (this.y + this.size > borderY2) {
-            this.y = borderY2 - this.size;
-            return true;
-        } else if (this.y < borderY1) {
-            this.y = borderY1;
-            return true;
+        return null;
+    }
+    
+    @Override
+    public Tile returnWallY(Tile[][] walls, double dy) {
+        double lowestX = this.getCenterX() - (this.getSize() / 2);
+        double highestX = this.getCenterX() + (this.getSize() / 2);
+        double lowestY = this.getCenterY() - (this.getSize() / 2);
+        double highestY = this.getCenterY() + (this.getSize() / 2);
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int)(lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                Tile currentTile = walls[i][j];
+                if (!currentTile.isDead()
+                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
+                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
+                    return currentTile;
+                }
+            } 
         }
-        return false;
+        return null;
     }
 
     //so it can't be overridden
-    private void setMoveTarget(double playerX, double playerY, boolean passive){
+    private void setMoveTarget(double playerX, double playerY){
         double randAngle = Math.random() * Math.PI * 2; //in radians
-        double randMagnitude = Math.random() * this.attk.range();
-        if (passive) {
-            randMagnitude = Math.random() * this.passiveRange;
-        }
+        double randMagnitude = Math.random() * this.passiveRange;
         this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + playerX);
         this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + playerY);
     }
@@ -142,33 +156,35 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
 
 
-    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, int borderX1,
-            int borderY1, int borderX2, int borderY2) {
+    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Tile[][] walls) {
         //set targets
         if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
                 || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
             //enemy has reached the spot or player has left the spot outside of passive range, find new spot
-            this.setMoveTarget(playerX, playerY, true);
+            this.setMoveTarget(playerX, playerY);
         }
-        if (this.setBorders(borderX1, borderY1, borderX2, borderY2)) {
-            this.setMoveTarget(playerX, playerY, true);
-        }
-        if (this.passiveTimer < this.passiveTime) {
-            this.passiveTimer += Game.updateDelay();
-        }
-        if (this.passiveTimer >= this.passiveTime) {
-            this.setMoveTarget(playerX, playerY, false);
-            //actually dive in to attk player
-            this.passiveTimer = 0;
-        }
-
+        
         //move to target
-        this.x += Game.getVectorX(
+        double dx = Game.getVectorX(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
-        this.y += Game.getVectorY(
+        double dy = Game.getVectorY(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
-
-        //reload and attack
+        boolean collided = false;
+        this.x += dx;
+        if (this.returnWallX(walls, dx) != null) {
+            this.x -= dx;
+            collided = true;
+        }
+        this.y += dy;
+        if (this.returnWallY(walls, dy) != null) {
+            this.y -= dy;
+            collided = true;
+        }
+        if (collided) {
+            this.setMoveTarget(playerX, playerY);
+        }
+                
+                //reload and attack
         if (this.reloadTimer < this.reload) {
             this.reloadTimer += Game.updateDelay();
         }

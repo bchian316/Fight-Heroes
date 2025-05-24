@@ -1,4 +1,5 @@
 public interface Moveable {
-    public abstract boolean setBorders(int borderX1, int borderY1, int borderX2, int borderY2);
-    //returns true if sprite collided with wall
+    public abstract Tile returnWallX(Tile[][] walls, double dx);
+    public abstract Tile returnWallY(Tile[][] walls, double dy);
+    //returns Tile if sprite collided with wall
 }

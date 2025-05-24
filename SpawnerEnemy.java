@@ -20,9 +20,9 @@ public abstract class SpawnerEnemy extends Enemy {
         this.spawnTimer = 0;
     }
 
-    public void update(double playerX, double playerY, ArrayList<Projectile> projectiles, int borderX1, int borderY1,
-            int borderX2, int borderY2) {
-        super.update(playerX, playerY, projectiles, borderX1, borderY1, borderX2, borderY2);
+    @Override
+    public void update(double playerX, double playerY, ArrayList<Projectile> projectiles, Tile[][] walls) {
+        super.update(playerX, playerY, projectiles, walls);
         this.spawnTimer += Game.updateDelay();
     }
 }

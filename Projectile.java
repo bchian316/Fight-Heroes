@@ -74,10 +74,8 @@ public class Projectile implements Drawable{
 
     public boolean shouldKillSelf(Map bg) {
         //only checks for range and going out of screen, not donePierce
-        if (this.distanceTraveled > this.attk.range()) {
-            return true;
-        }
-        return this.x < Map.BORDERIMAGESIZE || this.x > bg.getWallX() || this.y < Map.BORDERIMAGESIZE || this.y > bg.getWallY();
+        
+        return this.distanceTraveled > this.attk.range();
     }
 
     public AttackStats getAttackStats() {

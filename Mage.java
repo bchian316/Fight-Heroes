@@ -31,7 +31,7 @@ public abstract class Mage {
         return this.size;
     }
 
-    public int getMaxHealth() {
+    public int getHealth() {
         return this.maxHealth;
     }
 

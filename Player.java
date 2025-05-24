@@ -41,12 +41,12 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
 
     public Player(Mage mage, double x, double y) {
         this.mage = mage;
-        this.x = x - this.mage.getSize() / 2;
-        this.y = y - this.mage.getSize() / 2;
-        this.health = this.mage.getMaxHealth();
+        this.x = x - this.getSize() / 2;
+        this.y = y - this.getSize() / 2;
+        this.health = this.getHealth();
 
         this.image = new ImageIcon("assets/mages/" + this.mage.getName() + ".png").getImage()
-                .getScaledInstance(this.mage.getSize(), this.mage.getSize(), Image.SCALE_DEFAULT);
+                .getScaledInstance(this.getSize(), this.getSize(), Image.SCALE_DEFAULT);
     }
 
     private void heal() {
@@ -55,8 +55,8 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
             if (this.regenTickTimer >= REGENTICKTIME) {
                 regenTickTimer = 0;
                 this.health += this.mage.getRegen();
-                if (this.health > this.mage.getMaxHealth()) {
-                    this.health = this.mage.getMaxHealth();
+                if (this.health > this.getHealth()) {
+                    this.health = this.getHealth();
                 }
             }   
         }
@@ -109,12 +109,20 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         this.reloadTimer = this.mage.getReload();
     }
 
-    public int getSize() {
+    public final int getHealth() {
+        return this.mage.getHealth();
+    }
+
+    public final int getSize() {
         return this.mage.getSize();
     }
 
+    public final int getSpeed() {
+        return this.mage.getSpeed();
+    }
+
     public void fullHeal() {
-        this.health = this.mage.getMaxHealth();
+        this.health = this.getHealth();
     }
     
     @Override
@@ -126,17 +134,17 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     @Override
     public boolean isHit(Projectile p) {
         return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(),
-                this.getCenterY()) <= (p.getSize() + this.mage.getSize()) / 2.0;
+                this.getCenterY()) <= (p.getSize() + this.getSize()) / 2.0;
     }
 
     @Override
     public double getCenterX() {
-        return this.x + mage.getSize() / 2.0;
+        return this.x + getSize() / 2.0;
     }
 
     @Override
     public double getCenterY() {
-        return this.y + mage.getSize() / 2.0;
+        return this.y + getSize() / 2.0;
     }
 
     private void reload() {
@@ -148,7 +156,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         
     }
 
-    public void update(Set<Integer> pressedKeys, int borderX1, int borderY1, int borderX2, int borderY2) {
+    public void update(Set<Integer> pressedKeys, Tile[][] walls) {
         double dx = 0;
         double dy = 0;
         if (pressedKeys.contains(KeyEvent.VK_W)) {
@@ -167,11 +175,14 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         if (magnitude != 0) {//prevent division by 0
             dx /= magnitude;
             dy /= magnitude;
-            this.x += dx * this.mage.getSpeed();
-            this.y += dy * this.mage.getSpeed();
-            this.setBorders(borderX1, borderY1, borderX2, borderY2);
-            //now the player moves at 1 pixel (bc we divided by the distance, and distance/distance = 1)
-            //multiply to get to moveSpeed
+            this.x += dx * this.getSpeed();
+            if (this.returnWallX(walls, dx) != null) { //set x border
+                this.x -= dx * this.getSpeed();
+            }
+            this.y += dy * this.getSpeed();
+            if (this.returnWallY(walls, dy) != null) { //set y border
+                this.y -= dy * this.getSpeed();
+            }
         }
 
         this.reload();
@@ -180,30 +191,50 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     }
 
     @Override
-    public boolean setBorders(int borderX1, int borderY1, int borderX2, int borderY2) {
-        boolean value = false;
-        if (this.x + this.mage.getSize() > borderX2) {
-            this.x = borderX2 - this.mage.getSize();
-            value = true;
-        } else if (this.x < borderX1) {
-            this.x = borderX1;
-            value = true;
+    public Tile returnWallX(Tile[][] walls, double dx) {
+        double lowestX = this.getCenterX() - (this.getSize() / 2);
+        double highestX = this.getCenterX() + (this.getSize() / 2);
+        double lowestY = this.getCenterY() - (this.getSize() / 2);
+        double highestY = this.getCenterY() + (this.getSize() / 2);
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                Tile currentTile = walls[i][j];
+                if (!currentTile.isDead()
+                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
+                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
+                    return currentTile;
+                }
+            }
         }
-        if (this.y + this.mage.getSize() > borderY2) {
-            this.y = borderY2 - this.mage.getSize();
-            value = true;
-        } else if (this.y < borderY1) {
-            this.y = borderY1;
-            value = true;
+        return null;
+    }
+    
+    @Override
+    public Tile returnWallY(Tile[][] walls, double dy) {
+        double lowestX = this.getCenterX() - (this.getSize() / 2);
+        double highestX = this.getCenterX() + (this.getSize() / 2);
+        double lowestY = this.getCenterY() - (this.getSize() / 2);
+        double highestY = this.getCenterY() + (this.getSize() / 2);
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int)(lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                Tile currentTile = walls[i][j];
+                if (!currentTile.isDead()
+                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
+                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
+                    return currentTile;
+                }
+            } 
         }
-        return value;
+        return null;
     }
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         //center x and center y
         this.stopHealing();
-        return this.mage.createProjectiles(this.x + this.mage.getSize()/2, this.y + this.mage.getSize()/2, targetX, targetY);
+        return this.mage.createProjectiles(this.x + this.getSize()/2, this.y + this.getSize()/2, targetX, targetY);
     }
     @Override
     public void draw(Graphics g) {
@@ -217,15 +248,15 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     public void drawHealthBar(Graphics g) {
         //call in draw method
         g.setColor(HEALTHBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() - this.mage.getSize()/2, (int) this.y + this.mage.getSize() + BAROFFSETY,
-                this.mage.getSize(), HEALTHBARHEIGHT);
+        g.fillRect((int) this.getCenterX() - this.getSize()/2, (int) this.y + this.getSize() + BAROFFSETY,
+                this.getSize(), HEALTHBARHEIGHT);
         if (this.isHealing) {
             g.setColor(HEALTHBAR_REGENCOLOR);
-            g.fillRect((int) this.getCenterX() - this.mage.getSize()/2, (int) this.y + this.mage.getSize() + BAROFFSETY,
-                this.mage.getSize(), HEALTHBARHEIGHT);
+            g.fillRect((int) this.getCenterX() - this.getSize()/2, (int) this.y + this.getSize() + BAROFFSETY,
+                this.getSize(), HEALTHBARHEIGHT);
         }
         g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect((int)this.getCenterX() - this.mage.getSize()/2, (int)this.y + this.mage.getSize() + BAROFFSETY, (int)(this.mage.getSize() * ((double)this.health/this.mage.getMaxHealth())), HEALTHBARHEIGHT);
+        g.fillRect((int)this.getCenterX() - this.getSize()/2, (int)this.y + this.getSize() + BAROFFSETY, (int)(this.getSize() * ((double)this.health/this.getHealth())), HEALTHBARHEIGHT);
     }
 
 
@@ -239,7 +270,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
                 Player.BIGHEALTHBARHEIGHT);
         }
         g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.mage.getMaxHealth())), Player.BIGHEALTHBARHEIGHT);
+        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.getHealth())), Player.BIGHEALTHBARHEIGHT);
     }
 
     private void drawReloadBar(Graphics g) {
