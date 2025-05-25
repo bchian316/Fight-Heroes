@@ -1,19 +1,18 @@
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
 public class Tile implements Drawable, hasHealth {
     //3 types of wall: ground, border, and wall
-    public static final int COLLISION_CUSHION = 8; //the wall has an 8 pixel cushion
+    public static final int COLLISION_CUSHION = 8; //the wall has an 8 pixel cushion for entities, not projectiles
 
     public static final int NUM_GROUND_IMAGES = 6;
     public static final int NUM_BORDER_IMAGES = 4;
     public static final int NUM_WALL_IMAGES = 16;
     public static final int IMAGE_SIZE = 50;
 
-    public static final int WALL_MAX_HEALTH = 80;
+    public static final int WALL_MAX_HEALTH = 200;
     public static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / NUM_WALL_IMAGES;
 
     public static final Image[] GROUND_IMAGES = new Image[NUM_GROUND_IMAGES];
@@ -71,10 +70,12 @@ public class Tile implements Drawable, hasHealth {
     }
     
     @Override
-    public void getDamaged(int damage) {
+    public void getDamaged(int damage) {//changes image too
         if (this.breakable && !this.isDead()) {
             this.health -= damage;
         }
+        this.setImage();
+        
     }
 
     @Override
@@ -83,7 +84,7 @@ public class Tile implements Drawable, hasHealth {
             return false;
         }
         
-        return Game.circleRectCollided(p.getCenterX(), p.getCenterY(), p.getSize()/2.0, this.getX(), this.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE);
+        return Game.circleTileCollided(p.getCenterX(), p.getCenterY(), p.getSize()/2.0, this);
     }
     
     @Override
@@ -109,17 +110,5 @@ public class Tile implements Drawable, hasHealth {
             return;
         }
         this.image = Tile.GROUND_IMAGES[(int) (Math.random() * Tile.NUM_GROUND_IMAGES)];
-    }
-
-    public void checkProjectiles(ArrayList<Projectile> projectiles) {
-        for (int i = projectiles.size() - 1; i >= 0; i--) {
-            Projectile p = projectiles.get(i);
-            if (this.isHit(p)) {
-                this.getDamaged(p.getDamage());
-                this.setImage();
-                //remove projectiles if they hit a wall
-                projectiles.remove(i);
-            }
-        }
     }
 }

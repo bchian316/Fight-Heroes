@@ -1,12 +1,12 @@
 public class Level {
     public static final Level[] LEVELS = {
             new Level(new Enemy[] { new Zombie(400, 100)},
-                    new Tile[] {new Tile(100, 100, 80, true),
-                                new Tile(150, 100, 40, true)}), //introduce zombie
-            new Level(new Enemy[] { new Zombie(50, 50),
-                                    new Zombie(250, 50),
-                                    new Zombie(550, 50)},
-                    new Tile[] {new Tile(100, 100, 80, false)}),
+                    new Tile[] {    new Tile(100, 100, 80, true),
+                                    new Tile(150, 100, 40, true)}), //introduce zombie
+            new Level(new Enemy[] { new Zombie(100, 150),
+                                    new Zombie(250, 150),
+                                    new Zombie(550, 150)},
+                    new Tile[] {    new Tile(100, 300, 80, false)}),
             new Level(new Enemy[] { new Zombie(400, 200), //introduce skeleton
                                     new Skeleton(200, 50),
                                     new Skeleton(600, 50)}),
@@ -21,7 +21,13 @@ public class Level {
                                     new Ghost(650, 100),
                                     new ZombieHut(100, 150),
                                     new Mummy(200, 150)}),
-            new Level(new Enemy[] { new Ben(400, 150)}),//miniboss
+            new Level(new Enemy[] { new Ben(400, 150),//miniboss
+                                    new Mummy(200, 150),
+                                    new Mummy(200, 150)},
+                    new Tile[] {    new Tile(350, 300, 150, true),
+                                    new Tile(400, 300, 150, true),
+                                    new Tile(350, 350, 150, true),
+                                    new Tile(400, 350, 150, true)}),
             new Level(new Enemy[] { new Frankenstein(400, 100),//introduce frankenstein
                                     new Skeleton(100, 200),
                                     new Skeleton(700, 200)}),
@@ -29,7 +35,7 @@ public class Level {
                                     new Skeleton(700, 150),
                                     new Zombie(300, 100),
                                     new Mummy(250, 200) }),
-            new Level(new Enemy[] { new Vampire(350, 50), //introduce vampire
+            new Level(new Enemy[] { new Vampire(350, 75), //introduce vampire
                                     new Zombie(500, 150),
                                     new Zombie(700, 150),
                                     new Frankenstein(300, 150) }),
@@ -70,12 +76,13 @@ public class Level {
                                     new Frankenstein(400, 100) }),
             new Level(new Enemy[] { new Wraith(500, 150),
                                     new ZombieHut(300, 100),
-                                    new SkeletonShaman(750, 200),
+                                    new SkeletonShaman(700, 200),
                                     new Ghoul(100, 200),
-                                    new Wight(600, 50),
-                                    new Mummy(400, 300)},
-                    new Tile[] {new Tile(100, 100, 80, true),
-                                new Tile(150, 100, 40, true)}),
+                                    new Wight(600, 150),
+                                    new Mummy(400, 200)},
+                    new Tile[] {    new Tile(350, 300, 0, false),
+                                    new Tile(400, 300, 0, false),
+                                    new Tile(0, 100, 0, true)}),
             new Level(new Enemy[] { new Ben(400, 100)}) //final bosses
     };
 

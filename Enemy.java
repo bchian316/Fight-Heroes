@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
-public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable {
+public abstract class Enemy implements hasHealth, canAttack, Drawable {
     private static final int BAROFFSETY = 5;
 
     private static final int HEALTHBARHEIGHT = 10;
@@ -62,45 +62,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
         return this.y + this.size / 2;
     }
 
-    @Override
-    public Tile returnWallX(Tile[][] walls, double dx) {
-        double lowestX = this.getCenterX() - (this.getSize() / 2);
-        double highestX = this.getCenterX() + (this.getSize() / 2);
-        double lowestY = this.getCenterY() - (this.getSize() / 2);
-        double highestY = this.getCenterY() + (this.getSize() / 2);
-        //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
-                Tile currentTile = walls[i][j];
-                if (!currentTile.isDead()
-                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
-                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
-                    return currentTile;
-                }
-            }
-        }
-        return null;
-    }
     
-    @Override
-    public Tile returnWallY(Tile[][] walls, double dy) {
-        double lowestX = this.getCenterX() - (this.getSize() / 2);
-        double highestX = this.getCenterX() + (this.getSize() / 2);
-        double lowestY = this.getCenterY() - (this.getSize() / 2);
-        double highestY = this.getCenterY() + (this.getSize() / 2);
-        //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int)(lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
-                Tile currentTile = walls[i][j];
-                if (!currentTile.isDead()
-                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
-                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
-                    return currentTile;
-                }
-            } 
-        }
-        return null;
-    }
 
     //so it can't be overridden
     private void setMoveTarget(double playerX, double playerY){
@@ -157,30 +119,41 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable, Moveable 
 
 
     public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Tile[][] walls) {
-        //set targets
-        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
-                || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
-            //enemy has reached the spot or player has left the spot outside of passive range, find new spot
-            this.setMoveTarget(playerX, playerY);
-        }
         
         //move to target
         double dx = Game.getVectorX(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
         double dy = Game.getVectorY(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.speed);
+        
         boolean collided = false;
         this.x += dx;
-        if (this.returnWallX(walls, dx) != null) {
-            this.x -= dx;
+        Tile xTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+        if (xTile != null) {
+            if (dx < 0) {
+                this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+            } else if (dx > 0) {
+                this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION;
+            }
             collided = true;
         }
         this.y += dy;
-        if (this.returnWallY(walls, dy) != null) {
-            this.y -= dy;
+        Tile yTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+        if (yTile != null) { //set y border
+            if (dy < 0) {
+                this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+            } else if (dy > 0) {
+                this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION;
+            }
             collided = true;
         }
         if (collided) {
+            this.setMoveTarget(playerX, playerY);
+        }
+        //set targets
+        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
+                || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
+            //enemy has reached the spot or player has left the spot outside of passive range, find new spot
             this.setMoveTarget(playerX, playerY);
         }
                 

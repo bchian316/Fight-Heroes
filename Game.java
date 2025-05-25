@@ -10,7 +10,7 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
     public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new FireMage(), PLAYERSTARTX, PLAYERSTARTY);
+    private final Player player = new Player(new WaterMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
 
@@ -48,7 +48,6 @@ public class Game extends JPanel {
 
     private void loadLevel(int levelNumber) {
         this.map.setMap(Level.LEVELS[levelNumber - 1].getWalls());
-        System.out.println("load level");
         this.enemies.clear();
         this.enemies.addAll(Arrays.asList(Level.LEVELS[levelNumber - 1].getEnemies()));
     }
@@ -61,7 +60,7 @@ public class Game extends JPanel {
         //will not need this line later once we implement wall physics
         this.player.update(l.getPressedKeys(), this.map.getMap());
         this.checkPlayerProjectiles();
-        Game.removeProjectiles(this.playerProjectiles, this.map);
+        Game.removeProjectiles(this.playerProjectiles);
         Game.updateProjectiles(this.playerProjectiles);
 
         //bad guys
@@ -70,7 +69,7 @@ public class Game extends JPanel {
         this.removeEnemies();
         this.spawnEnemies();
 
-        Game.removeProjectiles(this.enemyProjectiles, this.map);
+        Game.removeProjectiles(this.enemyProjectiles);
         Game.updateProjectiles(this.enemyProjectiles);
 
         //check if projectiles hit walls
@@ -101,10 +100,10 @@ public class Game extends JPanel {
     }
 
     
-    private static void removeProjectiles(ArrayList<Projectile> projectiles, Map map) {
+    private static void removeProjectiles(ArrayList<Projectile> projectiles) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = projectiles.get(i);
-            if (currentProj.shouldKillSelf(map)) {
+            if (currentProj.shouldKillSelf()) {
                 if (currentProj.canSplit()) { //this is for splitting without impact (Gene)
                     Game.addProjectiles(projectiles, currentProj.split());
                 }
@@ -124,18 +123,18 @@ public class Game extends JPanel {
         }
     }
 
-    private void checkPlayerProjectiles() {//removes player projectiles
-        for (int i = playerProjectiles.size() - 1; i >= 0; i--) {
-            Projectile currentProj = playerProjectiles.get(i);
+    private void checkPlayerProjectiles() {//if player projectiles hit enemy
+        for (int i = this.playerProjectiles.size() - 1; i >= 0; i--) {
+            Projectile currentProj = this.playerProjectiles.get(i);
             for (Enemy e : enemies) {
                 if (e.isHit(currentProj) && !currentProj.damagedAlready(e)) {
                     e.getDamaged(currentProj.getDamage());
                     currentProj.addHitEnemy(e);
                     if (currentProj.splitsOnImpact()) {
-                        Game.addProjectiles(playerProjectiles, currentProj.split());
+                        Game.addProjectiles(this.playerProjectiles, currentProj.split());
                     }
                     if (currentProj.donePierce()) {//by piercing too many enemies
-                        playerProjectiles.remove(i);
+                        this.playerProjectiles.remove(i);
                         break;
                     }
                 }
@@ -143,17 +142,17 @@ public class Game extends JPanel {
             //if currentproj is colliding with enemy
         }
     }
-    private void checkEnemyProjectiles() {
-        for (int i = enemyProjectiles.size() - 1; i >= 0; i--) {
-            Projectile currentProj = enemyProjectiles.get(i);
+    private void checkEnemyProjectiles() { //if enemy projectiles hit player
+        for (int i = this.enemyProjectiles.size() - 1; i >= 0; i--) {
+            Projectile currentProj = this.enemyProjectiles.get(i);
             if (this.player.isHit(currentProj) && !currentProj.damagedAlready(this.player)) {
                 this.player.getDamaged(currentProj.getDamage());
                 currentProj.addHitEnemy(player);
                 if (currentProj.splitsOnImpact()) {
-                    Game.addProjectiles(enemyProjectiles, currentProj.split());
+                    Game.addProjectiles(this.enemyProjectiles, currentProj.split());
                 }
                 if (currentProj.donePierce()) {//pierce too many good guys
-                    enemyProjectiles.remove(i);
+                    this.enemyProjectiles.remove(i);
                     break;
                 }
             }
@@ -239,22 +238,21 @@ public class Game extends JPanel {
         return getDistance(0, 0, dx, dy);
     }
 
-    public static boolean circleRectCollided(double cX, double cY, double radius, double rX, double rY, double width,
-            double height) {
+    public static boolean circleTileCollided(double cX, double cY, double radius, Tile tile) {
         double closestX, closestY; //for the rect
-        if (cX >= rX && cX <= rX + width) {
+        if (cX >= tile.getX() && cX <= tile.getX() + Tile.IMAGE_SIZE) {
             closestX = cX;
-        } else if (cX < rX) {
-            closestX = rX;
+        } else if (cX < tile.getX()) {
+            closestX = tile.getX();
         } else {
-            closestX = rX + width;
+            closestX = tile.getX() + Tile.IMAGE_SIZE;
         }
-        if (cY >= rY && cY <= rY + height) {
+        if (cY >= tile.getY() && cY <= tile.getY() + Tile.IMAGE_SIZE) {
             closestY = cY;
-        } else if (cY < rY) {
-            closestY = rY;
+        } else if (cY < tile.getY()) {
+            closestY = tile.getY();
         } else {
-            closestY = rY + height;
+            closestY = tile.getY() + Tile.IMAGE_SIZE;
         }
         return Game.getDistance(closestX, closestY, cX, cY) + Tile.COLLISION_CUSHION < radius;
     }
@@ -266,4 +264,37 @@ public class Game extends JPanel {
     public static double getVectorY(double angle, double magnitude) {
         return Math.sin(angle) * magnitude;
     }
+
+    public static Tile returnWallCollided(Tile[][] walls, double centerX, double centerY, int size) {
+        //doesn't work for only ground tiles
+        double lowestX = centerX - (size / 2);
+        if (lowestX < 0) {
+            lowestX = 0;
+        }
+        double highestX = centerX + (size / 2);
+        if (highestX > GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE) {
+            highestX = GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE; //prevent > 750
+        }
+        double lowestY = centerY - (size / 2);
+        if (lowestY < 0) {
+            lowestY = 0;
+        }
+        double highestY = centerY + (size / 2);
+        if (highestY > GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE) {
+            highestY = GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE; //prevent > 550
+        }
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                //i and j will be small numbers, not coords
+                Tile currentTile = walls[i][j];
+                if (!currentTile.isDead()
+                        && Game.circleTileCollided(centerX, centerY, size / 2, currentTile)) {
+                    return currentTile;
+                }
+            }
+        }
+        return null;
+    }
+    
 }

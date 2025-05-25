@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.ImageIcon;
 
-public class Player implements canAttack, Drawable, hasHealth, Moveable {
+public class Player implements canAttack, Drawable, hasHealth {
     private static final int BAROFFSETY = 5;
 
     //health bar width is the size of the player
@@ -27,7 +27,7 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
     private final Mage mage;
     private double x, y;
     private int health;
-    private int levelNumber = 1;
+    private int levelNumber = 7;
     private double reloadTimer = 0; //player can shoot
 
     private double regenTimer = 0; //when to regen
@@ -176,12 +176,22 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
             dx /= magnitude;
             dy /= magnitude;
             this.x += dx * this.getSpeed();
-            if (this.returnWallX(walls, dx) != null) { //set x border
-                this.x -= dx * this.getSpeed();
+            Tile xTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+            if (xTile != null) { //set x border
+                if (dx < 0) {
+                    this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                } else if (dx > 0) {
+                    this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION;
+                }
             }
             this.y += dy * this.getSpeed();
-            if (this.returnWallY(walls, dy) != null) { //set y border
-                this.y -= dy * this.getSpeed();
+            Tile yTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+            if (yTile != null) { //set y border
+                if (dy < 0) {
+                    this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                } else if (dy > 0) {
+                    this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION;
+                }
             }
         }
 
@@ -190,45 +200,6 @@ public class Player implements canAttack, Drawable, hasHealth, Moveable {
         this.startHealing();
     }
 
-    @Override
-    public Tile returnWallX(Tile[][] walls, double dx) {
-        double lowestX = this.getCenterX() - (this.getSize() / 2);
-        double highestX = this.getCenterX() + (this.getSize() / 2);
-        double lowestY = this.getCenterY() - (this.getSize() / 2);
-        double highestY = this.getCenterY() + (this.getSize() / 2);
-        //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
-                Tile currentTile = walls[i][j];
-                if (!currentTile.isDead()
-                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
-                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
-                    return currentTile;
-                }
-            }
-        }
-        return null;
-    }
-    
-    @Override
-    public Tile returnWallY(Tile[][] walls, double dy) {
-        double lowestX = this.getCenterX() - (this.getSize() / 2);
-        double highestX = this.getCenterX() + (this.getSize() / 2);
-        double lowestY = this.getCenterY() - (this.getSize() / 2);
-        double highestY = this.getCenterY() + (this.getSize() / 2);
-        //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int)(lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
-                Tile currentTile = walls[i][j];
-                if (!currentTile.isDead()
-                        && Game.circleRectCollided(this.getCenterX(), this.getCenterY(), this.getSize() / 2,
-                                currentTile.getX(), currentTile.getY(), Tile.IMAGE_SIZE, Tile.IMAGE_SIZE)) {
-                    return currentTile;
-                }
-            } 
-        }
-        return null;
-    }
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {

@@ -48,9 +48,14 @@ public class Map implements Drawable{
     }
     
     public void checkProjectiles(ArrayList<Projectile> projectiles) {
-        for (int i = 0; i <= this.getWallY(); i += Tile.IMAGE_SIZE) {
-            for (int j = 0; j <= this.getWallX(); j += Tile.IMAGE_SIZE) {
-                this.map[i / Tile.IMAGE_SIZE][j / Tile.IMAGE_SIZE].checkProjectiles(projectiles);
+        for (int i = projectiles.size() - 1; i >= 0; i--) {
+            Projectile p = projectiles.get(i);
+            Tile t = Game.returnWallCollided(this.map, p.getCenterX(), p.getCenterY(),
+                    p.getSize() + Tile.COLLISION_CUSHION);
+            //offset collision cushion
+            if (t != null) {
+                //no splitting
+                t.getDamaged(projectiles.remove(i).getDamage());
             }
         }
     }
