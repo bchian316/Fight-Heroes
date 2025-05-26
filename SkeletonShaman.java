@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SkeletonShaman extends SpawnerEnemy {
     public SkeletonShaman(int x, int y) {
-        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, 400, 2000, new AttackStats(15, 25, 13, 200, 1, new Color(200, 207, 8)), 5000);
+        super("Skeleton Shaman", x, y, 65, 100, 3, 1000, 400, new AttackStats(15, 25, 13, 200, 1, new Color(200, 207, 8)), 5000);
     }
 
 

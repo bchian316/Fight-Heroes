@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public abstract class Mage {
     //PlayerTypes are prebuilt templates for playable classes eg knight, warrior, etc
     //template for building a playable character
-    //MAKE SURE ALL PLAYER SIZES ARE THE RIGHT IMAGE SIZE TOO
+    //NO MAGES FATTER THAN 82.5 based on PLAYERSTARTY
     private final String name;
     private final int size;
     private final int maxHealth; //maximum hp

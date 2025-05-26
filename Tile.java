@@ -5,14 +5,14 @@ import javax.swing.ImageIcon;
 
 public class Tile implements Drawable, hasHealth {
     //3 types of wall: ground, border, and wall
-    public static final int COLLISION_CUSHION = 8; //the wall has an 8 pixel cushion for entities, not projectiles
+    public static final int COLLISION_CUSHION = 8; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
 
     public static final int NUM_GROUND_IMAGES = 6;
     public static final int NUM_BORDER_IMAGES = 4;
     public static final int NUM_WALL_IMAGES = 16;
     public static final int IMAGE_SIZE = 50;
 
-    public static final int WALL_MAX_HEALTH = 200;
+    public static final int WALL_MAX_HEALTH = 240;
     public static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / NUM_WALL_IMAGES;
 
     public static final Image[] GROUND_IMAGES = new Image[NUM_GROUND_IMAGES];
@@ -84,7 +84,7 @@ public class Tile implements Drawable, hasHealth {
             return false;
         }
         
-        return Game.circleTileCollided(p.getCenterX(), p.getCenterY(), p.getSize()/2.0, this);
+        return this.circleCollided(p.getCenterX(), p.getCenterY(), p.getSize());
     }
     
     @Override
@@ -110,5 +110,23 @@ public class Tile implements Drawable, hasHealth {
             return;
         }
         this.image = Tile.GROUND_IMAGES[(int) (Math.random() * Tile.NUM_GROUND_IMAGES)];
+    }
+    public boolean circleCollided(double cX, double cY, double cSize) {
+        double closestX, closestY; //for the rect
+        if (cX > this.x && cX < this.x + Tile.IMAGE_SIZE) {
+            closestX = cX;
+        } else if (cX <= this.x) {
+            closestX = this.x;
+        } else {
+            closestX = this.x + Tile.IMAGE_SIZE;
+        }
+        if (cY > this.y && cY < this.y + Tile.IMAGE_SIZE) {
+            closestY = cY;
+        } else if (cY <= this.y) {
+            closestY = this.y;
+        } else {
+            closestY = this.y + Tile.IMAGE_SIZE;
+        }
+        return Game.getDistance(closestX, closestY, cX, cY) + Tile.COLLISION_CUSHION < cSize/2.0;
     }
 }

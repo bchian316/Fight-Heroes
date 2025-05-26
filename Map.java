@@ -50,11 +50,12 @@ public class Map implements Drawable{
     public void checkProjectiles(ArrayList<Projectile> projectiles) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile p = projectiles.get(i);
-            Tile t = Game.returnWallCollided(this.map, p.getCenterX(), p.getCenterY(),
-                    p.getSize() + Tile.COLLISION_CUSHION);
-            //offset collision cushion
+            Tile t = this.returnWallCollided(p.getCenterX(), p.getCenterY(),
+                    1 + Tile.COLLISION_CUSHION*2);
+            //offset collision cushion, *2 because we want +cushion for radius, but this takes in diameter (size is always diameter)
+            //we only want the center of the projectile to trigger a wall collision (like nita peeking)
             if (t != null) {
-                //no splitting
+                //no splitting (like if gene shoots a wall)
                 t.getDamaged(projectiles.remove(i).getDamage());
             }
         }
@@ -62,5 +63,36 @@ public class Map implements Drawable{
 
     public Tile[][] getMap() {
         return this.map;
+    }
+    public Tile returnWallCollided(double centerX, double centerY, int size) {
+        //doesn't work for only ground tiles
+        double lowestX = centerX - (size / 2);
+        if (lowestX < 0) {
+            lowestX = 0;
+        }
+        double highestX = centerX + (size / 2);
+        if (highestX > GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE) {
+            highestX = GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE; //prevent > 750
+        }
+        double lowestY = centerY - (size / 2);
+        if (lowestY < 0) {
+            lowestY = 0;
+        }
+        double highestY = centerY + (size / 2);
+        if (highestY > GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE) {
+            highestY = GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE; //prevent > 550
+        }
+        //lowestXY and highestXY will be coords - check all walls between these ranges
+        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+                //i and j will be small numbers, not coords
+                Tile currentTile = this.map[i][j];
+                if (!currentTile.isDead()
+                        && currentTile.circleCollided(centerX, centerY, size)) {
+                    return currentTile;
+                }
+            }
+        }
+        return null;
     }
 }

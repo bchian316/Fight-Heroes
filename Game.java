@@ -9,8 +9,8 @@ import javax.swing.Timer;
 public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
-    public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-150;
-    private final Player player = new Player(new WaterMage(), PLAYERSTARTX, PLAYERSTARTY);
+    public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-175;
+    private final Player player = new Player(new WaveMage(), PLAYERSTARTX, PLAYERSTARTY);
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
 
@@ -18,7 +18,6 @@ public class Game extends JPanel {
     
     private final Listener l = new Listener(this);
     private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
-
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> enemyProjectiles = new ArrayList<>();
 
@@ -58,7 +57,7 @@ public class Game extends JPanel {
             System.exit(0);
         }
         //will not need this line later once we implement wall physics
-        this.player.update(l.getPressedKeys(), this.map.getMap());
+        this.player.update(l.getPressedKeys(), this.map);
         this.checkPlayerProjectiles();
         Game.removeProjectiles(this.playerProjectiles);
         Game.updateProjectiles(this.playerProjectiles);
@@ -162,7 +161,7 @@ public class Game extends JPanel {
     
     private void updateEnemies() {
         for (Enemy e : this.enemies) {
-            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, this.map.getMap());
+            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, this.map);
         }
     }
 
@@ -237,25 +236,6 @@ public class Game extends JPanel {
     public static double getDistance(double dx, double dy) {
         return getDistance(0, 0, dx, dy);
     }
-
-    public static boolean circleTileCollided(double cX, double cY, double radius, Tile tile) {
-        double closestX, closestY; //for the rect
-        if (cX >= tile.getX() && cX <= tile.getX() + Tile.IMAGE_SIZE) {
-            closestX = cX;
-        } else if (cX < tile.getX()) {
-            closestX = tile.getX();
-        } else {
-            closestX = tile.getX() + Tile.IMAGE_SIZE;
-        }
-        if (cY >= tile.getY() && cY <= tile.getY() + Tile.IMAGE_SIZE) {
-            closestY = cY;
-        } else if (cY < tile.getY()) {
-            closestY = tile.getY();
-        } else {
-            closestY = tile.getY() + Tile.IMAGE_SIZE;
-        }
-        return Game.getDistance(closestX, closestY, cX, cY) + Tile.COLLISION_CUSHION < radius;
-    }
     
     public static double getVectorX(double angle, double magnitude) {
         return Math.cos(angle) * magnitude;
@@ -264,37 +244,4 @@ public class Game extends JPanel {
     public static double getVectorY(double angle, double magnitude) {
         return Math.sin(angle) * magnitude;
     }
-
-    public static Tile returnWallCollided(Tile[][] walls, double centerX, double centerY, int size) {
-        //doesn't work for only ground tiles
-        double lowestX = centerX - (size / 2);
-        if (lowestX < 0) {
-            lowestX = 0;
-        }
-        double highestX = centerX + (size / 2);
-        if (highestX > GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE) {
-            highestX = GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE; //prevent > 750
-        }
-        double lowestY = centerY - (size / 2);
-        if (lowestY < 0) {
-            lowestY = 0;
-        }
-        double highestY = centerY + (size / 2);
-        if (highestY > GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE) {
-            highestY = GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE; //prevent > 550
-        }
-        //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
-                //i and j will be small numbers, not coords
-                Tile currentTile = walls[i][j];
-                if (!currentTile.isDead()
-                        && Game.circleTileCollided(centerX, centerY, size / 2, currentTile)) {
-                    return currentTile;
-                }
-            }
-        }
-        return null;
-    }
-    
 }

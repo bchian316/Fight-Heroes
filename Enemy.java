@@ -27,7 +27,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable {
 
     private final Image image;
 
-    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int passiveTime,
+    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange,
             AttackStats attk) {
         this.x = (double) (x - size / 2);
         this.y = (double) (y - size / 2);
@@ -65,24 +65,20 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable {
     
 
     //so it can't be overridden
-    private void setMoveTarget(double playerX, double playerY){
+    private void setMoveTarget(double playerX, double playerY, boolean manuever) {
+        //manuever if hit wall, no manuever if pursuing player
         double randAngle = Math.random() * Math.PI * 2; //in radians
+        if (manuever) {
+            this.moveTargetX = (int) (Game.getVectorX(randAngle, this.size) + this.getCenterX());
+            this.moveTargetY = (int) (Game.getVectorY(randAngle, this.size) + this.getCenterY());
+            return;
+        }
         double randMagnitude = Math.random() * this.passiveRange;
         this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + playerX);
         this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + playerY);
     }
-
-    public int getSize() {
-        return this.size;
-    }
-
-    public int getSpeed() {
-        return this.speed;
-    }
     
-    public Image getImage() {
-        return this.image;
-    }
+    
 
     @Override
     public void getDamaged(int damage) {
@@ -110,7 +106,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(this.getImage(), (int) this.x, (int) this.y, null);
+        g.drawImage(this.image, (int) this.x, (int) this.y, null);
         this.drawHealthBar(g);
     }
 
@@ -118,7 +114,7 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable {
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
 
 
-    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Tile[][] walls) {
+    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
         
         //move to target
         double dx = Game.getVectorX(
@@ -128,33 +124,31 @@ public abstract class Enemy implements hasHealth, canAttack, Drawable {
         
         boolean collided = false;
         this.x += dx;
-        Tile xTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+        Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (xTile != null) {
+            // the +-1 stops the weird glitch where a fast enemy keeps triggering a wall collision
             if (dx < 0) {
-                this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
             } else if (dx > 0) {
-                this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION;
+                this.x = xTile.getX() - this.size + Tile.COLLISION_CUSHION - 1;
             }
             collided = true;
         }
         this.y += dy;
-        Tile yTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+        Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (yTile != null) { //set y border
             if (dy < 0) {
-                this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
             } else if (dy > 0) {
-                this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION;
+                this.y = yTile.getY() - this.size + Tile.COLLISION_CUSHION - 1;
             }
             collided = true;
         }
-        if (collided) {
-            this.setMoveTarget(playerX, playerY);
-        }
-        //set targets
-        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
+        if (collided || Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.speed
                 || Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
             //enemy has reached the spot or player has left the spot outside of passive range, find new spot
-            this.setMoveTarget(playerX, playerY);
+            //if enemy has collided with wall, manuever
+            this.setMoveTarget(playerX, playerY, collided);
         }
                 
                 //reload and attack

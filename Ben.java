@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Ben extends SpawnerEnemy {
     public static int SPAWN_RANGE = 200;
     public Ben(int x, int y) {
-        super("Ben", x, y, 200, 300, 2, 3500, 800, 5000, new AttackStats(16, 50, 13, 250, 1, new Color(222, 140, 15), false,
+        super("Ben", x, y, 200, 300, 2, 3500, 800, new AttackStats(16, 50, 13, 250, 1, new Color(222, 140, 15), false,
                 new AttackStats(5, 25, 10, 500, 2, new Color(252, 170, 45))), 12000);
     }
 

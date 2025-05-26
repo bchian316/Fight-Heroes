@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Wraith extends SpawnerEnemy {
     public Wraith(int x, int y) {
-        super("Wraith", x, y, 60, 100, 3, 1500, 600, 4000,
+        super("Wraith", x, y, 60, 100, 3, 1500, 600,
                 new AttackStats(25, 40, 15, 200, 1, new Color(102, 102, 102), false,
                         new AttackStats(20, 25, 10, 200, 2, new Color(4, 189, 35), false,
                                 new AttackStats(15, 20, 8, 200, 2, new Color(0, 105, 17)))),
-        2000);
+        2500);
     }
 
     @Override

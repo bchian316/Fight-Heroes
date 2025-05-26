@@ -27,8 +27,8 @@ public class Player implements canAttack, Drawable, hasHealth {
     private final Mage mage;
     private double x, y;
     private int health;
-    private int levelNumber = 7;
-    private double reloadTimer = 0; //player can shoot
+    private int levelNumber = 1;
+    private double reloadTimer; //player can shoot
 
     private double regenTimer = 0; //when to regen
     private static final double REGENTIME = 3000; //3secs for regen
@@ -44,6 +44,7 @@ public class Player implements canAttack, Drawable, hasHealth {
         this.x = x - this.getSize() / 2;
         this.y = y - this.getSize() / 2;
         this.health = this.getHealth();
+        this.reloadTimer = this.mage.getReload(); //start at loaded
 
         this.image = new ImageIcon("assets/mages/" + this.mage.getName() + ".png").getImage()
                 .getScaledInstance(this.getSize(), this.getSize(), Image.SCALE_DEFAULT);
@@ -152,11 +153,11 @@ public class Player implements canAttack, Drawable, hasHealth {
         this.reloadTimer += Game.updateDelay();
         if (this.reloadTimer > this.mage.getReload()) {
             reloadTimer = this.mage.getReload();
-        }   
+        }
         
     }
 
-    public void update(Set<Integer> pressedKeys, Tile[][] walls) {
+    public void update(Set<Integer> pressedKeys, Map map) {
         double dx = 0;
         double dy = 0;
         if (pressedKeys.contains(KeyEvent.VK_W)) {
@@ -176,21 +177,21 @@ public class Player implements canAttack, Drawable, hasHealth {
             dx /= magnitude;
             dy /= magnitude;
             this.x += dx * this.getSpeed();
-            Tile xTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+            Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize());
             if (xTile != null) { //set x border
                 if (dx < 0) {
-                    this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                    this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
                 } else if (dx > 0) {
-                    this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION;
+                    this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION - 1;
                 }
             }
             this.y += dy * this.getSpeed();
-            Tile yTile = Game.returnWallCollided(walls, this.getCenterX(), this.getCenterY(), this.getSize());
+            Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize());
             if (yTile != null) { //set y border
                 if (dy < 0) {
-                    this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION;
+                    this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
                 } else if (dy > 0) {
-                    this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION;
+                    this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION - 1;
                 }
             }
         }
