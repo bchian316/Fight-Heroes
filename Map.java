@@ -9,40 +9,40 @@ public class Map implements Drawable{
     public Map(int WIDTH, int HEIGHT) {
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
-        this.map = new Tile[this.getWallY() / Tile.IMAGE_SIZE + 1][this.getWallX() / Tile.IMAGE_SIZE + 1];
+        this.map = new Tile[this.getWallY() / Tile.SIZE + 1][this.getWallX() / Tile.SIZE + 1];
     }
 
     public final int getWallX() {
-        return this.WIDTH - Tile.IMAGE_SIZE - GameRunner.WIDTHOFFSET;
+        return this.WIDTH - Tile.SIZE - GameRunner.WIDTHOFFSET;
     }
 
     public final int getWallY() {
-        return this.HEIGHT - Tile.IMAGE_SIZE - GameRunner.HEIGHTOFFSET;
+        return this.HEIGHT - Tile.SIZE - GameRunner.HEIGHTOFFSET;
     }
     
     public final void setMap(Tile[] walls) {
         //called every new level - takes custom walls
-        for (int i = 0; i <= this.getWallY(); i += Tile.IMAGE_SIZE) {
-            for (int j = 0; j <= this.getWallX(); j += Tile.IMAGE_SIZE) {
+        for (int i = 0; i <= this.getWallY(); i += Tile.SIZE) {
+            for (int j = 0; j <= this.getWallX(); j += Tile.SIZE) {
                 if (i == 0 || j == 0 || i == this.getWallY() || j == this.getWallX()) {//sets unbreakable walls in border
-                    this.map[i / Tile.IMAGE_SIZE][j / Tile.IMAGE_SIZE] = new Tile(j, i, 0, false);
+                    this.map[i / Tile.SIZE][j / Tile.SIZE] = new Tile(j, i);
                 } else {
-                    this.map[i / Tile.IMAGE_SIZE][j / Tile.IMAGE_SIZE] = new Tile(j, i, 0, true);
+                    this.map[i / Tile.SIZE][j / Tile.SIZE] = new Tile(j, i, 0);
                 }
-                this.map[i / Tile.IMAGE_SIZE][j / Tile.IMAGE_SIZE].setImage();
+                this.map[i / Tile.SIZE][j / Tile.SIZE].setImage();
             }
         }
         for (Tile t : walls) {
-            this.map[t.getY() / Tile.IMAGE_SIZE][t.getX() / Tile.IMAGE_SIZE] = t;
+            this.map[t.getY() / Tile.SIZE][t.getX() / Tile.SIZE] = t;
             t.setImage();
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        for (int i = 0; i <= this.getWallY(); i += Tile.IMAGE_SIZE) {
-            for (int j = 0; j <= this.getWallX(); j += Tile.IMAGE_SIZE) {
-                this.map[i / Tile.IMAGE_SIZE][j / Tile.IMAGE_SIZE].draw(g);
+        for (int i = 0; i <= this.getWallY(); i += Tile.SIZE) {
+            for (int j = 0; j <= this.getWallX(); j += Tile.SIZE) {
+                this.map[i / Tile.SIZE][j / Tile.SIZE].draw(g);
             }
         }
     }
@@ -51,7 +51,7 @@ public class Map implements Drawable{
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile p = projectiles.get(i);
             Tile t = this.returnWallCollided(p.getCenterX(), p.getCenterY(),
-                    1 + Tile.COLLISION_CUSHION*2);
+                    2 + Tile.COLLISION_CUSHION*2);
             //offset collision cushion, *2 because we want +cushion for radius, but this takes in diameter (size is always diameter)
             //we only want the center of the projectile to trigger a wall collision (like nita peeking)
             if (t != null) {
@@ -71,20 +71,20 @@ public class Map implements Drawable{
             lowestX = 0;
         }
         double highestX = centerX + (size / 2);
-        if (highestX > GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE) {
-            highestX = GameRunner.SCREENWIDTH - Tile.IMAGE_SIZE; //prevent > 750
+        if (highestX > GameRunner.SCREENWIDTH - Tile.SIZE) {
+            highestX = GameRunner.SCREENWIDTH - Tile.SIZE; //prevent > 750
         }
         double lowestY = centerY - (size / 2);
         if (lowestY < 0) {
             lowestY = 0;
         }
         double highestY = centerY + (size / 2);
-        if (highestY > GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE) {
-            highestY = GameRunner.SCREENHEIGHT - Tile.IMAGE_SIZE; //prevent > 550
+        if (highestY > GameRunner.SCREENHEIGHT - Tile.SIZE) {
+            highestY = GameRunner.SCREENHEIGHT - Tile.SIZE; //prevent > 550
         }
         //lowestXY and highestXY will be coords - check all walls between these ranges
-        for (int i = (int) (lowestY / Tile.IMAGE_SIZE); i < highestY / Tile.IMAGE_SIZE; i++) {//rows first
-            for (int j = (int) (lowestX / Tile.IMAGE_SIZE); j < highestX / Tile.IMAGE_SIZE; j++) {
+        for (int i = (int) (lowestY / Tile.SIZE); i < highestY / Tile.SIZE; i++) {//rows first
+            for (int j = (int) (lowestX / Tile.SIZE); j < highestX / Tile.SIZE; j++) {
                 //i and j will be small numbers, not coords
                 Tile currentTile = this.map[i][j];
                 if (!currentTile.isDead()

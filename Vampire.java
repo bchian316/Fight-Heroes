@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Vampire extends Enemy {
 
     public Vampire(int x, int y) {
-        super("Vampire", x, y, 35, 50, 3, 3000, 600, new AttackStats(30, 25, 25, 400, 1, new Color(255, 18, 18)));
+        super("Vampire", x, y, 35, 40, 3, 3500, 600, new AttackStats(30, 25, 25, 600, 1, new Color(255, 18, 18)));
     }
 
 

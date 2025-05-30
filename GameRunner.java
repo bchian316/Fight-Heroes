@@ -13,7 +13,7 @@ public class GameRunner {
 
 		window.setSize(SCREENWIDTH,SCREENHEIGHT);
         window.setContentPane(g);
-        window.setLocation(150,50);
+        window.setLocation(150,25);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
         window.setResizable(false);

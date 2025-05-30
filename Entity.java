@@ -21,8 +21,9 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
 
     public Entity(String name, String addOn, int x, int y, int size, int health, int speed, int reload, AttackStats attk) {
         this.name = name;
-        this.x = this.getCenterX();
-        this.y = this.getCenterY();
+        //no going out of screen
+        this.x = Math.max(Math.min(x - size/2.0, GameRunner.SCREENWIDTH - size - Tile.SIZE), Tile.SIZE);
+        this.y = Math.max(Math.min(y - size/2.0, GameRunner.SCREENHEIGHT - size - Tile.SIZE), Tile.SIZE);
         this.size = size;
         this.health = health;
         this.maxHealth = health;
@@ -40,13 +41,18 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
                 mage.getAttackStats());
     }
 
-    public void changeX(double change) {
-        this.x += change;
+    public double getX() {
+        return this.x;
     }
 
-    public void changeY(double change) {
-        this.y += change;
+    public double getY() {
+        return this.y;
     }
+
+    public int getSize() {
+        return this.size;
+    }
+
     public void setX(double value) {
         this.x = value;
     }
@@ -55,22 +61,52 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
         this.y = value;
     }
 
-    public int setBorders(Map map, double dx, double dy){
-        //returns true if there is collision
+    public int setBorders(Map map, double dx, double dy) {
+        //this implements moving also
+        //returns 1 or 2 if there is collision
         //this method sets the entity to a position where it is not colliding with walls (squares)
         int collisions = 0;
         this.x += dx;
         Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (xTile != null) {
-            // the +-1 stops the weird glitch where a fast enemy keeps triggering a wall collision
-            this.x = Game.getVectorX(Game.getAngle(0, 0, dx, dy), this.size/2.0);
+            //the vectorX expression sets the centerX to where it should be, subtract half of size to get the x (top left corner)
+            /*double centerX = xTile.getX() + Tile.SIZE + Game.getVectorX(
+                    Game.getAngle(xTile.getClosestX(this.getCenterX()), xTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
+                    this.size / 2.0); //where the centerX should be
+            System.out.print("CenterX:");
+            System.out.println(centerX);
+            this.x = centerX - this.size / 2.0; */
+            this.x -= dx;
             collisions++;
         }
-        this.y += dy;
+
+        this.y += dy; //now centerY changes, we want to keep the past one
         Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (yTile != null) { //set y border
-            this.x = Game.getVectorY(Game.getAngle(0, 0, dx, dy), this.size/2.0);
+            /*double centerY = yTile.getY() + Tile.SIZE + Game.getVectorY(
+                    Game.getAngle(yTile.getClosestX(this.getCenterX()), yTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
+                    this.size / 2.0); //where the centerY should be
+            System.out.print("CenterY:");
+            System.out.println(centerY);
+            this.y = centerY - this.size/2.0; */
+            this.y -= dy; //cancel movement
             collisions++;
+        }
+
+        //allocate for wall movement reduction
+        if(xTile == null && yTile != null){
+            //collision on y but not x (left or right)
+            if (dx > 0) {
+                this.x += this.speed - dx;
+            } else if (dx < 0) {
+                this.x -= this.speed + dx;
+            }
+        } else if (xTile != null && yTile == null) {
+            if (dy > 0) {
+                this.y += this.speed - dy;
+            } else if (dy < 0) {
+                this.y -= this.speed + dy;
+            }
         }
         return collisions; //if is 2, then the entity is stuck (cuz it is blocked on 2 sides)
         //if is one, then he only hit one wall and is 'sliding'
@@ -90,21 +126,31 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
         }
     }
 
-    public void load(){
+    public void load() {
         this.reloadTimer = this.reload;
     }
-    
-    //these two are for drawing health bars later
-    public int getHealth() {
-        return this.health;
-    }
 
-    public int getMaxHealth() {
-        return this.maxHealth;
+    public void unload() {
+        this.reloadTimer = 0;
+    }
+    
+    public double getReloadFraction() {
+        return ((double) this.reloadTimer) / ((double) this.reload);
+    }
+    public double getHealthFraction() {
+        return ((double) this.health) / ((double) this.maxHealth);
     }
 
     public void fullHeal() {
         this.health = this.maxHealth;
+    }
+
+    public void heal(int health) {
+        //only adds health, not for regen purposes
+        this.health += health;
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth;
+        }
     }
 
     @Override
@@ -142,6 +188,15 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
         //draw health bars by overriding
     }
 
-    public abstract ArrayList<Projectile> attack();
+    @Override
+    public abstract ArrayList<Projectile> attack(double targetX, double targetY);
+
+    @Override
+    public boolean isHit(Projectile p) {
+        if (this.isDead()) {
+            return false;
+        }
+        return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(), this.getCenterY()) < (p.getSize() + this.size)/2.0;
+    }
 
 }

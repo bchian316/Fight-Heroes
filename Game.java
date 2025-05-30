@@ -2,15 +2,19 @@ import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Game extends JPanel {
     public static final double FPS = 30.0;
-    public static final double PLAYERSTARTX = ((double)GameRunner.SCREENWIDTH)/2;
-    public static final double PLAYERSTARTY = GameRunner.SCREENHEIGHT-175;
-    private final Player player = new Player(new WaveMage(), PLAYERSTARTX, PLAYERSTARTY);
+    public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH/2;
+    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 175;
+    public static final Mage[] mages = { new DarkMage(), new DonovanMage(), new EarthMage(), new ExplodyMage(),
+            new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
+            new PulseMage(), new WaterMage(), new WaveMage(), new WindMage() };
+    private final Player player;
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
 
@@ -21,14 +25,21 @@ public class Game extends JPanel {
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> enemyProjectiles = new ArrayList<>();
 
-    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Tile.IMAGE_SIZE);
+    private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Tile.SIZE);
     
     public Game() {
         super();
+        //choose player
+        System.out.println("0-13");
+        try (Scanner scanner = new Scanner(System.in)) {
+            this.player = new Player(Game.mages[scanner.nextInt()], PLAYERSTARTX, PLAYERSTARTY);
+        }
+
         ActionListener action = _ -> this.update(); //create an action listener using lambda expression
         new Timer((int) (1000.0 / Game.FPS), action).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
         //no need reference to timer cuz it already does stuff itself
+        
         this.loadLevel(this.player.getLevelNumber());
     }
 
@@ -41,14 +52,14 @@ public class Game extends JPanel {
         if (this.player.isLoaded()) {
             Game.addProjectiles(this.playerProjectiles,
                     this.player.attack(targetX, targetY));
-            this.player.resetReloadTimer();
+            this.player.unload();
         }
     }
 
     private void loadLevel(int levelNumber) {
-        this.map.setMap(Level.LEVELS[levelNumber - 1].getWalls());
+        this.map.setMap(Level.LEVELS[levelNumber].getWalls());
         this.enemies.clear();
-        this.enemies.addAll(Arrays.asList(Level.LEVELS[levelNumber - 1].getEnemies()));
+        this.enemies.addAll(Arrays.asList(Level.LEVELS[levelNumber].getEnemies()));
     }
     
     private void update() {//update frame

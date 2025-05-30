@@ -1,35 +1,31 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Set;
-import javax.swing.ImageIcon;
 
-public class Player implements canAttack, Drawable, hasHealth {
+public class Player extends Entity {
     private static final int BAROFFSETY = 5;
 
-    //health bar width is the size of the player
     private static final int BIGHEALTHBARHEIGHT = 15;
+    private static final int HEALTHBARWIDTH = 50;
     private static final int HEALTHBARHEIGHT = 10;
     private static final Color HEALTHBAR_BGCOLOR = new Color(0, 0, 0);
     private static final Color HEALTHBAR_FGCOLOR = new Color(0, 255, 0); //display green over red
     private static final Color HEALTHBAR_REGENCOLOR = new Color(0, 150, 0); //display green over red
 
-
+    private static final int BIGRELOADBARWIDTH = 15;
     private static final int RELOADBARWIDTH = 50;
     private static final int RELOADBARHEIGHT = 10;
     private static final Color RELOADBAR_BGCOLOR = new Color(80, 80, 80);
     private static final Color RELOADBAR_MGCOLOR = new Color(150, 150, 150);
     private static final Color RELOADBAR_FGCOLOR = new Color(190, 190, 0); //dark gray, light gray, then yellow
 
+    private final Mage mage; //just for attacking
 
-    private final Mage mage;
-    private double x, y;
-    private int health;
-    private int levelNumber = 1;
-    private double reloadTimer; //player can shoot
+    private int levelNumber = 18;
 
+    private final int regenRate;
     private double regenTimer = 0; //when to regen
     private static final double REGENTIME = 3000; //3secs for regen
     private double regenTickTimer = 0;
@@ -37,17 +33,11 @@ public class Player implements canAttack, Drawable, hasHealth {
     private boolean isHealing = false; //if regening
     
 
-    private final Image image;
-
-    public Player(Mage mage, double x, double y) {
+    public Player(Mage mage, int x, int y) {
+        super("mages", x, y, mage);
         this.mage = mage;
-        this.x = x - this.getSize() / 2;
-        this.y = y - this.getSize() / 2;
-        this.health = this.getHealth();
-        this.reloadTimer = this.mage.getReload(); //start at loaded
-
-        this.image = new ImageIcon("assets/mages/" + this.mage.getName() + ".png").getImage()
-                .getScaledInstance(this.getSize(), this.getSize(), Image.SCALE_DEFAULT);
+        this.regenRate = mage.getRegen();
+        this.load();
     }
 
     private void heal() {
@@ -55,10 +45,7 @@ public class Player implements canAttack, Drawable, hasHealth {
             this.regenTickTimer += Game.updateDelay();
             if (this.regenTickTimer >= REGENTICKTIME) {
                 regenTickTimer = 0;
-                this.health += this.mage.getRegen();
-                if (this.health > this.getHealth()) {
-                    this.health = this.getHealth();
-                }
+                super.heal(this.regenRate);
             }   
         }
     }
@@ -79,14 +66,9 @@ public class Player implements canAttack, Drawable, hasHealth {
         this.regenTimer = 0;
     }
 
-    @Override
-    public boolean isDead() {
-        return this.health <= 0;
-    }
-
     public void setToStartCoords() {
-        this.x = Game.PLAYERSTARTX;
-        this.y = Game.PLAYERSTARTY;
+        this.setX(Game.PLAYERSTARTX);
+        this.setY(Game.PLAYERSTARTY);
     }
 
     public int getLevelNumber() {
@@ -96,65 +78,11 @@ public class Player implements canAttack, Drawable, hasHealth {
     public void incrementLevelNumber() {
         this.levelNumber++;
     }
-
-    @Override
-    public boolean isLoaded() {
-        return (this.reloadTimer == this.mage.getReload());
-    }
-
-    public void resetReloadTimer() {
-        this.reloadTimer = 0;
-    }
-
-    public void load() {//instantly load reload timer
-        this.reloadTimer = this.mage.getReload();
-    }
-
-    public final int getHealth() {
-        return this.mage.getHealth();
-    }
-
-    public final int getSize() {
-        return this.mage.getSize();
-    }
-
-    public final int getSpeed() {
-        return this.mage.getSpeed();
-    }
-
-    public void fullHeal() {
-        this.health = this.getHealth();
-    }
     
     @Override
     public void getDamaged(int damage) {
+        super.getDamaged(damage);
         this.stopHealing();
-        this.health -= damage;
-    }
-
-    @Override
-    public boolean isHit(Projectile p) {
-        return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(),
-                this.getCenterY()) <= (p.getSize() + this.getSize()) / 2.0;
-    }
-
-    @Override
-    public double getCenterX() {
-        return this.x + getSize() / 2.0;
-    }
-
-    @Override
-    public double getCenterY() {
-        return this.y + getSize() / 2.0;
-    }
-
-    private void reload() {
-        
-        this.reloadTimer += Game.updateDelay();
-        if (this.reloadTimer > this.mage.getReload()) {
-            reloadTimer = this.mage.getReload();
-        }
-        
     }
 
     public void update(Set<Integer> pressedKeys, Map map) {
@@ -176,24 +104,9 @@ public class Player implements canAttack, Drawable, hasHealth {
         if (magnitude != 0) {//prevent division by 0
             dx /= magnitude;
             dy /= magnitude;
-            this.x += dx * this.getSpeed();
-            Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize());
-            if (xTile != null) { //set x border
-                if (dx < 0) {
-                    this.x = xTile.getX() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
-                } else if (dx > 0) {
-                    this.x = xTile.getX() - this.getSize() + Tile.COLLISION_CUSHION - 1;
-                }
-            }
-            this.y += dy * this.getSpeed();
-            Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize());
-            if (yTile != null) { //set y border
-                if (dy < 0) {
-                    this.y = yTile.getY() + Tile.IMAGE_SIZE - Tile.COLLISION_CUSHION + 1;
-                } else if (dy > 0) {
-                    this.y = yTile.getY() - this.getSize() + Tile.COLLISION_CUSHION - 1;
-                }
-            }
+            dx *= this.getSpeed();
+            dy *= this.getSpeed();
+            this.setBorders(map, dx, dy);
         }
 
         this.reload();
@@ -206,13 +119,14 @@ public class Player implements canAttack, Drawable, hasHealth {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         //center x and center y
         this.stopHealing();
-        return this.mage.createProjectiles(this.x + this.getSize()/2, this.y + this.getSize()/2, targetX, targetY);
+        return this.mage.createProjectiles(this.getCenterX(), this.getCenterY(), targetX, targetY);
     }
     @Override
     public void draw(Graphics g) {
-        g.drawImage(this.image, (int) this.x, (int) this.y, null);
+        super.draw(g);
         this.drawReloadBar(g);
         this.drawHealthBar(g);
+        this.drawBigReloadBar(g);
         this.drawBigHealthBar(g);
     }
 
@@ -220,42 +134,57 @@ public class Player implements canAttack, Drawable, hasHealth {
     public void drawHealthBar(Graphics g) {
         //call in draw method
         g.setColor(HEALTHBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() - this.getSize()/2, (int) this.y + this.getSize() + BAROFFSETY,
-                this.getSize(), HEALTHBARHEIGHT);
+        g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH/2, (int) this.getY() + this.getSize() + BAROFFSETY,
+                Player.HEALTHBARWIDTH, Player.HEALTHBARHEIGHT);
         if (this.isHealing) {
             g.setColor(HEALTHBAR_REGENCOLOR);
-            g.fillRect((int) this.getCenterX() - this.getSize()/2, (int) this.y + this.getSize() + BAROFFSETY,
-                this.getSize(), HEALTHBARHEIGHT);
+            g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH/2, (int) this.getY() + this.getSize() + BAROFFSETY,
+                Player.HEALTHBARWIDTH, Player.HEALTHBARHEIGHT);
         }
         g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect((int)this.getCenterX() - this.getSize()/2, (int)this.y + this.getSize() + BAROFFSETY, (int)(this.getSize() * ((double)this.health/this.getHealth())), HEALTHBARHEIGHT);
+        g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH / 2, (int) this.getY() + this.getSize() + BAROFFSETY,
+                (int)(Player.HEALTHBARWIDTH * this.getHealthFraction()), Player.HEALTHBARHEIGHT);
     }
 
 
     private void drawBigHealthBar(Graphics g) {
-        g.setColor(HEALTHBAR_BGCOLOR);
+        g.setColor(Player.HEALTHBAR_BGCOLOR);
         g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH,
                 Player.BIGHEALTHBARHEIGHT);
         if (this.isHealing) {
-            g.setColor(HEALTHBAR_REGENCOLOR);
+            g.setColor(Player.HEALTHBAR_REGENCOLOR);
             g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, GameRunner.SCREENWIDTH,
                 Player.BIGHEALTHBARHEIGHT);
         }
-        g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * ((double)this.health/this.getHealth())), Player.BIGHEALTHBARHEIGHT);
+        g.setColor(Player.HEALTHBAR_FGCOLOR);
+        g.fillRect(0, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET, (int)(GameRunner.SCREENWIDTH * this.getHealthFraction()), Player.BIGHEALTHBARHEIGHT);
     }
 
     private void drawReloadBar(Graphics g) {
         g.setColor(Player.RELOADBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH/2, (int) this.y - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
+        g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH / 2,
+                (int) this.getY() - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
                 Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);
         g.setColor(Player.RELOADBAR_MGCOLOR);
-        g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH / 2, (int) this.y - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
-                (int)(Player.RELOADBARWIDTH * (this.reloadTimer / this.mage.getReload())), Player.HEALTHBARHEIGHT);
-        if(this.isLoaded()){
+        g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH / 2,
+                (int) this.getY() - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
+                (int) (Player.RELOADBARWIDTH * this.getReloadFraction()), Player.HEALTHBARHEIGHT);
+        if (this.isLoaded()) {
             g.setColor(Player.RELOADBAR_FGCOLOR);
-            g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH/2, (int) this.y - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
-                Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);
+            g.fillRect((int) this.getCenterX() - Player.RELOADBARWIDTH / 2,
+                    (int) this.getY() - Player.RELOADBARHEIGHT - Player.BAROFFSETY,
+                    Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);
+        }
+    }
+    private void drawBigReloadBar(Graphics g) {
+        g.setColor(Player.RELOADBAR_BGCOLOR);
+        g.fillRect(GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET, 0, Player.BIGRELOADBARWIDTH, GameRunner.SCREENHEIGHT);
+        g.setColor(Player.RELOADBAR_MGCOLOR);
+        g.fillRect(GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET, GameRunner.SCREENHEIGHT - (int)(GameRunner.SCREENHEIGHT * this.getReloadFraction()), Player.BIGRELOADBARWIDTH,
+                (int)(GameRunner.SCREENHEIGHT * this.getReloadFraction()));
+        if (this.isLoaded()) {
+            g.setColor(Player.RELOADBAR_FGCOLOR);
+            g.fillRect(GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET, 0, Player.BIGRELOADBARWIDTH, GameRunner.SCREENHEIGHT);
         }
     }
 }

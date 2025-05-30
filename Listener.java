@@ -19,31 +19,20 @@ public class Listener implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent evt) {
         //player attacks
         this.g.requestFocusInWindow();
-        this.g.attemptPlayerAttack((double)evt.getX(), (double)evt.getY());
-        
-
-    } // end mousePressed()
-
-    /**
-     * Called whenever the user releases the mouse button. If the user was drawing 
-     * a curve, the curve is done, so we should set dragging to false
-     */
-    @Override
-    public void mouseReleased(MouseEvent evt) {
-        
+        this.g.attemptPlayerAttack((double) evt.getX(), (double) evt.getY());
     }
     
     @Override
-    public void mouseEntered(MouseEvent evt) {
-    } // Some empty routines.
+    public void mouseReleased(MouseEvent evt) {}
+    
+    @Override
+    public void mouseEntered(MouseEvent evt) {}
 
     @Override
-    public void mouseExited(MouseEvent evt) {
-    } //    (Required by the MouseListener
+    public void mouseExited(MouseEvent evt) {}
 
     @Override
-    public void mouseClicked(MouseEvent evt) {
-    }
+    public void mouseClicked(MouseEvent evt) {}
 
 
     
@@ -59,8 +48,7 @@ public class Listener implements MouseListener, KeyListener {
     }
     
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 
     public Set<Integer> getPressedKeys() {
         return this.pressedKeys;
