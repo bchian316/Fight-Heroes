@@ -51,12 +51,15 @@ public class Map implements Drawable{
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile p = projectiles.get(i);
             Tile t = this.returnWallCollided(p.getCenterX(), p.getCenterY(),
-                    2 + Tile.COLLISION_CUSHION*2);
+                    p.getCollisionRadius() + Tile.COLLISION_CUSHION*2);
             //offset collision cushion, *2 because we want +cushion for radius, but this takes in diameter (size is always diameter)
-            //we only want the center of the projectile to trigger a wall collision (like nita peeking)
+            //we only want the center half of the projectile to trigger a wall collision (like nita peeking)
             if (t != null) {
                 //no splitting (like if gene shoots a wall)
                 t.getDamaged(projectiles.remove(i).getDamage());
+                if (p.splitsOnImpact()) {//if they split ON IMPACT, then they can split off a wall. Otherwise, if they only split from range, they dont split
+                    Game.addProjectiles(projectiles, p.split());
+                }
             }
         }
     }

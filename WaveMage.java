@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class WaveMage extends Mage {
     private static final int ATTKOFFSET = 15;
     public WaveMage() {
-        super("Wave Mage", 40, 70, 8, 4, 750, new AttackStats(5, 15, 16, 250, 3, new Color(36, 227, 144)));
+        super("Wave Mage", 40, 130, 8, 4, 750, new AttackStats(4, 15, 16, 250, 3, 2, new Color(36, 227, 144)));
     }
 
     @Override

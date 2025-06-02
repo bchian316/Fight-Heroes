@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class PlasmaMage extends Mage {
     public PlasmaMage() {
-        super("Plasma Mage", 50, 100, 10, 5, 750, new AttackStats(10, 25, 10, 200, 1, new Color(255, 115, 115), true,
-                new AttackStats(7, 10, 5, 75, 1, new Color(255, 115, 115))));
+        super("Plasma Mage", 50, 90, 10, 5, 750, new AttackStats(10, 25, 10, 200, 1, 4, new Color(255, 115, 115), true,
+                new AttackStats(7, 15, 8, 75, 1, 5, new Color(255, 115, 115))));
     }
 
     @Override

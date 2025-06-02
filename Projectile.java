@@ -57,6 +57,10 @@ public class Projectile implements Drawable{
         return this.attk.maxPierce();
     }
 
+    public int getCollisionRadius() {
+        return this.attk.collisionRadius();
+    }
+
     public void addHitEnemy(hasHealth h) {
         this.hitEnemies.add(h);
     }

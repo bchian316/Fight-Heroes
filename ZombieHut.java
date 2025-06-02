@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ZombieHut extends SpawnerEnemy {
     public ZombieHut(int x, int y) {
-        super("Zombie Hut", x, y, 60, 80, 0, 0, 0, new AttackStats(0, 0, 0, 0, 0, new Color(0, 0, 0)), 4000);
+        super("Zombie Hut", x, y, 60, 90, 0, 0, 0, new AttackStats(0, 0, 0, 0, 0, 0, new Color(0, 0, 0)), 4000);
     }
 
 

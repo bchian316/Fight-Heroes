@@ -23,7 +23,7 @@ public class Player extends Entity {
 
     private final Mage mage; //just for attacking
 
-    private int levelNumber = 18;
+    private int levelNumber = 19;
 
     private final int regenRate;
     private double regenTimer = 0; //when to regen
@@ -67,8 +67,8 @@ public class Player extends Entity {
     }
 
     public void setToStartCoords() {
-        this.setX(Game.PLAYERSTARTX);
-        this.setY(Game.PLAYERSTARTY);
+        this.setX(Game.PLAYERSTARTX - this.getSize()/2);
+        this.setY(Game.PLAYERSTARTY - this.getSize()/2);
     }
 
     public int getLevelNumber() {

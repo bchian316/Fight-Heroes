@@ -22,8 +22,8 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
     public Entity(String name, String addOn, int x, int y, int size, int health, int speed, int reload, AttackStats attk) {
         this.name = name;
         //no going out of screen
-        this.x = Math.max(Math.min(x - size/2.0, GameRunner.SCREENWIDTH - size - Tile.SIZE), Tile.SIZE);
-        this.y = Math.max(Math.min(y - size/2.0, GameRunner.SCREENHEIGHT - size - Tile.SIZE), Tile.SIZE);
+        this.x = Math.max(Math.min(x - size/2, GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET - size - Tile.SIZE), Tile.SIZE);
+        this.y = Math.max(Math.min(y - size/2, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET - size - Tile.SIZE), Tile.SIZE);
         this.size = size;
         this.health = health;
         this.maxHealth = health;

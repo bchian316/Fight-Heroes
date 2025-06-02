@@ -11,8 +11,6 @@ public class Listener implements MouseListener, KeyListener {
     
     public Listener(Game g) {
         this.g = g;
-        this.g.addMouseListener(this);
-        this.g.addKeyListener(this);
     }
 
     @Override

@@ -9,23 +9,25 @@ public class AttackStats {
     private final int speed;
     private final int range;
     private final int maxPierce; //-1 means can pierce everything
+    private final int collisionRadius; //minimum 1, only for wall peeking, lower is better
     private final Color color;
     private final AttackStats splitStats;
-    private final boolean splitsOnImpact;
+    private final boolean splitsOnImpact; //splits on impact with walls and enemies
 
-    public AttackStats(int damage, int size, int speed, int range, int maxPierce, Color color, boolean splitsOnImpact, AttackStats splitStats) {
+    public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color, boolean splitsOnImpact, AttackStats splitStats) {
         this.damage = damage;
         this.size = size;
         this.speed = speed;
         this.range = range;
         this.maxPierce = maxPierce;
+        this.collisionRadius = collisionRadius;
         this.color = color;
         this.splitsOnImpact = splitsOnImpact;
         this.splitStats = splitStats;
     }
 
-    public AttackStats(int damage, int size, int speed, int range, int maxPierce, Color color) {
-        this(damage, size, speed, range, maxPierce, color, false, null);
+    public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
+        this(damage, size, speed, range, maxPierce, collisionRadius, color, false, null);
     }
 
     public int damage() {
@@ -46,6 +48,10 @@ public class AttackStats {
 
     public int maxPierce() {
         return this.maxPierce;
+    }
+
+    public int collisionRadius() {
+        return this.collisionRadius;
     }
     
     public Color color() {

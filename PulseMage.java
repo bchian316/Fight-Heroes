@@ -3,9 +3,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class PulseMage extends Mage {
-    private static final int ATTKOFFSET = 50;
+    private static final int ATTKOFFSET = 45;
     public PulseMage() {
-        super("Pulse Mage", 50, 50, 4, 5, 1000, new AttackStats(12, 20, 15, 200, 2, new Color(0, 115, 0)));
+        super("Pulse Mage", 55, 80, 4, 6, 750, new AttackStats(14, 20, 15, 175, 2, 1, new Color(0, 115, 0)));
     }
 
     @Override

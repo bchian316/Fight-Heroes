@@ -10,10 +10,10 @@ import javax.swing.Timer;
 public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH/2;
-    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 175;
-    public static final Mage[] mages = { new DarkMage(), new DonovanMage(), new EarthMage(), new ExplodyMage(),
+    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 162;
+    public static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
             new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
-            new PulseMage(), new WaterMage(), new WaveMage(), new WindMage() };
+            new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new DonovanMage()};
     private final Player player;
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
@@ -29,8 +29,10 @@ public class Game extends JPanel {
     
     public Game() {
         super();
+        this.addMouseListener(l);
+        this.addKeyListener(l);
         //choose player
-        System.out.println("0-13");
+        System.out.println("0-12");
         try (Scanner scanner = new Scanner(System.in)) {
             this.player = new Player(Game.mages[scanner.nextInt()], PLAYERSTARTX, PLAYERSTARTY);
         }
