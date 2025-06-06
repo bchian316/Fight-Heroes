@@ -9,8 +9,6 @@ import javax.swing.Timer;
 
 public class Game extends JPanel {
     public static final double FPS = 30.0;
-    public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH/2;
-    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 162;
     public static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
             new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
             new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new DonovanMage()};
@@ -32,9 +30,12 @@ public class Game extends JPanel {
         this.addMouseListener(l);
         this.addKeyListener(l);
         //choose player
-        System.out.println("0-12");
+        for (int i = 0; i < Game.mages.length - 1; i++) {
+            System.out.println(i + ". " + Game.mages[i].toString());
+        }
+        System.out.println("Choose class (0-12):");
         try (Scanner scanner = new Scanner(System.in)) {
-            this.player = new Player(Game.mages[scanner.nextInt()], PLAYERSTARTX, PLAYERSTARTY);
+            this.player = new Player(Game.mages[scanner.nextInt()]);
         }
 
         ActionListener action = _ -> this.update(); //create an action listener using lambda expression
@@ -88,7 +89,7 @@ public class Game extends JPanel {
         this.map.checkProjectiles(this.enemyProjectiles);
         this.map.checkProjectiles(this.playerProjectiles);
 
-        if (this.enemies.isEmpty()) {
+        if (this.enemies.isEmpty() && this.player.getLevelNumber() < Level.LEVELS.length-1) {
             this.portal.show();
         }
         if (this.portal.isVisible() && this.portal.inPortal(this.player.getCenterX(), this.player.getCenterY())) {
@@ -196,7 +197,7 @@ public class Game extends JPanel {
             if (enemies.get(i) instanceof SpawnerEnemy) {
                 SpawnerEnemy spawnerEnemy = (SpawnerEnemy)(enemies.get(i));
                 if (spawnerEnemy.spawnLoaded()) {
-                    enemies.addAll(spawnerEnemy.spawn(this.player.getCenterX(), this.player.getCenterY()));
+                    enemies.addAll(spawnerEnemy.spawn(this.map));
                 }
             }
             //if currentproj is colliding with enemy

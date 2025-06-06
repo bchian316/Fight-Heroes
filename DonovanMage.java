@@ -32,12 +32,18 @@ public class DonovanMage extends Mage {
         return newProjs;
     }
 
-    public ArrayList<Projectile> createEvenMoreProjectiles(double x, double y, double targetX, double targetY, AttackStats splitStats) {
+    public ArrayList<Projectile> createEvenMoreProjectiles(double x, double y, double targetX, double targetY,
+            AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        
+
         for (int i = 0; i < 3; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i-1) * 15.0), splitStats));
+            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i - 1) * 15.0),
+                    splitStats));
         }
         return newProjs;
+    }
+    @Override
+    public String toString() {
+        return super.toString() + ": very cool";
     }
 }

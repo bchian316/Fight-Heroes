@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class WaterMage extends Mage {
     public WaterMage() {
-        super("Water Mage", 50, 75, 5, 7, 650, new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false,
+        super("Water Mage", 50, 75, 5, 7, 750, new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false,
                 new AttackStats(8, 10, 15, 125, 1, 10, new Color(0, 25, 217))));
     }
 
@@ -28,5 +28,8 @@ public class WaterMage extends Mage {
         
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire a water droplet that sprays enemies when it splits";
+    }
 }

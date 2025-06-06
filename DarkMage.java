@@ -13,5 +13,8 @@ public class DarkMage extends Mage {
         newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), this.getAttackStats()));
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire a high damage, piercing shot";
+    }
 }

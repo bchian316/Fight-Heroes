@@ -3,7 +3,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-public class Tile implements Drawable, hasHealth {
+public class Tile implements Drawable, HasHealth {
     //3 types of wall: ground, border, and wall
     public static final int COLLISION_CUSHION = 8; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
 

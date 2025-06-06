@@ -6,7 +6,7 @@ public class Projectile implements Drawable{
     private double x, y;
     private final double velX, velY;
     private final AttackStats attk;
-    private final HashSet<hasHealth> hitEnemies;
+    private final HashSet<HasHealth> hitEnemies;
     private double distanceTraveled = 0;
     private SplitProjectileInterface split;//you actually can have a projectile that can pierce and split
 
@@ -61,7 +61,7 @@ public class Projectile implements Drawable{
         return this.attk.collisionRadius();
     }
 
-    public void addHitEnemy(hasHealth h) {
+    public void addHitEnemy(HasHealth h) {
         this.hitEnemies.add(h);
     }
 
@@ -72,7 +72,7 @@ public class Projectile implements Drawable{
         return this.hitEnemies.size() >= this.attk.maxPierce();
     }
 
-    public boolean damagedAlready(hasHealth h) {
+    public boolean damagedAlready(HasHealth h) {
         return this.hitEnemies.contains(h);
     }
 

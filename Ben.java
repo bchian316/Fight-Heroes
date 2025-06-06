@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Ben extends SpawnerEnemy {
     private final static int SPAWN_RANGE = 200;
     public Ben(int x, int y) {
-        super("Ben", x, y, 150, 350, 2, 3500, 800, new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false,
+        super("Ben", x, y, 150, 450, 2, 3500, 800, new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false,
                 new AttackStats(5, 25, 8, 500, 2, 10, new Color(252, 170, 45))), 12000);
     }
 
@@ -32,7 +32,7 @@ public class Ben extends SpawnerEnemy {
 
 
     @Override
-    public ArrayList<Enemy> spawn(double playerX, double playerY) {
+    public ArrayList<Enemy> spawn(Map map) {
         this.resetSpawnTimer();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         double randAngle = Math.random() * Math.PI * 2; // in radians

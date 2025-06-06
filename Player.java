@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Player extends Entity {
+    public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH/2;
+    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 162;
+
     private static final int BAROFFSETY = 5;
 
     private static final int BIGHEALTHBARHEIGHT = 15;
@@ -23,7 +26,7 @@ public class Player extends Entity {
 
     private final Mage mage; //just for attacking
 
-    private int levelNumber = 19;
+    private int levelNumber = 0;
 
     private final int regenRate;
     private double regenTimer = 0; //when to regen
@@ -33,8 +36,8 @@ public class Player extends Entity {
     private boolean isHealing = false; //if regening
     
 
-    public Player(Mage mage, int x, int y) {
-        super("mages", x, y, mage);
+    public Player(Mage mage) {
+        super("mages", Player.PLAYERSTARTX, Player.PLAYERSTARTY, mage);
         this.mage = mage;
         this.regenRate = mage.getRegen();
         this.load();
@@ -67,8 +70,8 @@ public class Player extends Entity {
     }
 
     public void setToStartCoords() {
-        this.setX(Game.PLAYERSTARTX - this.getSize()/2);
-        this.setY(Game.PLAYERSTARTY - this.getSize()/2);
+        this.setX(Player.PLAYERSTARTX - this.getSize()/2);
+        this.setY(Player.PLAYERSTARTY - this.getSize()/2);
     }
 
     public int getLevelNumber() {

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Wraith extends SpawnerEnemy {
     public Wraith(int x, int y) {
-        super("Wraith", x, y, 60, 100, 3, 1500, 600,
+        super("Wraith", x, y, 60, 100, 3, 1750, 600,
                 new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false,
                         new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false,
                                 new AttackStats(10, 20, 8, 200, 2, 20, new Color(0, 105, 17)))),
-        2500);
+        2250);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Wraith extends SpawnerEnemy {
     }
 
     @Override
-    public ArrayList<Enemy> spawn(double playerX, double playerY) {
+    public ArrayList<Enemy> spawn(Map map) {
         this.resetSpawnTimer();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         newEnemies.add(new Ghost((int) this.getCenterX(), (int) this.getCenterY()));

@@ -51,6 +51,11 @@ public abstract class Mage {
         return this.attackStats;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     //special method that doesn't take in attkstats cuz it uses the one attributed to the object already
     public abstract ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY); //returns projectiles to add to game list
 }

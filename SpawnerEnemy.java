@@ -9,7 +9,7 @@ public abstract class SpawnerEnemy extends Enemy {
         this.spawnTimer = (int) (Math.random() * spawnTime);
     }
 
-    public abstract ArrayList<Enemy> spawn(double playerX, double playerY);
+    public abstract ArrayList<Enemy> spawn(Map map);
 
     public boolean spawnLoaded() {
         return spawnTimer >= spawnTime;

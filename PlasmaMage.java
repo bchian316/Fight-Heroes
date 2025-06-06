@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class PlasmaMage extends Mage {
     public PlasmaMage() {
-        super("Plasma Mage", 50, 90, 10, 5, 750, new AttackStats(10, 25, 10, 200, 1, 4, new Color(255, 115, 115), true,
-                new AttackStats(7, 15, 8, 75, 1, 5, new Color(255, 115, 115))));
+        super("Plasma Mage", 50, 90, 10, 5, 700, new AttackStats(13, 25, 10, 200, 1, 25, new Color(255, 115, 115), true,
+                new AttackStats(8, 15, 8, 75, 1, 5, new Color(255, 115, 115))));
     }
 
     @Override
@@ -26,5 +26,8 @@ public class PlasmaMage extends Mage {
         }
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire a sphere that explodes into multiple projectiles";
+    }
 }

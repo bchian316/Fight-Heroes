@@ -14,5 +14,8 @@ public class WindMage extends Mage {
         newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(15), this.getAttackStats()));
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire 2 slow, piercing bursts of wind";
+    }
 }

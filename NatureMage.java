@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class NatureMage extends Mage {
     public NatureMage() {
-        super("Nature Mage", 80, 150, 20, 6, 750, new AttackStats(35, 50, 10, 100, -1, 20, new Color(0, 200, 0), false,
-                new AttackStats(25, 30, 12, 100, -1, 10, new Color(0, 255, 0), false, new AttackStats(15, 10, 15, 100, -1, 5, new Color(0, 255, 0)))));
+        super("Nature Mage", 80, 150, 20, 6, 750,
+            new AttackStats(35, 50, 10, 100, -1, 20, new Color(0, 200, 0), false,
+                new AttackStats(25, 30, 12, 100, -1, 10, new Color(0, 255, 0), false,
+                    new AttackStats(15, 10, 15, 100, -1, 5, new Color(0, 255, 0)))));
     }
 
     @Override
@@ -35,5 +37,8 @@ public class NatureMage extends Mage {
         
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire a shrinking projectile that can hit enemies multiple times";
+    }
 }

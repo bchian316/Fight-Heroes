@@ -13,6 +13,8 @@ public abstract class Enemy extends Entity {
 
     private double moveTargetX, moveTargetY;
 
+    private boolean justSpawned = true;
+
     private final int passiveRange; //should always stay within this range
 
     private boolean maneuvering = false;
@@ -21,17 +23,20 @@ public abstract class Enemy extends Entity {
             AttackStats attk) {
         super(name, "monsters", x, y, size, health, speed, reload, attk);
 
-        
         this.passiveRange = passiveRange;
-        
+
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
     }
-
+    
+    private boolean isWiggling(int collisions) {
+        return (collisions == 1 && Math.abs(this.getCenterY() - this.moveTargetY) <= this.getSpeed())
+            || (collisions == 2 && Math.abs(this.getCenterX() - this.moveTargetX) <= this.getSpeed());
+    }
     
     //so it can't be overridden
     private void setMoveTarget(Map map, double playerX, double playerY) {
-        //manuever if hit wall, no manuever if pursuing player
+        //manuever if hit wall, no manuever if pursuing player, can't select space in wall
         do { 
             double randAngle = Math.random() * Math.PI * 2; //in radians
             if (this.maneuvering) {
@@ -59,23 +64,42 @@ public abstract class Enemy extends Entity {
     public void draw(Graphics g) {
         super.draw(g);
         this.drawHealthBar(g);
+        //g.fillOval((int)(this.moveTargetX-5), (int)(this.moveTargetY-5), 10, 10);
     }
 
     @Override
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
-
+    private boolean stuckInWall(Map map) {
+        //true if we are stuck
+        return map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize()) != null;
+    }
 
     public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
         
-        //move to target
+        //set directions
+        
         double dx = Game.getVectorX(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.getSpeed());
         double dy = Game.getVectorY(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.getSpeed());
+                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+                this.getSpeed());
         
+        if (this.justSpawned && this.stuckInWall(map)) {
+            //spawned in wall
+            if (this.getSpeed() == 0) {
+                dx = Game.getVectorX(
+                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), Tile.SIZE);
+                dy = Game.getVectorY(
+                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), Tile.SIZE);
+            } else {
+                dx *= Tile.SIZE / (double) this.getSpeed();
+                dy *= Tile.SIZE / (double) this.getSpeed();
+            }
+        }
+
         int collisions = this.setBorders(map, dx, dy);
-        if (collisions == 2 || collisions == 1) {
-            //is collliding with wall: manuever
+        if (collisions == 3 || this.isWiggling(collisions)) {
+            //is collliding with 2 wall or is wiggling
             if (!this.maneuvering) {
                 this.maneuvering = true;
             }
@@ -98,7 +122,9 @@ public abstract class Enemy extends Entity {
             Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.unload();
         }
-
+        if (!this.stuckInWall(map)) {
+            this.justSpawned = false;
+        }
     }
 
 }

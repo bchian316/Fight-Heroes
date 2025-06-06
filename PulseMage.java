@@ -19,5 +19,8 @@ public class PulseMage extends Mage {
         newProjs.add(new Projectile(x, y, angle, this.getAttackStats()));
         return newProjs;
     }
-
+    @Override
+    public String toString() {
+        return super.toString() + ": Fire a piercing pulse of 5 bullets";
+    }
 }

@@ -1,6 +1,6 @@
 public class Level {
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Zombie(400, 100)}), //introduce zombie
+            new Level(new Enemy[] { new SkeletonLich(400, 100)}), //introduce zombie
             new Level(new Enemy[] { new Zombie(100, 150),
                                     new Zombie(250, 150),
                                     new Zombie(550, 150)},
@@ -147,7 +147,7 @@ public class Level {
                                     new Skeleton(600, 250)},
                     new Tile[] {    new Tile(50, 150),
                                     new Tile(100, 150),
-                                    new Tile(250, 150, 120),
+                                    new Tile(150, 150, 120),
                                     new Tile(200, 150, 120),
                                     new Tile(250, 150, 120),
                                     new Tile(300, 150, 100),
@@ -202,6 +202,21 @@ public class Level {
                                     new Tile(550, 400, 80),
                                     new Tile(600, 450, 80),
                                     new Tile(650, 500, 80)}),
+            new Level(new Enemy[] { new SkeletonLich(300, 100),
+                                    new SkeletonLich(500, 150)},
+                    new Tile[] {    new Tile(300, 200),
+                                    new Tile(300, 250),
+                                    new Tile(300, 300),
+                                    new Tile(300, 350),
+                                    new Tile(450, 200),
+                                    new Tile(450, 250),
+                                    new Tile(450, 300),
+                                    new Tile(450, 350),
+                                    new Tile(350, 200),
+                                    new Tile(400, 200),
+                                    new Tile(450, 200),
+                                    new Tile(350, 350, 80),
+                                    new Tile(400, 350, 80)}),
             new Level(new Enemy[] { new Ghoul(500, 100), 
                                     new Zombie(100, 350),
                                     new Ghost(725, 150),

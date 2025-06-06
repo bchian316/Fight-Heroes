@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-public abstract class Entity implements canAttack, hasHealth, Drawable {
+public abstract class Entity implements CanAttack, HasHealth, Drawable {
     //move static methods from Game into here
     private final String name;
     private double x, y;
@@ -22,8 +22,8 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
     public Entity(String name, String addOn, int x, int y, int size, int health, int speed, int reload, AttackStats attk) {
         this.name = name;
         //no going out of screen
-        this.x = Math.max(Math.min(x - size/2, GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET - size - Tile.SIZE), Tile.SIZE);
-        this.y = Math.max(Math.min(y - size/2, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET - size - Tile.SIZE), Tile.SIZE);
+        this.x = Math.max(Math.min(x - size/2, GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET - size - Tile.SIZE), Tile.SIZE + size/2);
+        this.y = Math.max(Math.min(y - size/2, GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET - size - Tile.SIZE), Tile.SIZE + size/2);
         this.size = size;
         this.health = health;
         this.maxHealth = health;
@@ -61,12 +61,17 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
         this.y = value;
     }
 
+
     public int setBorders(Map map, double dx, double dy) {
+        //returns 0 if no collision, 1 if x collision, 2 if y collision, and 3 if both
         //this implements moving also
-        //returns 1 or 2 if there is collision
+        //returns 1 or 2 or 3 if there is collision
         //this method sets the entity to a position where it is not colliding with walls (squares)
         int collisions = 0;
+        //should not be stuck in wall rn
+        
         this.x += dx;
+
         Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (xTile != null) {
             //the vectorX expression sets the centerX to where it should be, subtract half of size to get the x (top left corner)
@@ -79,8 +84,9 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
             this.x -= dx;
             collisions++;
         }
-
-        this.y += dy; //now centerY changes, we want to keep the past one
+        
+        this.y += dy;
+        
         Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (yTile != null) { //set y border
             /*double centerY = yTile.getY() + Tile.SIZE + Game.getVectorY(
@@ -90,7 +96,7 @@ public abstract class Entity implements canAttack, hasHealth, Drawable {
             System.out.println(centerY);
             this.y = centerY - this.size/2.0; */
             this.y -= dy; //cancel movement
-            collisions++;
+            collisions+=2;
         }
 
         //allocate for wall movement reduction
