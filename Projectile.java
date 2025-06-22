@@ -88,7 +88,7 @@ public class Projectile implements Drawable{
 
     public ArrayList<Projectile> split() {
         //center x and center y
-        return this.split.split(this.x + this.attk.size()/2, this.y + this.attk.size()/2, this.x + this.velX + this.attk.size()/2, this.y + this.velY + this.attk.size()/2, this.attk.getSplitStats());
+        return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats());
     }
 
     public boolean canSplit() {

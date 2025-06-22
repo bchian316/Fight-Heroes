@@ -17,41 +17,41 @@ public class Ryan extends SpawnerEnemy {
         this.heal(20);
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
+            double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
+                            + Math.toRadians((i - 1) * 45);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
-                            + Math.toRadians((i - 1) * 45),
-                    this.getAttackStats(), (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+                    angle,
+                    this.getAttackStats(), (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         }
         return newProjs;
     }
     
-    public ArrayList<Projectile> moreAttack(double x, double y, double targetX, double targetY, AttackStats splitStats) {
+    public ArrayList<Projectile> moreAttack(double x, double y, double angle, AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         //shoots twice from himself
         for (int i = 0; i < 5; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians((i - 2) * 72), splitStats,
-                    (x1, y1, targetX1, targetY1, splitStats1) -> evenMoreAttack(x1, y1, targetX1, targetY1, splitStats1)));
+            newProjs.add(new Projectile(x, y, angle + Math.toRadians((i - 2) * 72), splitStats,
+                    (x1, y1, angle1, splitStats1) -> evenMoreAttack(x1, y1, angle1, splitStats1)));
         }
         return newProjs;
     }
-    public ArrayList<Projectile> evenMoreAttack(double x, double y, double targetX, double targetY, AttackStats splitStats) {
+    public ArrayList<Projectile> evenMoreAttack(double x, double y, double angle, AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         //one more range elongation
         for (int i = 0; i < 4; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(i*90), splitStats,
-                    (x1, y1, targetX1, targetY1, splitStats1) -> evenEvenMoreAttack(x1, y1, targetX1, targetY1, splitStats1)));
+            newProjs.add(new Projectile(x, y, angle + Math.toRadians(i*90), splitStats,
+                    (x1, y1, angle1, splitStats1) -> evenEvenMoreAttack(x1, y1, angle1, splitStats1)));
             
         }
         return newProjs;
     }
 
-    public ArrayList<Projectile> evenEvenMoreAttack(double x, double y, double targetX, double targetY,
+    public ArrayList<Projectile> evenEvenMoreAttack(double x, double y, double angle,
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         //one more range elongation
         for (int i = 0; i < 6; i++) {
-            newProjs.add(new Projectile(x, y,
-                    Game.getAngle(x, y, targetX, targetY) + Math.toRadians((i - 2.5) * 20) + Math.PI, splitStats));
+            newProjs.add(new Projectile(x, y, angle + Math.toRadians((i - 2.5) * 20) + Math.PI, splitStats));
         }
 
         return newProjs;

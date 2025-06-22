@@ -14,30 +14,30 @@ public class DonovanMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i), this.getAttackStats(),
-                    (x1, y1, targetX1, targetY1, splitStats) -> createMoreProjectiles(x1, y1, targetX1, targetY1, splitStats)));
+            double angle = Game.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i);
+            newProjs.add(new Projectile(x, y, angle, this.getAttackStats(),
+                    (x1, y1, angle1, splitStats) -> createMoreProjectiles(x1, y1, angle1, splitStats)));
         }
         return newProjs;
     }
 
     //to spawn split shots, needs a specific set of stats
     //MAKE SURE THAT THE OFFSET IS OFF OF THE PROJECTILE NOT THE PLAYER
-    public ArrayList<Projectile> createMoreProjectiles(double x, double y, double targetX, double targetY, AttackStats splitStats) {
+    public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle, AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        
         for (int i = 0; i < 5; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i-2) * 15.0), splitStats, 
-                    (x1, y1, targetX1, targetY1, splitStats1) -> createEvenMoreProjectiles(x1, y1, targetX1, targetY1, splitStats1)));
+            newProjs.add(new Projectile(x, y, angle - Math.toRadians((i-2) * 15.0), splitStats, 
+                    (x1, y1, angle1, splitStats1) -> createEvenMoreProjectiles(x1, y1, angle1, splitStats1)));
         }
         return newProjs;
     }
 
-    public ArrayList<Projectile> createEvenMoreProjectiles(double x, double y, double targetX, double targetY,
+    public ArrayList<Projectile> createEvenMoreProjectiles(double x, double y, double angle,
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i - 1) * 15.0),
+            newProjs.add(new Projectile(x, y, angle - Math.toRadians((i - 1) * 15.0),
                     splitStats));
         }
         return newProjs;

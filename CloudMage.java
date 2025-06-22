@@ -2,11 +2,11 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class ExplodyMage extends Mage {
-    private static final int EXPLOSION_OFFSET = 10;
-    public ExplodyMage() {
-        super("Explody Mage", 60, 125, 8, 6, 1000, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true,
-                new AttackStats(30, 125, 1, 15, -1, 1, new Color(194, 48, 0))));
+public class CloudMage extends Mage {
+    public CloudMage() {
+        super("Cloud Mage", 65, 80, 8, 4, 750,
+            new AttackStats(15, 35, 15, 300, -1, 25, new Color(255, 255, 255), false,
+                new AttackStats(15, 35, 20, 300, -1, 25, new Color(255, 255, 255))));
     }
 
     @Override
@@ -23,14 +23,13 @@ public class ExplodyMage extends Mage {
     public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle,
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x - Game.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
-                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats));
+        newProjs.add(new Projectile(x, y, angle + Math.PI, splitStats));
 
         return newProjs;
     }
     
     @Override
     public String toString() {
-        return super.toString() + ": Fire highly explosive spheres";
+        return super.toString() + ": Fire a returning cloud";
     }
 }

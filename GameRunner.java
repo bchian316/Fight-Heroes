@@ -10,13 +10,14 @@ public class GameRunner {
         JFrame window = new JFrame(NAME);
 
         Game g = new Game();
+        window.setContentPane(g);
 
 		window.setSize(SCREENWIDTH,SCREENHEIGHT);
-        window.setContentPane(g);
         window.setLocation(150,25);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
         window.setResizable(false);
-        window.requestFocusInWindow();
+
+        g.requestFocusInWindow();
     }
 }

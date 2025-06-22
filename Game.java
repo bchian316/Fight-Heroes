@@ -1,5 +1,4 @@
 import java.awt.Graphics;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -11,7 +10,7 @@ public class Game extends JPanel {
     public static final double FPS = 30.0;
     public static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
             new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
-            new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new DonovanMage()};
+            new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new CloudMage(), new DonovanMage()};
     private final Player player;
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
@@ -33,17 +32,17 @@ public class Game extends JPanel {
         for (int i = 0; i < Game.mages.length - 1; i++) {
             System.out.println(i + ". " + Game.mages[i].toString());
         }
-        System.out.println("Choose class (0-12):");
+        System.out.println("Choose class (0-13):");
         try (Scanner scanner = new Scanner(System.in)) {
             this.player = new Player(Game.mages[scanner.nextInt()]);
         }
 
-        ActionListener action = _ -> this.update(); //create an action listener using lambda expression
-        new Timer((int) (1000.0 / Game.FPS), action).start(); // Do action FPS times in one second
+        new Timer((int) (1000.0 / Game.FPS), _ -> this.update()).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
         //no need reference to timer cuz it already does stuff itself
         
         this.loadLevel(this.player.getLevelNumber());
+        this.requestFocusInWindow();
     }
 
     public static double updateDelay() {

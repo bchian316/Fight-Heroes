@@ -1,6 +1,6 @@
 public class Level {
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new SkeletonLich(400, 100)}), //introduce zombie
+            new Level(new Enemy[] { new Grave(400, 100)}), //introduce zombie
             new Level(new Enemy[] { new Zombie(100, 150),
                                     new Zombie(250, 150),
                                     new Zombie(550, 150)},

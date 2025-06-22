@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SkeletonLich extends SpawnerEnemy {
     public SkeletonLich(int x, int y) {
-        super("SkeletonLich", x, y, 85, 135, 1, 1500, 550,
+        super("SkeletonLich", x, y, 85, 125, 1, 1500, 550,
                 new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false,
                         new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false,
                                 new AttackStats(6, 20, 20, 175, 1, 3, new Color(196, 73, 16)))),
@@ -13,7 +13,6 @@ public class SkeletonLich extends SpawnerEnemy {
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
-        this.heal(8);
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(35),
@@ -41,14 +40,8 @@ public class SkeletonLich extends SpawnerEnemy {
     }
     public ArrayList<Projectile> evenMoreAttack(double x, double y, double targetX, double targetY,
             AttackStats splitStats) {
-        ArrayList<Projectile> newProjs = new ArrayList<>();
-        // shoots twice from himself
-        for (int i = 0; i < 3; i++) {
-            newProjs.add(new Projectile(x, y,
-                    Game.getAngle(x, y, targetX, targetY) - Math.toRadians(i*120),
-                    splitStats));
-        }
-        return newProjs;
+        this.heal(6);
+        return new ArrayList<>();
     }
 
     @Override
