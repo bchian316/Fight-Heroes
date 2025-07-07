@@ -23,21 +23,21 @@ public abstract class Enemy extends Entity {
             AttackStats attk) {
         super(name, "monsters", x, y, size, health, speed, reload, attk);
 
-        this.passiveRange = passiveRange;
+        this.passiveRange = passiveRange; //even stationary enemies should have >0 passive range to move out of walls
 
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
     }
-    
+
     private boolean isWiggling(int collisions) {
         return (collisions == 1 && Math.abs(this.getCenterY() - this.moveTargetY) <= this.getSpeed())
-            || (collisions == 2 && Math.abs(this.getCenterX() - this.moveTargetX) <= this.getSpeed());
+                || (collisions == 2 && Math.abs(this.getCenterX() - this.moveTargetX) <= this.getSpeed());
     }
-    
+
     //so it can't be overridden
     private void setMoveTarget(Map map, double playerX, double playerY) {
         //manuever if hit wall, no manuever if pursuing player, can't select space in wall
-        do { 
+        do {
             double randAngle = Math.random() * Math.PI * 2; //in radians
             if (this.maneuvering) {
                 double randMagnitude = Math.random() * (Enemy.MAX_MANUEVER_DISTANCE + this.getSize());
@@ -57,7 +57,8 @@ public abstract class Enemy extends Entity {
         g.setColor(HEALTHBAR_BGCOLOR);
         g.fillRect((int) this.getX(), (int) this.getY() + this.getSize() + BAROFFSETY, this.getSize(), HEALTHBARHEIGHT);
         g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect((int)this.getX(), (int)this.getY() + this.getSize() + BAROFFSETY, (int)(this.getSize() * this.getHealthFraction()), HEALTHBARHEIGHT);
+        g.fillRect((int) this.getX(), (int) this.getY() + this.getSize() + BAROFFSETY,
+                (int) (this.getSize() * this.getHealthFraction()), HEALTHBARHEIGHT);
     }
 
     @Override
@@ -69,35 +70,39 @@ public abstract class Enemy extends Entity {
 
     @Override
     public abstract ArrayList<Projectile> attack(double targetX, double targetY); //spawn projectiles
+
     private boolean stuckInWall(Map map) {
         //true if we are stuck
         return map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize()) != null;
     }
 
     public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
-        
+
         //set directions
-        
+
         double dx = Game.getVectorX(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), this.getSpeed());
+                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+                this.getSpeed());
         double dy = Game.getVectorY(
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
                 this.getSpeed());
-        
+
         if (this.justSpawned && this.stuckInWall(map)) {
             //spawned in wall
             if (this.getSpeed() == 0) {
                 dx = Game.getVectorX(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), Tile.SIZE);
+                    Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+                    Tile.SIZE);
                 dy = Game.getVectorY(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY), Tile.SIZE);
+                    Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+                        Tile.SIZE);
             } else {
                 dx *= Tile.SIZE / (double) this.getSpeed();
                 dy *= Tile.SIZE / (double) this.getSpeed();
             }
         }
 
-        int collisions = this.setBorders(map, dx, dy);
+        int collisions = this.setBorders(map, dx, dy, !this.justSpawned);
         if (collisions == 3 || this.isWiggling(collisions)) {
             //is collliding with 2 wall or is wiggling
             if (!this.maneuvering) {
@@ -105,17 +110,19 @@ public abstract class Enemy extends Entity {
             }
             setMoveTarget(map, playerX, playerY);
         }
-        if(Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.getSize()/2.0){
+        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) < this.getSize()
+                / 2.0) {
             //if arrived
             this.maneuvering = false;
             this.setMoveTarget(map, playerX, playerY);
         }
-        if (!this.maneuvering && Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
+        if (!this.maneuvering
+                && Game.getDistance(this.moveTargetX, moveTargetY, playerX, playerY) > this.passiveRange) {
             //player has left the spot outside of passive range, find new spot
             //ONLY DO THIS IF NOT MANUEVERING
             this.setMoveTarget(map, playerX, playerY);
         }
-                
+
         //reload and attack
         this.reload();
         if (this.isLoaded()) {

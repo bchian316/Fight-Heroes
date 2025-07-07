@@ -109,7 +109,7 @@ public class Player extends Entity {
             dy /= magnitude;
             dx *= this.getSpeed();
             dy *= this.getSpeed();
-            this.setBorders(map, dx, dy);
+            this.setBorders(map, dx, dy, true);
         }
 
         this.reload();

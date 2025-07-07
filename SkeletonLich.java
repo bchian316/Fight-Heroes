@@ -14,31 +14,32 @@ public class SkeletonLich extends SpawnerEnemy {
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
+        double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(35),
+                    angle + Math.toRadians(35),
                     this.getAttackStats(),
-                (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
+                    angle,
                     this.getAttackStats(),
-                (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) - Math.toRadians(35),
+                    angle - Math.toRadians(35),
                     this.getAttackStats(),
-                    (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         return newProjs;
     }
 
-    public ArrayList<Projectile> moreAttack(double x, double y, double targetX, double targetY,
+    public ArrayList<Projectile> moreAttack(double x, double y, double angle,
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(x, y,
-                    Game.getAngle(x, y, targetX, targetY) + Math.PI,
+                    angle + Math.PI,
                     splitStats,
-                (x1, y1, targetX1, targetY1, splitStats1) -> evenMoreAttack(x1, y1, targetX1, targetY1, splitStats1)));
+                (x1, y1, angle1, splitStats1) -> evenMoreAttack(x1, y1, angle1, splitStats1)));
         return newProjs;
     }
-    public ArrayList<Projectile> evenMoreAttack(double x, double y, double targetX, double targetY,
+    public ArrayList<Projectile> evenMoreAttack(double x, double y, double angle,
             AttackStats splitStats) {
         this.heal(6);
         return new ArrayList<>();

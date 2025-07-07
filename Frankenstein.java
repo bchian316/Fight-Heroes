@@ -15,17 +15,17 @@ public class Frankenstein extends Enemy {
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
                     this.getAttackStats(),
-                    (x1, y1, targetX1, targetY1, splitStats) -> moreAttack(x1, y1, targetX1, targetY1, splitStats)));
+                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         return newProjs;
     }
 
-    public ArrayList<Projectile> moreAttack(double x, double y, double targetX, double targetY,
+    public ArrayList<Projectile> moreAttack(double x, double y, double angle,
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         // shoots twice from himself
         for (int i = 0; i < 9; i++) {
             newProjs.add(new Projectile(x, y,
-                    Game.getAngle(x, y, targetX, targetY) - Math.toRadians((i-4)*40),
+                    angle - Math.toRadians((i-4)*40),
                     splitStats));
         }
         return newProjs;

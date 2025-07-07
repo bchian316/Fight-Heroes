@@ -62,14 +62,15 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
     }
 
 
-    public int setBorders(Map map, double dx, double dy) {
+    public int setBorders(Map map, double dx, double dy, boolean wallCollide) {
+        //wallCollide is for wall restriction - if an enemy just spawned, don't do this so they can move through walls
         //returns 0 if no collision, 1 if x collision, 2 if y collision, and 3 if both
         //this implements moving also
         //returns 1 or 2 or 3 if there is collision
         //this method sets the entity to a position where it is not colliding with walls (squares)
         int collisions = 0;
         //should not be stuck in wall rn
-        
+
         this.x += dx;
 
         Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
@@ -81,12 +82,14 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
             System.out.print("CenterX:");
             System.out.println(centerX);
             this.x = centerX - this.size / 2.0; */
-            this.x -= dx;
+            if (wallCollide) {
+                this.x -= dx;
+            }
             collisions++;
         }
-        
+
         this.y += dy;
-        
+
         Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (yTile != null) { //set y border
             /*double centerY = yTile.getY() + Tile.SIZE + Game.getVectorY(
@@ -95,29 +98,33 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
             System.out.print("CenterY:");
             System.out.println(centerY);
             this.y = centerY - this.size/2.0; */
-            this.y -= dy; //cancel movement
-            collisions+=2;
+            if (wallCollide) {
+                this.y -= dy; //cancel movement
+            }
+            collisions += 2;
         }
 
         //allocate for wall movement reduction
-        if(xTile == null && yTile != null){
-            //collision on y but not x (left or right)
-            if (dx > 0) {
-                this.x += this.speed - dx;
-            } else if (dx < 0) {
-                this.x -= this.speed + dx;
-            }
-        } else if (xTile != null && yTile == null) {
-            if (dy > 0) {
-                this.y += this.speed - dy;
-            } else if (dy < 0) {
-                this.y -= this.speed + dy;
+        if (wallCollide) {
+            if (xTile == null && yTile != null) {
+                //collision on y but not x (left or right)
+                if (dx > 0) {
+                    this.x += this.speed - dx;
+                } else if (dx < 0) {
+                    this.x -= this.speed + dx;
+                }
+            } else if (xTile != null && yTile == null) {
+                if (dy > 0) {
+                    this.y += this.speed - dy;
+                } else if (dy < 0) {
+                    this.y -= this.speed + dy;
+                }
             }
         }
         return collisions; //if is 2, then the entity is stuck (cuz it is blocked on 2 sides)
         //if is one, then he only hit one wall and is 'sliding'
     }
-
+    
     //for updating (movement)
     public int getSpeed() {
         return this.speed;
