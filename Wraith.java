@@ -8,7 +8,7 @@ public class Wraith extends SpawnerEnemy {
                 new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false,
                         new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false,
                                 new AttackStats(10, 20, 8, 200, 2, 20, new Color(0, 105, 17)))),
-        2250);
+        7, 2500);
     }
 
     @Override

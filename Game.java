@@ -109,6 +109,7 @@ public class Game extends JPanel {
         this.player.setToStartCoords();
         this.player.fullHeal();
         this.player.load();
+        this.player.clearStatusEffects();
     }
 
     
@@ -159,6 +160,7 @@ public class Game extends JPanel {
             Projectile currentProj = this.enemyProjectiles.get(i);
             if (this.player.isHit(currentProj) && !currentProj.damagedAlready(this.player)) {
                 this.player.getDamaged(currentProj.getDamage());
+                this.player.addStatusEffect(currentProj.getStatusEffect());
                 currentProj.addHitEnemy(player);
                 if (currentProj.splitsOnImpact()) {
                     Game.addProjectiles(this.enemyProjectiles, currentProj.split());

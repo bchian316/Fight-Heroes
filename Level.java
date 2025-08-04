@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+
 public class Level {
     public static final Level[] LEVELS = {
-            new Level(new Enemy[] { new Grave(400, 100)}), //introduce zombie
+            new Level(new Enemy[] { new Zombie(400, 100)},
+                    new Tile[] {}), //introduce zombie
             new Level(new Enemy[] { new Zombie(100, 150),
                                     new Zombie(250, 150),
                                     new Grave(400, 325)},
@@ -356,16 +359,12 @@ public class Level {
                                     new Tile(550, 400)}) 
     };
 
-    private Enemy[] enemies;
-    private Tile[] walls;
+    private final Enemy[] enemies;
+    private final Tile[] walls;
 
     public Level(Enemy[] enemies, Tile[] walls) {
         this.enemies = enemies;
         this.walls = walls;
-    }
-
-    public Level(Enemy[] enemies) {
-        this(enemies, new Tile[] {});//no walls
     }
     
     public Enemy[] getEnemies() {

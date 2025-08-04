@@ -7,7 +7,7 @@ public class Ryan extends SpawnerEnemy {
         super("Ryan", x, y, 150, 650, 3, 6000, 800, new AttackStats(18, 75, 6, 350, 1, 75, new Color(235, 20, 5), true,
                 new AttackStats(8, 50, 8, 275, 1, 20, new Color(235, 77, 5), true,
                         new AttackStats(6, 25, 10, 200, 1, 20, new Color(235, 112, 5), false,
-                                new AttackStats(5, 15, 3, 100, 1, 1, new Color(235, 162, 5))))), 19000);
+                                new AttackStats(5, 15, 3, 100, 1, 1, new Color(235, 162, 5))))), 50, 10000);
     }
 
 
@@ -67,7 +67,7 @@ public class Ryan extends SpawnerEnemy {
         int spawnRandom = (int) (Math.random() * 7);
         switch (spawnRandom) {
             case 0 -> {//spawn zombie horde
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 7; i++) {
                     double randAngle = Math.random() * Math.PI * 2; // in radians
                     double randMagnitude = Math.random() * 450;
                     newEnemies.add(new Zombie((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
@@ -88,7 +88,7 @@ public class Ryan extends SpawnerEnemy {
                 }
             }
             case 2 -> { //wight and ghoul
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 2; i++) {
                     double randAngle = Math.random() * Math.PI * 2; // in radians
                     if (Math.random() >= 0.5) {
                         double randMagnitude = Math.random() * 250;
@@ -106,7 +106,7 @@ public class Ryan extends SpawnerEnemy {
                 double randMagnitude = Math.random() * 100;
                 newEnemies.add(new Frankenstein((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 3; i++) {
                     randAngle = Math.random() * Math.PI * 2; // in radians
                     randMagnitude = Math.random() * 350;
                     newEnemies.add(new Skeleton((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
@@ -114,13 +114,7 @@ public class Ryan extends SpawnerEnemy {
                 }
             }
             
-            case 4 -> {//skeleton shamans and more ghosts
-                for (int i = 0; i < 5; i++) {
-                    double randAngle = Math.random() * Math.PI * 2; // in radians
-                    double randMagnitude = Math.random() * 100;
-                    newEnemies.add(new Ghost((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                            (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
-                }
+            case 4 -> {//skeleton shamans
                 for (int i = 0; i < 2; i++) {
                     double randAngle = Math.random() * Math.PI * 2; // in radians
                     double randMagnitude = Math.random() * 150;

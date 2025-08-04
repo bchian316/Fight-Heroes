@@ -4,6 +4,7 @@ import java.awt.Color;
 public class AttackStats {
     //attacks will be circles
     //this class is purely just to organize attack statistics
+    private final StatusEffect statusEffect;
     private final int damage;
     private final int size;
     private final int speed;
@@ -14,7 +15,9 @@ public class AttackStats {
     private final AttackStats splitStats;
     private final boolean splitsOnImpact; //splits on impact with walls and enemies
 
-    public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color, boolean splitsOnImpact, AttackStats splitStats) {
+    public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce,
+            int collisionRadius, Color color, boolean splitsOnImpact, AttackStats splitStats) {
+        this.statusEffect = statusEffect;
         this.damage = damage;
         this.size = size;
         this.speed = speed;
@@ -26,8 +29,21 @@ public class AttackStats {
         this.splitStats = splitStats;
     }
 
+    public AttackStats(int damage, int size, int speed, int range, int maxPierce,
+            int collisionRadius, Color color, boolean splitsOnImpact, AttackStats splitStats) {
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, splitsOnImpact, splitStats);
+    }
+
+    public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
+        this(statusEffect, damage, size, speed, range, maxPierce, collisionRadius, color, false, null);
+    }
+
     public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
-        this(damage, size, speed, range, maxPierce, collisionRadius, color, false, null);
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, false, null);
+    }
+    
+    public StatusEffect statusEffect() {
+        return this.statusEffect;
     }
 
     public int damage() {

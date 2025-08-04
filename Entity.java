@@ -1,10 +1,11 @@
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 
 public abstract class Entity implements CanAttack, HasHealth, Drawable {
+
+    protected static final int STATUS_EFFECT_CUSHION = 45; //distance between status effect centers (size is 30)
     //move static methods from Game into here
     private final String name;
     private double x, y;
@@ -74,7 +75,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         this.x += dx;
 
         Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
-        if (xTile != null) {
+        if (xTile != null || !map.entityInMap(this)) {
             //the vectorX expression sets the centerX to where it should be, subtract half of size to get the x (top left corner)
             /*double centerX = xTile.getX() + Tile.SIZE + Game.getVectorX(
                     Game.getAngle(xTile.getClosestX(this.getCenterX()), xTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
@@ -91,7 +92,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         this.y += dy;
 
         Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
-        if (yTile != null) { //set y border
+        if (yTile != null || !map.entityInMap(this)) { //set y border
             /*double centerY = yTile.getY() + Tile.SIZE + Game.getVectorY(
                     Game.getAngle(yTile.getClosestX(this.getCenterX()), yTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
                     this.size / 2.0); //where the centerY should be
@@ -124,19 +125,24 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         return collisions; //if is 2, then the entity is stuck (cuz it is blocked on 2 sides)
         //if is one, then he only hit one wall and is 'sliding'
     }
+
     
     //for updating (movement)
     public int getSpeed() {
         return this.speed;
     }
 
-    public void reload() {
+    public void reload(double reduction) { //player uses this for reload reduction
         if (this.reloadTimer < this.reload) {
-            this.reloadTimer += Game.updateDelay();
+            this.reloadTimer += Game.updateDelay() * reduction;
             if (this.reloadTimer > this.reload) {
                 this.reloadTimer = this.reload;
             }
         }
+    }
+
+    public void reload() {
+        reload(1);
     }
 
     public void load() {

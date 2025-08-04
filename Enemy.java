@@ -1,15 +1,16 @@
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 public abstract class Enemy extends Entity {
-    private static final int MAX_MANUEVER_DISTANCE = Tile.SIZE * 3;
+    private static final int MAX_MANUEVER_DISTANCE = Tile.SIZE * 4;
 
     private static final int BAROFFSETY = 5;
     private static final int HEALTHBARHEIGHT = 10;
     private static final Color HEALTHBAR_BGCOLOR = new Color(0, 0, 0);
     private static final Color HEALTHBAR_FGCOLOR = new Color(255, 0, 0); //display green over red
+
+    private final int power;
 
     private double moveTargetX, moveTargetY;
 
@@ -20,10 +21,12 @@ public abstract class Enemy extends Entity {
     private boolean maneuvering = false;
 
     public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange,
-            AttackStats attk) {
+            AttackStats attk, int power) {
         super(name, "monsters", x, y, size, health, speed, reload, attk);
 
         this.passiveRange = passiveRange; //even stationary enemies should have >0 passive range to move out of walls
+
+        this.power = power; //also unique to enemies - a rating for their power to create rooms
 
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
@@ -76,7 +79,26 @@ public abstract class Enemy extends Entity {
         return map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.getSize()) != null;
     }
 
+    private void flowFromWall(Map map) {
+        while (this.stuckInWall(map)) {
+            //spawned in wall
+            double randAngle = Math.random() * Math.PI * 2;
+            
+            double dx = Game.getVectorX(randAngle, Tile.SIZE);
+            double dy = Game.getVectorY(randAngle, Tile.SIZE);
+            
+            this.setBorders(map, dx, dy, false);
+        }
+        //if enemy is in wall, enter flowstate and move away from wall; keep moving until not in wall
+    }
+
     public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
+
+        if (this.justSpawned) {
+            this.flowFromWall(map);
+            //enemy is now guaranteed to not be in wall
+            this.justSpawned = false;
+        }
 
         //set directions
 
@@ -87,22 +109,7 @@ public abstract class Enemy extends Entity {
                 Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
                 this.getSpeed());
 
-        if (this.justSpawned && this.stuckInWall(map)) {
-            //spawned in wall
-            if (this.getSpeed() == 0) {
-                dx = Game.getVectorX(
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
-                    Tile.SIZE);
-                dy = Game.getVectorY(
-                    Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
-                        Tile.SIZE);
-            } else {
-                dx *= Tile.SIZE / (double) this.getSpeed();
-                dy *= Tile.SIZE / (double) this.getSpeed();
-            }
-        }
-
-        int collisions = this.setBorders(map, dx, dy, !this.justSpawned);
+        int collisions = this.setBorders(map, dx, dy, true);
         if (collisions == 3 || this.isWiggling(collisions)) {
             //is collliding with 2 wall or is wiggling
             if (!this.maneuvering) {
@@ -129,9 +136,10 @@ public abstract class Enemy extends Entity {
             Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.unload();
         }
-        if (!this.stuckInWall(map)) {
-            this.justSpawned = false;
-        }
+    }
+    
+    public int getPower() {
+        return this.power;
     }
 
 }

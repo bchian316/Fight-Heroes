@@ -67,6 +67,7 @@ public class Map implements Drawable{
     public Tile[][] getMap() {
         return this.map;
     }
+
     public Tile returnWallCollided(double centerX, double centerY, int size) {
         //doesn't work for only ground tiles
         double lowestX = centerX - (size / 2);
@@ -97,5 +98,13 @@ public class Map implements Drawable{
             }
         }
         return null;
+    }
+    
+    public boolean entityInMap(Entity e) {
+        //returns true if in map
+        return e.getCenterX() >= Tile.SIZE
+                && e.getCenterX() <= GameRunner.SCREENWIDTH - GameRunner.WIDTHOFFSET - Tile.SIZE
+                && e.getCenterY() >= Tile.SIZE
+                && e.getCenterY() <= GameRunner.SCREENHEIGHT - GameRunner.HEIGHTOFFSET - Tile.SIZE;
     }
 }

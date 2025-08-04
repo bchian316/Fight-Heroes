@@ -6,7 +6,9 @@ public class GameRunner {
     public static final int WIDTHOFFSET = 25;
     public static final int SCREENHEIGHT = 650;
     public static final int HEIGHTOFFSET = 50;
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
+        
         JFrame window = new JFrame(NAME);
 
         Game g = new Game();

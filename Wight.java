@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Wight extends Enemy {
     public static final int ATTKOFFSET = 35;
     public Wight(int x, int y) {
-        super("Wight", x, y, 75, 60, 5, 1500, 500, new AttackStats(8, 35, 13, 300, -1, 3, new Color(80, 80, 80)));
+        super("Wight", x, y, 75, 60, 5, 1500, 500, new AttackStats(8, 35, 13, 300, -1, 3, new Color(80, 80, 80)), 4);
     }
 
     @Override

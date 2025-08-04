@@ -8,7 +8,7 @@ public class SkeletonLich extends SpawnerEnemy {
                 new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false,
                         new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false,
                                 new AttackStats(6, 20, 20, 175, 1, 3, new Color(196, 73, 16)))),
-                9000);
+                7, 9000);
     }
 
     @Override

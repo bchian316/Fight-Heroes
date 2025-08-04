@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Grave extends SpawnerEnemy {
     public Grave(int x, int y) {
-        super("Grave", x, y, 50, 55, 0, 1500, 500, new AttackStats(7, 30, 18, 300, 1, 20, new Color(57, 57, 57)), 3000);
+        super("Grave", x, y, 50, 55, 0, 1500, 500, new AttackStats(new StatusEffect("Freeze", 0, 0, 0, 0.4, 0, 1000, new Color(12, 173, 232)), 7, 30, 18, 300, 1, 20, new Color(57, 57, 57)), 3, 3000);
     }
 
 

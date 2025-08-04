@@ -98,4 +98,8 @@ public class Projectile implements Drawable{
     public boolean splitsOnImpact() {
         return this.attk.splitsOnImpact();
     }
+
+    public StatusEffect getStatusEffect() {
+        return this.attk.statusEffect();
+    }
 }
