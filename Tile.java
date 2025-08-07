@@ -1,6 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Image;
-
+import java.awt.Color;
 import javax.swing.ImageIcon;
 
 public class Tile implements Drawable, HasHealth {
@@ -75,12 +75,12 @@ public class Tile implements Drawable, HasHealth {
     }
     
     @Override
-    public void getDamaged(int damage) {//changes image too
+    public DamageCounter getDamaged(int damage, Color c) {//changes image too
         if (this.breakable && !this.isDead()) {
             this.health -= damage;
         }
         this.setImage();
-        
+        return null;
     }
 
     @Override

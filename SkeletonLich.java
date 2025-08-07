@@ -4,29 +4,21 @@ import java.util.ArrayList;
 
 public class SkeletonLich extends SpawnerEnemy {
     public SkeletonLich(int x, int y) {
-        super("SkeletonLich", x, y, 85, 125, 1, 1500, 550,
-                new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false,
-                        new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false,
-                                new AttackStats(6, 20, 20, 175, 1, 3, new Color(196, 73, 16)))),
-                7, 9000);
+        super("SkeletonLich", x, y, 85, 125, 1, 1500, 550, 9000, 7);
     }
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    angle + Math.toRadians(35),
-                    this.getAttackStats(),
+        for (int i = -1; i <= 1; i++) {
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
+                    angle + Math.toRadians(35)*i,
+                    new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false,
+                        new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false,
+                                new AttackStats(6, 20, 20, 175, 1, 3, new Color(196, 73, 16)))),
                     (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    angle,
-                    this.getAttackStats(),
-                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
-                    angle - Math.toRadians(35),
-                    this.getAttackStats(),
-                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
+        }
         return newProjs;
     }
 

@@ -17,7 +17,12 @@ public class Listener implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent evt) {
         //player attacks
         this.g.requestFocusInWindow();
-        this.g.attemptPlayerAttack((double) evt.getX(), (double) evt.getY());
+        if (!this.pressedKeys.contains(KeyEvent.VK_SHIFT)) {
+            //normal attack, not pressing shift
+            this.g.attemptPlayerAttack((double) evt.getX(), (double) evt.getY());
+            return;
+        }
+        this.g.attemptPlayerSpecial((double) evt.getX(), (double) evt.getY());
     }
     
     @Override

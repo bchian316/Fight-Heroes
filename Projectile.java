@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,6 +66,10 @@ public class Projectile implements Drawable{
         this.hitEnemies.add(h);
     }
 
+    public Color getColor() {
+        return this.attk.color();
+    }
+
     public boolean donePierce() {
         if (this.attk.maxPierce() == -1) {
             return false;
@@ -100,6 +105,14 @@ public class Projectile implements Drawable{
     }
 
     public StatusEffect getStatusEffect() {
-        return this.attk.statusEffect();
+        if (this.attk.statusEffect() == null) {
+            return null;
+        }
+        try{
+            return this.attk.statusEffect().clone();
+
+        } catch(CloneNotSupportedException e){
+            return null;
+        }
     }
 }

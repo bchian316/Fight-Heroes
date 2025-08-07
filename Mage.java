@@ -11,16 +11,18 @@ public abstract class Mage {
     private final int regen;
     private final int speed; //movement speed
     private final int reload; //delay between attacking ms
-    private final AttackStats attackStats;
+    private final int specialReload;
 
-    public Mage(String name, int size, int maxHealth, int regen, int speed, int reload, AttackStats attackStats) {
+    //now that each mage will have separate copy of attack stats, make a separate timer for each status effect
+
+    public Mage(String name, int size, int maxHealth, int regen, int speed, int reload, int specialReload) {
         this.name = name;
         this.size = size;
         this.maxHealth = maxHealth;
         this.regen = regen;
         this.speed = speed;
         this.reload = reload;
-        this.attackStats = attackStats;
+        this.specialReload = specialReload;
     }
 
     public String getName() {
@@ -47,8 +49,8 @@ public abstract class Mage {
         return this.reload;
     }
 
-    public AttackStats getAttackStats() {
-        return this.attackStats;
+    public int getSpecialReload() {
+        return this.specialReload;
     }
 
     @Override
@@ -58,4 +60,7 @@ public abstract class Mage {
 
     //special method that doesn't take in attkstats cuz it uses the one attributed to the object already
     public abstract ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY); //returns projectiles to add to game list
+
+    //for implementing super
+    public abstract ArrayList<Projectile> special(Player p, double targetX, double targetY); //returns projectiles to add to game list
 }

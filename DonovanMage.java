@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 public class DonovanMage extends Mage {
     public DonovanMage() {
-        super("Donovan Mage", 75, 120, 15, 10, 2000,
-                new AttackStats(20, 30, 12, 100, 1, 10, new Color(214, 15, 15), true,
-                    new AttackStats(10, 20, 12, 100, 1, 7, new Color(0, 0, 200), true,
-                        new AttackStats(5, 10, 12, 100, 1, 5, new Color(0, 200, 0)))));
+        super("Donovan Mage", 75, 120, 15, 10, 2000, 8000);
     }
 
     @Override
@@ -15,7 +12,10 @@ public class DonovanMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             double angle = Game.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i);
-            newProjs.add(new Projectile(x, y, angle, this.getAttackStats(),
+            newProjs.add(new Projectile(x, y, angle,
+                    new AttackStats(20, 30, 12, 100, 1, 10, new Color(214, 15, 15), true,
+                    new AttackStats(10, 20, 12, 100, 1, 7, new Color(0, 0, 200), true,
+                    new AttackStats(5, 10, 12, 100, 1, 5, new Color(0, 200, 0)))),
                     (x1, y1, angle1, splitStats) -> createMoreProjectiles(x1, y1, angle1, splitStats)));
         }
         return newProjs;
@@ -42,6 +42,13 @@ public class DonovanMage extends Mage {
         }
         return newProjs;
     }
+
+    @Override
+    public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
+        p.addStatusEffect(new StatusEffect("Donovan", 30, 1, -1, 1, 3, 6000, new Color(0, 0, 0)));
+        return new ArrayList<>();
+    }
+
     @Override
     public String toString() {
         return super.toString() + ": very cool";

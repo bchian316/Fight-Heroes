@@ -56,7 +56,7 @@ public class Map implements Drawable{
             //we only want the center half of the projectile to trigger a wall collision (like nita peeking)
             if (t != null) {
                 //no splitting (like if gene shoots a wall)
-                t.getDamaged(projectiles.remove(i).getDamage());
+                t.getDamaged(projectiles.remove(i).getDamage(), p.getColor());
                 if (p.splitsOnImpact()) {//if they split ON IMPACT, then they can split off a wall. Otherwise, if they only split from range, they dont split
                     Game.addProjectiles(projectiles, p.split());
                 }

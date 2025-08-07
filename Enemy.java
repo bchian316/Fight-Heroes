@@ -18,18 +18,28 @@ public abstract class Enemy extends Entity {
 
     private final int passiveRange; //should always stay within this range
 
+    private final Timer regenTimer;
+    private final int regen; //how much health it heals and how often
+
     private boolean maneuvering = false;
 
-    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange,
-            AttackStats attk, int power) {
-        super(name, "monsters", x, y, size, health, speed, reload, attk);
+    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int regen,
+            int regenTick, int power) {
+        super(name, "monsters", x, y, size, health, speed, reload);
 
         this.passiveRange = passiveRange; //even stationary enemies should have >0 passive range to move out of walls
+
+        this.regen = regen;
+        this.regenTimer = new Timer(regenTick, (int) (Math.random() * regenTick));
 
         this.power = power; //also unique to enemies - a rating for their power to create rooms
 
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
+    }
+    
+    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int power) {
+        this(name, x, y, size, health, speed, reload, passiveRange, 0, 0, power);
     }
 
     private boolean isWiggling(int collisions) {
@@ -92,7 +102,7 @@ public abstract class Enemy extends Entity {
         //if enemy is in wall, enter flowstate and move away from wall; keep moving until not in wall
     }
 
-    public void update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
+    public ArrayList<DamageCounter> update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
 
         if (this.justSpawned) {
             this.flowFromWall(map);
@@ -130,12 +140,19 @@ public abstract class Enemy extends Entity {
             this.setMoveTarget(map, playerX, playerY);
         }
 
-        //reload and attack
-        this.reload();
+        //attack if loaded
         if (this.isLoaded()) {
             Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.unload();
         }
+
+        this.regenTimer.update();
+        if (this.regenTimer.isDone()) {
+            this.heal(this.regen);
+            this.regenTimer.reset();
+        }
+
+        return super.update();
     }
     
     public int getPower() {

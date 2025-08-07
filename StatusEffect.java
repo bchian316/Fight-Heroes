@@ -1,33 +1,33 @@
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Color;
-
 import javax.swing.ImageIcon;
 
-public class StatusEffect {
+public class StatusEffect implements Cloneable{
     private static final int ICON_SIZE = 30;
     private static final int ICON_BORDER_WIDTH = 6;
     private static final int DAMAGE_TICK_LENGTH = 1000;
 
     private final String name;
-    private final int tickDamage;
-    private int tickDamageTimer;
-    private final double regenReduction, defenseReduction, speedReduction, reloadReduction; //these are percentages (0.3 is -30% speed or -30% reload or + 30% extra damage)
-    //stop regenReduction, reduce health over time, increase damage taken over time, reduce speedReduction, reduce reloadReduction
-    private double timer = 0;
+    private final int tickHealthChange;
+    private final Timer tickDamageTimer = new Timer(DAMAGE_TICK_LENGTH);
+    private final double regenChange, defenseChange, speedChange, reloadChange; //these are percentages (0.3 is -30% speed or -30% reload or + 30% extra damage)
+    //stop regenChange, reduce health over time, increase damage taken over time, reduce speedChange, reduce reloadChange
+    private final Timer timer;
     private final int time;
     private final Image image;
     private final Color color;
 
-    public StatusEffect(String name, int tickDamage, double regenReduction, double defenseReduction, double speedReduction, double reloadReduction, int time, Color color) {
+    public StatusEffect(String name, int tickHealthChange, double regenChange, double defenseChange, double speedChange, double reloadChange, int time, Color color) {
         this.name = name;
-        this.tickDamage = tickDamage;
-        this.regenReduction = regenReduction;
-        this.defenseReduction = defenseReduction;
-        this.speedReduction = speedReduction;
-        this.reloadReduction = reloadReduction;
+        this.tickHealthChange = tickHealthChange;
+        this.regenChange = regenChange;
+        this.defenseChange = defenseChange;
+        this.speedChange = speedChange;
+        this.reloadChange = reloadChange;
         this.time = time;
+        this.timer = new Timer(this.time);
         this.image = new ImageIcon("assets/status effects/" + this.name + ".png").getImage()
                 .getScaledInstance(StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE, Image.SCALE_DEFAULT);
         this.color = color;
@@ -37,27 +37,27 @@ public class StatusEffect {
         return name;
     }
     
-    public int getTickDamage() {
+    public int getTickHealthChange() {//make sure to only call once per frame
         if (this.updateTickDamageTimer()) {
-            return tickDamage;
+            return tickHealthChange;
         }
         return 0;
     }
 
-    public double getRegenReduction() {
-        return regenReduction;
+    public double getRegenChange() {
+        return regenChange;
     }
 
-    public double getDefenseReduction() {
-        return defenseReduction;
+    public double getDefenseChange() {
+        return defenseChange;
     }
 
-    public double getSpeedReduction() {
-        return speedReduction;
+    public double getSpeedChange() {
+        return speedChange;
     }
 
-    public double getReloadReduction() {
-        return reloadReduction;
+    public double getReloadChange() {
+        return reloadChange;
     }
 
     public int getTime() {
@@ -65,7 +65,11 @@ public class StatusEffect {
     }
 
     public void resetTimer() {
-        this.timer = 0;
+        this.timer.reset();
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 
     public void drawIcon(Graphics g, int x, int y) {
@@ -74,27 +78,28 @@ public class StatusEffect {
         g.fillOval(x - StatusEffect.ICON_SIZE/2, y - StatusEffect.ICON_SIZE/2, StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE);
         g.drawImage(this.image, x - StatusEffect.ICON_SIZE/2, y - StatusEffect.ICON_SIZE/2, null);
         g.setColor(Color.WHITE);
-        for (int i = 0; i < StatusEffect.ICON_BORDER_WIDTH; i++) {
-            g.drawArc(x - StatusEffect.ICON_SIZE/2 - i/2, y - StatusEffect.ICON_SIZE/2 - i/2, StatusEffect.ICON_SIZE+i, StatusEffect.ICON_SIZE+i, 90, (int) (360 * this.timer / this.time));
+        for (int i = 1; i < StatusEffect.ICON_BORDER_WIDTH; i++) {
+            g.drawArc(x - StatusEffect.ICON_SIZE/2 - i/2, y - StatusEffect.ICON_SIZE/2 - i/2, StatusEffect.ICON_SIZE+i, StatusEffect.ICON_SIZE+i, 90, (int) (360 * this.timer.doneFraction()));
             
         }
     }
 
     public boolean updateTickDamageTimer() {
-        this.tickDamageTimer += Game.updateDelay();
-        if (this.tickDamageTimer >= StatusEffect.DAMAGE_TICK_LENGTH) {
-            this.tickDamageTimer = 0;
+        this.tickDamageTimer.update();
+        if (this.tickDamageTimer.isDone()) {
+            this.tickDamageTimer.reset();
             return true;
         }
         return false;
     }
 
     public boolean updateAndExpire() {
-        this.timer += Game.updateDelay();
-        if (this.timer >= this.time) {
-            this.timer = 0; //reset timer for the next application: enemies will always have the same statusEffect object
-            return true; //statusEffect is over
-        }
-        return false;
+        this.timer.update();
+        return this.timer.isDone();
+    }
+
+    @Override
+    protected StatusEffect clone() throws CloneNotSupportedException {
+        return (StatusEffect)super.clone();
     }
 }

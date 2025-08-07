@@ -5,19 +5,20 @@ import java.util.ArrayList;
 public class Ben extends SpawnerEnemy {
     private final static int SPAWN_RANGE = 200;
     public Ben(int x, int y) {
-        super("Ben", x, y, 150, 450, 2, 3500, 800, new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false,
-                new AttackStats(5, 25, 8, 500, 2, 10, new Color(252, 170, 45))), 25, 12000);
+        super("Ben", x, y, 150, 450, 2, 3500, 800, 12000, 25);
     }
 
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (double i = -1.5; i <= 1.5; i++) {
             double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
-                    + Math.toRadians((i - 1.5) * 30);
+                    + Math.toRadians(i * 30);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
-                    this.getAttackStats(), (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
+                    new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false,
+                            new AttackStats(5, 25, 8, 500, 2, 10, new Color(252, 170, 45))),
+                        (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         }
         return newProjs;
     }

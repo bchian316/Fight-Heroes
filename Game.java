@@ -1,8 +1,8 @@
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -11,6 +11,9 @@ public class Game extends JPanel {
     public static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
             new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
             new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new CloudMage(), new DonovanMage()};
+    
+
+    private static final Font FONT = new Font("harrington", Font.BOLD, 30);
     private final Player player;
     
     public final static int NUM_LEVELS = Level.LEVELS.length;
@@ -22,13 +25,19 @@ public class Game extends JPanel {
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> enemyProjectiles = new ArrayList<>();
 
+    private final ArrayList<DamageCounter> damageCounters = new ArrayList<>();
+
     private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Tile.SIZE);
     
     public Game() {
         super();
+
+        this.setFont(FONT);
         this.addMouseListener(l);
         this.addKeyListener(l);
+        
         //choose player
+        
         for (int i = 0; i < Game.mages.length - 1; i++) {
             System.out.println(i + ". " + Game.mages[i].toString());
         }
@@ -36,6 +45,8 @@ public class Game extends JPanel {
         try (Scanner scanner = new Scanner(System.in)) {
             this.player = new Player(Game.mages[scanner.nextInt()]);
         }
+        
+        this.requestFocusInWindow();
 
         new Timer((int) (1000.0 / Game.FPS), _ -> this.update()).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
@@ -54,7 +65,13 @@ public class Game extends JPanel {
         if (this.player.isLoaded()) {
             Game.addProjectiles(this.playerProjectiles,
                     this.player.attack(targetX, targetY));
-            this.player.unload();
+        }
+    }
+
+    public void attemptPlayerSpecial(double targetX, double targetY) {
+        if (this.player.isSpecialLoaded()) {
+            Game.addProjectiles(this.playerProjectiles,
+                    this.player.special(targetX, targetY));
         }
     }
 
@@ -65,28 +82,28 @@ public class Game extends JPanel {
     }
     
     private void update() {//update frame
+        //update includes removing
         if (this.player.isDead()) {
             System.out.println("YOU DIED!");
             System.exit(0);
         }
-        //will not need this line later once we implement wall physics
-        this.player.update(l.getPressedKeys(), this.map);
-        this.checkPlayerProjectiles();
-        Game.removeProjectiles(this.playerProjectiles);
-        Game.updateProjectiles(this.playerProjectiles);
 
-        //bad guys
-        this.checkEnemyProjectiles();
-        this.updateEnemies();
-        this.removeEnemies();
+        //update entities
+        this.addDamageCounter(this.player.update(l.getPressedKeys(), this.map));
+        this.updateEnemies(); //will add damage counters
         this.spawnEnemies();
 
-        Game.removeProjectiles(this.enemyProjectiles);
+        //check good guy projectiles
+        this.checkProjectileCollision(this.enemies, this.playerProjectiles);
+        Game.updateProjectiles(this.playerProjectiles);
+        this.map.checkProjectiles(this.playerProjectiles); //hit walls
+        
+        //bad guy projectiles
+        this.checkProjectileCollision(this.player, this.enemyProjectiles);
         Game.updateProjectiles(this.enemyProjectiles);
+        this.map.checkProjectiles(this.enemyProjectiles); //hit walls
 
-        //check if projectiles hit walls
-        this.map.checkProjectiles(this.enemyProjectiles);
-        this.map.checkProjectiles(this.playerProjectiles);
+        this.updateDamageCounters();
 
         if (this.enemies.isEmpty() && this.player.getLevelNumber() < Level.LEVELS.length-1) {
             this.portal.show();
@@ -109,11 +126,12 @@ public class Game extends JPanel {
         this.player.setToStartCoords();
         this.player.fullHeal();
         this.player.load();
+        this.player.loadSpecial();
         this.player.clearStatusEffects();
     }
 
     
-    private static void removeProjectiles(ArrayList<Projectile> projectiles) {
+    private static void updateProjectiles(ArrayList<Projectile> projectiles) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
             Projectile currentProj = projectiles.get(i);
             if (currentProj.shouldKillSelf()) {
@@ -121,7 +139,9 @@ public class Game extends JPanel {
                     Game.addProjectiles(projectiles, currentProj.split());
                 }
                 projectiles.remove(i);
+                continue;
             }
+            currentProj.update();
             //if currentproj is colliding with enemy
         }
     }
@@ -129,64 +149,42 @@ public class Game extends JPanel {
     public static void addProjectiles(ArrayList<Projectile> projectiles, ArrayList<Projectile> newProjectiles) {
         projectiles.addAll(newProjectiles);
     }
-    
-    private static void updateProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile p : projectiles) {
-            p.update();
-        }
-    }
 
-    private void checkPlayerProjectiles() {//if player projectiles hit enemy
-        for (int i = this.playerProjectiles.size() - 1; i >= 0; i--) {
-            Projectile currentProj = this.playerProjectiles.get(i);
-            for (Enemy e : enemies) {
+    private void checkProjectileCollision(ArrayList<? extends Entity> entities, ArrayList<Projectile> projectiles) {
+        for (int i = projectiles.size() - 1; i >= 0; i--) {
+            Projectile currentProj = projectiles.get(i);
+            for (Entity e : entities) {
                 if (e.isHit(currentProj) && !currentProj.damagedAlready(e)) {
-                    e.getDamaged(currentProj.getDamage());
+                    this.addDamageCounter(e.getDamaged(currentProj.getDamage(), currentProj.getColor()));
+                    e.addStatusEffect(currentProj.getStatusEffect());
                     currentProj.addHitEnemy(e);
+
                     if (currentProj.splitsOnImpact()) {
-                        Game.addProjectiles(this.playerProjectiles, currentProj.split());
+                        Game.addProjectiles(projectiles, currentProj.split());
                     }
-                    if (currentProj.donePierce()) {//by piercing too many enemies
-                        this.playerProjectiles.remove(i);
+                    if (currentProj.donePierce()) {//by piercing too many entities
+                        projectiles.remove(i);
                         break;
                     }
+
                 }
             }
-            //if currentproj is colliding with enemy
         }
     }
-    private void checkEnemyProjectiles() { //if enemy projectiles hit player
-        for (int i = this.enemyProjectiles.size() - 1; i >= 0; i--) {
-            Projectile currentProj = this.enemyProjectiles.get(i);
-            if (this.player.isHit(currentProj) && !currentProj.damagedAlready(this.player)) {
-                this.player.getDamaged(currentProj.getDamage());
-                this.player.addStatusEffect(currentProj.getStatusEffect());
-                currentProj.addHitEnemy(player);
-                if (currentProj.splitsOnImpact()) {
-                    Game.addProjectiles(this.enemyProjectiles, currentProj.split());
-                }
-                if (currentProj.donePierce()) {//pierce too many good guys
-                    this.enemyProjectiles.remove(i);
-                    break;
-                }
-            }
-            //if currentproj is colliding with enemy
-        }
-    }
-    
-    private void updateEnemies() {
-        for (Enemy e : this.enemies) {
-            e.update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, this.map);
-        }
+    private void checkProjectileCollision(Entity e, ArrayList<Projectile> projectiles) {
+        ArrayList<Entity> oneEntity = new ArrayList<>();
+        oneEntity.add(e);
+        checkProjectileCollision(oneEntity, projectiles);
     }
 
-    private void removeEnemies() {
+    private void updateEnemies() {
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
             if (enemies.get(i).isDead()) {
-
                 enemies.remove(i);
+                continue;
             }
+            this.addDamageCounter(enemies.get(i).update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, this.map));
             //if currentproj is colliding with enemy
         }
     }
@@ -196,7 +194,7 @@ public class Game extends JPanel {
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
             if (enemies.get(i) instanceof SpawnerEnemy) {
-                SpawnerEnemy spawnerEnemy = (SpawnerEnemy)(enemies.get(i));
+                SpawnerEnemy spawnerEnemy = (SpawnerEnemy) (enemies.get(i));
                 if (spawnerEnemy.spawnLoaded()) {
                     enemies.addAll(spawnerEnemy.spawn(this.map));
                 }
@@ -205,12 +203,33 @@ public class Game extends JPanel {
         }
     }
 
+    private void addDamageCounter(DamageCounter d) {
+        if (d != null) {
+            this.damageCounters.add(d);
+        }
+    }
 
+    private void addDamageCounter(ArrayList<DamageCounter> d) {
+        for (DamageCounter d_ : d) {
+            this.addDamageCounter(d_);
+        }
+    }
+
+    private void updateDamageCounters() {
+        for (int i = this.damageCounters.size() - 1; i >= 0; i--) {
+            if (this.damageCounters.get(i).lifetimeOver()) {
+                this.damageCounters.remove(i);
+                continue;
+            }
+            this.damageCounters.get(i).update();
+        }
+    }
     
     
     @Override
     public void paintComponent(Graphics g) {//draw stuff
         super.paintComponent(g);
+        g.drawString("", 0, 0); //initialize the font
         
         this.map.draw(g);
         
@@ -222,6 +241,8 @@ public class Game extends JPanel {
         this.drawEnemies(g);
 
         this.portal.draw(g);
+
+        this.drawDamageCounters(g);
     }
     private static void drawProjectiles(Graphics g, ArrayList<Projectile> projectiles) {
         for (Projectile p : projectiles) {
@@ -232,6 +253,12 @@ public class Game extends JPanel {
     private void drawEnemies(Graphics g) {
         for (Enemy e : this.enemies) {
             e.draw(g);
+        }
+    }
+
+    private void drawDamageCounters(Graphics g) {
+        for (DamageCounter d : this.damageCounters) {
+            d.draw(g);
         }
     }
     

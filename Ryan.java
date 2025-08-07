@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 public class Ryan extends SpawnerEnemy {
     public Ryan(int x, int y) {
-        super("Ryan", x, y, 150, 650, 3, 6000, 800, new AttackStats(18, 75, 6, 350, 1, 75, new Color(235, 20, 5), true,
-                new AttackStats(8, 50, 8, 275, 1, 20, new Color(235, 77, 5), true,
-                        new AttackStats(6, 25, 10, 200, 1, 20, new Color(235, 112, 5), false,
-                                new AttackStats(5, 15, 3, 100, 1, 1, new Color(235, 162, 5))))), 50, 10000);
+        super("Ryan", x, y, 150, 650, 3, 6000, 800, 10000, 50);
     }
 
 
@@ -16,12 +13,16 @@ public class Ryan extends SpawnerEnemy {
         //targetX will remain constant for all child bullets - game.getangle will be current direction
         this.heal(20);
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = -1; i <= 1; i++) {
             double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
-                            + Math.toRadians((i - 1) * 45);
+                            + Math.toRadians(i * 45);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     angle,
-                    this.getAttackStats(), (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
+                    new AttackStats(18, 75, 6, 350, 1, 75, new Color(235, 20, 5), true,
+                    new AttackStats(8, 50, 8, 275, 1, 20, new Color(235, 77, 5), true,
+                    new AttackStats(6, 25, 10, 200, 1, 20, new Color(235, 112, 5), false,
+                    new AttackStats(5, 15, 3, 100, 1, 1, new Color(235, 162, 5))))),
+                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         }
         return newProjs;
     }

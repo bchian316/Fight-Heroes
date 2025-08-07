@@ -5,8 +5,7 @@ import java.util.ArrayList;
 public class Frankenstein extends Enemy {
 
     public Frankenstein(int x, int y) {
-        super("Frankenstein", x, y, 115, 175, 2, 1750, 300, new AttackStats(20, 80, 20, 75, 1, 75, new Color(142, 189, 0), false,
-                new AttackStats(8, 15, 10, 150, 2, 15, new Color(55, 140, 90))), 4);
+        super("Frankenstein", x, y, 115, 175, 2, 1750, 300, 4);
     }
 
     @Override
@@ -14,7 +13,8 @@ public class Frankenstein extends Enemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
-                    this.getAttackStats(),
+                    new AttackStats(20, 80, 20, 75, 1, 75, new Color(142, 189, 0), false,
+                    new AttackStats(8, 15, 10, 150, 2, 15, new Color(55, 140, 90))),
                     (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
         return newProjs;
     }
@@ -23,9 +23,9 @@ public class Frankenstein extends Enemy {
             AttackStats splitStats) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         // shoots twice from himself
-        for (int i = 0; i < 9; i++) {
+        for (int i = -4; i <= 4; i++) {
             newProjs.add(new Projectile(x, y,
-                    angle - Math.toRadians((i-4)*40),
+                    angle - Math.toRadians(i*40),
                     splitStats));
         }
         return newProjs;

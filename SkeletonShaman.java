@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class SkeletonShaman extends SpawnerEnemy {
     public SkeletonShaman(int x, int y) {
-        super("Skeleton Shaman", x, y, 65, 55, 3, 1000, 400, new AttackStats(8, 25, 13, 200, 1, 20, new Color(200, 207, 8)), 5, 4000);
+        super("Skeleton Shaman", x, y, 65, 55, 3, 1000, 400, 4000, 5);
     }
 
 
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(10),
-                this.getAttackStats()));
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) - Math.toRadians(10),
-                this.getAttackStats()));
+        for (int i = -1; i <= 1; i += 2) {
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(10)*i,
+                    new AttackStats(8, 25, 13, 200, 1, 20, new Color(200, 207, 8))));
+        }
         return newProjs;
     }
 
