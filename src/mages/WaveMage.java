@@ -23,7 +23,7 @@ public class WaveMage extends Mage {
         for (double i = -2.5; i <= 2.5; i++) {
             newProjs.add(new Projectile(x + Game.getVectorX(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i),
                     y + Game.getVectorY(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i), angle,
-                    new AttackStats(6, 15, 13, 250, 3, 2, new Color(36, 227, 144))));
+                    new AttackStats(6, 15, 13, 250, 3, 2, new Color(36, 227, 144)), null));
         }
         return newProjs;
     }
@@ -37,7 +37,7 @@ public class WaveMage extends Mage {
                     p.getCenterY() + Game.getVectorY(angle + Math.PI / 2, WaveMage.SUPEROFFSET * i), angle,
                     new AttackStats(
                             new StatusEffect("Disease", -4, -0.8, 0, 0, 0, 8000, new Color(36, 227, 144)),
-                            9, 30, 18, 350, -1, 2, new Color(16, 207, 125))));
+                            9, 30, 18, 350, -1, 2, new Color(16, 207, 125)), null));
         }
         return newProjs;
     }

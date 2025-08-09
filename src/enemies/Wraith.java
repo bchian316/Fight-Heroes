@@ -3,9 +3,11 @@ package enemies;
 import game.Game;
 import game.AttackStats;
 import game.Projectile;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Wraith extends SpawnerEnemy {
     public Wraith(int x, int y) {
@@ -17,33 +19,33 @@ public class Wraith extends SpawnerEnemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
-                        new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false, true,
-                        new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false, true,
+                        new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false, true, false,
+                        new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false, true, false,
                         new AttackStats(10, 20, 8, 200, 2, 20, new Color(0, 105, 17)))),
-                (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
+                (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         
         return newProjs;
     }
 
-    public ArrayList<Projectile> moreAttack(double x, double y, double angle, AttackStats splitStats) {
+    public ArrayList<Projectile> moreAttack(double x, double y, double angle, AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         // shoots twice from himself
         newProjs.add(new Projectile(x, y, angle - Math.toRadians(45), splitStats, 
-                (x1, y1, angle1, splitStats1) -> evenMoreAttack(x1, y1, angle1, splitStats1)));
+                (x1, y1, angle1, splitStats1, hitObjects1) -> evenMoreAttack(x1, y1, angle1, splitStats1, hitObjects1), hitObjects));
         newProjs.add(new Projectile(x, y, angle + Math.toRadians(45), splitStats, 
-                (x1, y1, angle1, splitStats1) -> evenMoreAttack(x1, y1, angle1, splitStats1)));
+                (x1, y1, angle1, splitStats1, hitObjects1) -> evenMoreAttack(x1, y1, angle1, splitStats1, hitObjects1), hitObjects));
         return newProjs;
     }
 
     public ArrayList<Projectile> evenMoreAttack(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(x, y,
                 angle - Math.toRadians(30),
-                splitStats));
+                splitStats, hitObjects));
         newProjs.add(new Projectile(x, y,
                 angle + Math.toRadians(30),
-                splitStats));
+                splitStats, hitObjects));
         return newProjs;
     }
 

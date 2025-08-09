@@ -19,7 +19,7 @@ public class IceMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -3; i <= 3; i++) {
             newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(i * 12),
-                    new AttackStats(16, 20, 18, 200, 1, 20, new Color(0, 100, 200))));
+                    new AttackStats(16, 20, 18, 200, 1, 20, new Color(0, 100, 200)), null));
         }
         return newProjs;
     }
@@ -30,7 +30,7 @@ public class IceMage extends Mage {
         for (int i = -1; i <= 1; i++) {
             newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(),
                     Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY) + i*Math.toRadians(25),
-                    new AttackStats(new StatusEffect("Freeze", 0, 0, 0, -0.5, 0, 5000, new Color(0, 150, 250)), 10, 20, 18, 350, 1, 20, new Color(0, 150, 250))));
+                    new AttackStats(new StatusEffect("Freeze", 0, 0, 0, -0.5, 0, 5000, new Color(0, 150, 250)), 10, 20, 18, 350, 1, 20, new Color(0, 150, 250)), null));
         }
         return newProjs;
     }

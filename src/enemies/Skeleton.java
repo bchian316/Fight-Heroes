@@ -18,7 +18,7 @@ public class Skeleton extends Enemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
-                new AttackStats(7, 15, 12, 200, 1, 7, new Color(255, 255, 255))));
+                new AttackStats(7, 15, 12, 200, 1, 7, new Color(255, 255, 255)), null));
         return newProjs;
     }
     

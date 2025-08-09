@@ -4,9 +4,11 @@ import game.Game;
 import game.AttackStats;
 import game.Projectile;
 import game.Player;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class LightningMage extends Mage {
     private static final int SPECIAL_SPREAD = 35; //pixels between projectiles
@@ -19,7 +21,7 @@ public class LightningMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), new AttackStats(60, 75, 20, 350, 2, 20, new Color(178, 78, 204))));
+        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), new AttackStats(60, 75, 20, 350, 2, 20, new Color(178, 78, 204)), null));
         return newProjs;
     }
     @Override
@@ -31,27 +33,27 @@ public class LightningMage extends Mage {
                     p.getCenterX() + i * Game.getVectorX(angle + Math.PI / 2, SPECIAL_SPREAD),
                     p.getCenterY() + i * Game.getVectorY(angle + Math.PI / 2, SPECIAL_SPREAD),
                     angle - Math.toRadians(SPECIAL_ANGLE/2),
-                    new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164), false, true,
-                    new AttackStats(20, 20, 10, 200, 3, 10, new Color(148, 48, 164), false, true,
+                    new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164), false, true, true,
+                    new AttackStats(20, 20, 10, 200, 3, 10, new Color(148, 48, 164), false, true, true,
                     new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164)))),
-                    (x1, y1, angle1, splitStats) -> special2(x1, y1, angle1, splitStats)));
+                    (x1, y1, angle1, splitStats, hitObjects) -> special2(x1, y1, angle1, splitStats, hitObjects), null));
         }
         return newProjs;
     }
 
     public ArrayList<Projectile> special2(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(x, y, angle + Math.toRadians(SPECIAL_ANGLE), splitStats,
-                (x1, y1, angle1, splitStats1) -> special3(x1, y1, angle1, splitStats1)));
+                (x1, y1, angle1, splitStats1, hitObjects1) -> special3(x1, y1, angle1, splitStats1, hitObjects1), hitObjects));
 
         return newProjs;
     }
 
     public ArrayList<Projectile> special3(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x, y, angle - Math.toRadians(SPECIAL_ANGLE), splitStats));
+        newProjs.add(new Projectile(x, y, angle - Math.toRadians(SPECIAL_ANGLE), splitStats, hitObjects));
 
         return newProjs;
     }

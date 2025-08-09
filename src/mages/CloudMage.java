@@ -5,9 +5,11 @@ import game.AttackStats;
 import game.StatusEffect;
 import game.Projectile;
 import game.Player;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CloudMage extends Mage {
     public CloudMage() {
@@ -19,18 +21,18 @@ public class CloudMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
-                new AttackStats(15, 35, 15, 300, -1, 25, new Color(255, 255, 255), false, true,
+                new AttackStats(15, 35, 15, 300, -1, 25, new Color(255, 255, 255), false, true, false,
                 new AttackStats(15, 35, 20, 300, -1, 25, new Color(255, 255, 255))),
-                (x1, y1, angle1, splitStats) -> createMoreProjectiles(x1, y1, angle1, splitStats)));
+                (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
     }
 
     //to spawn split shots, needs a specific set of stats
     //MAKE SURE THAT THE OFFSET IS OFF OF THE PROJECTILE NOT THE PLAYER
     public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x, y, angle + Math.PI, splitStats));
+        newProjs.add(new Projectile(x, y, angle + Math.PI, splitStats, hitObjects));
 
         return newProjs;
     }

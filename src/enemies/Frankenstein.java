@@ -3,9 +3,11 @@ package enemies;
 import game.Game;
 import game.AttackStats;
 import game.Projectile;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Frankenstein extends Enemy {
 
@@ -18,20 +20,20 @@ public class Frankenstein extends Enemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
-                    new AttackStats(20, 80, 20, 75, 1, 75, new Color(142, 189, 0), false, true,
+                    new AttackStats(20, 80, 20, 75, 1, 75, new Color(142, 189, 0), false, true, false,
                     new AttackStats(8, 15, 10, 150, 2, 15, new Color(55, 140, 90))),
-                    (x1, y1, angle1, splitStats) -> moreAttack(x1, y1, angle1, splitStats)));
+                    (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
     }
 
     public ArrayList<Projectile> moreAttack(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         // shoots twice from himself
         for (int i = -4; i <= 4; i++) {
             newProjs.add(new Projectile(x, y,
                     angle - Math.toRadians(i*40),
-                    splitStats));
+                    splitStats, hitObjects));
         }
         return newProjs;
     }

@@ -18,7 +18,7 @@ public class Vampire extends Enemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
-                new AttackStats(25, 25, 25, 600, 1, 10, new Color(255, 18, 18))));
+                new AttackStats(25, 25, 25, 600, 1, 10, new Color(255, 18, 18)), null));
         return newProjs;
     }
     

@@ -18,7 +18,7 @@ public class Grave extends SpawnerEnemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i * 45),
-                    new AttackStats(7, 30, 18, 300, 1, 20, new Color(57, 57, 57))));
+                    new AttackStats(7, 30, 18, 300, 1, 20, new Color(57, 57, 57)), null));
         }
         return newProjs;
     }

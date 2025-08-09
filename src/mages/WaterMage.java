@@ -4,9 +4,11 @@ import game.Game;
 import game.AttackStats;
 import game.Projectile;
 import game.Player;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class WaterMage extends Mage {
     private static final int SPECIAL_DISTANCE = 125;
@@ -20,19 +22,19 @@ public class WaterMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
-                new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false, true,
+                new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false, true, false,
                 new AttackStats(8, 10, 15, 125, 1, 10, new Color(0, 25, 217))),
-                (x1, y1, angle1, splitStats) -> createMoreProjectiles(x1, y1, angle1, splitStats)));
+                (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
     }
 
     //to spawn split shots, needs a specific set of stats
     //MAKE SURE THAT THE OFFSET IS OFF OF THE PROJECTILE NOT THE PLAYER
-    public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle, AttackStats splitStats) {
+    public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle, AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
 
-        for (int i = 0; i < 9; i++) {
-            newProjs.add(new Projectile(x, y, angle - Math.toRadians((i - 4) * 15.0), splitStats));
+        for (int i = -4; i <= 4; i++) {
+            newProjs.add(new Projectile(x, y, angle - Math.toRadians(i * 15.0), splitStats, hitObjects));
         }
 
         return newProjs;
@@ -46,7 +48,7 @@ public class WaterMage extends Mage {
             double angle = Math.toRadians(i * 45.0);
             newProjs.add(new Projectile(targetX + Game.getVectorX(angle + Math.PI, SPECIAL_DISTANCE),
                     targetY + Game.getVectorY(angle + Math.PI, SPECIAL_DISTANCE), angle, 
-                    new AttackStats(8, 15, 8, SPECIAL_DISTANCE + 50, 2, 10, new Color(25, 25, 225))));
+                    new AttackStats(8, 15, 8, SPECIAL_DISTANCE + 50, 2, 10, new Color(25, 25, 225)), null));
         }
 
         return newProjs;

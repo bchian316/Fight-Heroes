@@ -63,6 +63,7 @@ public abstract class Mage {
     }
 
     //special method that doesn't take in attkstats cuz it uses the one attributed to the object already
+    //not a splitprojectileinterface
     public abstract ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY); //returns projectiles to add to game list
 
     //for implementing super

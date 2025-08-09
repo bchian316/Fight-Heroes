@@ -16,9 +16,10 @@ public class AttackStats {
     private final AttackStats splitStats;
     private final boolean splitsOnImpact; //splits on impact with walls and enemies
     private final boolean splitsAtEnd; //splits at end of range
+    private final boolean splitInheritance; //split projs retain same hit enemies as parents
 
     public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce,
-            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, AttackStats splitStats) {
+            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
         this.statusEffect = statusEffect;
         this.damage = damage;
         this.size = size;
@@ -30,19 +31,20 @@ public class AttackStats {
         this.splitsOnImpact = splitsOnImpact;
         this.splitsAtEnd = splitsAtEnd;
         this.splitStats = splitStats;
+        this.splitInheritance = splitInheritance;
     }
 
     public AttackStats(int damage, int size, int speed, int range, int maxPierce,
-            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, AttackStats splitStats) {
-        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, splitsOnImpact, splitsAtEnd, splitStats);
+            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, splitsOnImpact, splitsAtEnd, splitInheritance, splitStats);
     }
 
     public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
-        this(statusEffect, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, null);
+        this(statusEffect, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, null);
     }
 
     public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
-        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, null);
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, null);
     }
     
     public StatusEffect statusEffect() {
@@ -87,5 +89,9 @@ public class AttackStats {
 
     public boolean splitsAtEnd() {
         return this.splitsAtEnd;
+    }
+
+    public boolean splitInheritance() {
+        return this.splitInheritance;
     }
 }

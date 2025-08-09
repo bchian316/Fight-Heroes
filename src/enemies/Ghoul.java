@@ -19,7 +19,7 @@ public class Ghoul extends Enemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -3; i <= 3; i++) {
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i*12),
-                    new AttackStats(8, 30, 6, 250, 2, 7, new Color(31, 122, 240))));
+                    new AttackStats(8, 30, 6, 250, 2, 7, new Color(31, 122, 240)), null));
         }
         return newProjs;
     }

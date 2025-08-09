@@ -17,7 +17,8 @@ public class DarkMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), new AttackStats(50, 15, 40, 500, -1, 15, new Color(0, 0, 0))));
+        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY),
+                new AttackStats(50, 15, 40, 500, -1, 15, new Color(0, 0, 0)), null));
         return newProjs;
     }
 

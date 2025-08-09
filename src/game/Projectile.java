@@ -9,23 +9,27 @@ public class Projectile implements Drawable{
     private double x, y;
     private final double velX, velY;
     private final AttackStats attk;
-    private final HashSet<HasHealth> hitEnemies;
+    private final HashSet<HasHealth> hitObjects = new HashSet<>(); //can be entities or walls because they both implement hashealth
     private double distanceTraveled = 0;
     private SplitProjectileInterface split;//you actually can have a projectile that can pierce and split
 
-    public Projectile(double x, double y, double angle, AttackStats attk, SplitProjectileInterface split) {
+    public Projectile(double x, double y, double angle, AttackStats attk, SplitProjectileInterface split, HashSet<HasHealth> hitObjects) {
         //x and y should be the center of the player, not his actual coords
+        //parent splitprojectile constructor
         this.x = x - attk.size() / 2;
         this.y = y - attk.size() / 2;
         this.velX = Math.cos(angle) * attk.speed();
         this.velY = Math.sin(angle) * attk.speed();
         this.attk = attk;
-        this.hitEnemies = new HashSet<>();
+        if (hitObjects != null) {//dont inherit anything
+            this.hitObjects.addAll(hitObjects);
+        }
         this.split = split;
     }
     
-    public Projectile(double x, double y, double angle, AttackStats attk) {
-        this(x, y, angle, attk, null);
+    public Projectile(double x, double y, double angle, AttackStats attk, HashSet<HasHealth> hitObjects) {
+        //unsplitting projectile, still need extra param to add inherited hashealths
+        this(x, y, angle, attk, null, hitObjects);
     }
     
     @Override
@@ -65,7 +69,7 @@ public class Projectile implements Drawable{
     }
 
     public void addHitEnemy(HasHealth h) {
-        this.hitEnemies.add(h);
+        this.hitObjects.add(h);
     }
 
     public Color getColor() {
@@ -76,11 +80,11 @@ public class Projectile implements Drawable{
         if (this.attk.maxPierce() == -1) {
             return false;
         }
-        return this.hitEnemies.size() >= this.attk.maxPierce();
+        return this.hitObjects.size() >= this.attk.maxPierce();
     }
 
     public boolean damagedAlready(HasHealth h) {
-        return this.hitEnemies.contains(h);
+        return this.hitObjects.contains(h);
     }
 
     public boolean doneTraveling() {
@@ -94,8 +98,13 @@ public class Projectile implements Drawable{
     }
 
     public ArrayList<Projectile> split() {
+        //spawn new projs
         //center x and center y
-        return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats());
+        if (this.splitInheritance()) { //more bad, children cant hit already hit objects
+            return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), this.hitObjects);
+            
+        }
+        return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), null);
     }
 
     public boolean canSplit() {
@@ -108,6 +117,10 @@ public class Projectile implements Drawable{
     
     public boolean splitsAtEnd() {
         return this.attk.splitsAtEnd();
+    }
+
+    public boolean splitInheritance() {
+        return this.attk.splitInheritance();
     }
 
     public StatusEffect getStatusEffect() {

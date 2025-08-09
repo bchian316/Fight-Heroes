@@ -18,7 +18,7 @@ public class SkeletonShaman extends SpawnerEnemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -1; i <= 1; i += 2) {
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(10)*i,
-                    new AttackStats(8, 25, 13, 200, 1, 20, new Color(200, 207, 8))));
+                    new AttackStats(8, 25, 13, 200, 1, 20, new Color(200, 207, 8)), null));
         }
         return newProjs;
     }

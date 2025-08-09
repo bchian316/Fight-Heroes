@@ -14,7 +14,7 @@ import java.awt.Image;
 
 public final class Player extends Entity {
     public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH / 2;
-    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 162;
+    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 115;
 
     private static final Image STAT_FRAME = new ImageIcon("assets/Stat Frame.png").getImage();
     private static final int BAROFFSET = 5;

@@ -20,7 +20,7 @@ public class EarthMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(i * 36),
-                    new AttackStats(7, 40, 20, 200, 1, 15, new Color(125, 78, 16))));
+                    new AttackStats(7, 40, 20, 200, 1, 15, new Color(125, 78, 16)), null));
         }
         return newProjs;
     }

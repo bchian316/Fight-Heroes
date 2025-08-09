@@ -19,11 +19,11 @@ public class PulseMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(x, y, targetX, targetY);
-        newProjs.add(new Projectile(x + PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0))));
-        newProjs.add(new Projectile(x - PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0))));
-        newProjs.add(new Projectile(x, y + PulseMage.ATTKOFFSET, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0))));
-        newProjs.add(new Projectile(x, y - PulseMage.ATTKOFFSET, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0))));
-        newProjs.add(new Projectile(x, y, angle, new AttackStats(20, 30, 15, 175, 2, 1, new Color(0, 115, 0))));
+        newProjs.add(new Projectile(x + PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
+        newProjs.add(new Projectile(x - PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
+        newProjs.add(new Projectile(x, y + PulseMage.ATTKOFFSET, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
+        newProjs.add(new Projectile(x, y - PulseMage.ATTKOFFSET, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
+        newProjs.add(new Projectile(x, y, angle, new AttackStats(20, 30, 15, 175, 2, 1, new Color(0, 115, 0)), null));
         return newProjs;
     }
     @Override
@@ -32,7 +32,7 @@ public class PulseMage extends Mage {
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(),
                 Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY),
                 new AttackStats(new StatusEffect("Fragility", 0, 0, 1, 0, 0, 5000, new Color(50, 50, 50)),
-                0, 25, 12, 100, 1, 1, new Color(35, 70, 35))));
+                0, 25, 12, 100, 1, 1, new Color(35, 70, 35)), null));
         return newProjs;
     }
     @Override

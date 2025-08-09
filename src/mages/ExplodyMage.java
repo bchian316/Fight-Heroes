@@ -5,9 +5,11 @@ import game.AttackStats;
 import game.StatusEffect;
 import game.Projectile;
 import game.Player;
+import game.HasHealth;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ExplodyMage extends Mage {
     private static final int EXPLOSION_OFFSET = 10;
@@ -19,19 +21,19 @@ public class ExplodyMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(x, y, targetX, targetY);
-        newProjs.add(new Projectile(x, y, angle, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true, true,
+        newProjs.add(new Projectile(x, y, angle, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true, true, false,
                 new AttackStats(30, 125, 1, 15, -1, 1, new Color(194, 48, 0))),
-                (x1, y1, angle1, splitStats) -> createMoreProjectiles(x1, y1, angle1, splitStats)));
+                (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
     }
 
     //to spawn split shots, needs a specific set of stats
     //MAKE SURE THAT THE OFFSET IS OFF OF THE PROJECTILE NOT THE PLAYER
     public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(x - Game.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
-                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats));
+                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
 
         return newProjs;
     }
@@ -41,18 +43,18 @@ public class ExplodyMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
-                new AttackStats(5, 25, 10, 225, 1, 25, new Color(255, 40, 38), true, true,
+                new AttackStats(5, 25, 10, 225, 1, 25, new Color(255, 40, 38), true, true, false,
                         new AttackStats(new StatusEffect("Burn", -5, 0.8, 0.2, 0, 0, 7000, new Color(232, 78, 12)), 60,
                                 250, 1, 20, -1, 1, new Color(250, 20, 30))),
-                (x1, y1, angle1, splitStats) -> special2(x1, y1, angle1, splitStats)));
+                (x1, y1, angle1, splitStats, hitObjects) -> special2(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
     }
     
     public ArrayList<Projectile> special2(double x, double y, double angle,
-            AttackStats splitStats) {
+            AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(x - Game.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
-                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats));
+                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
 
         return newProjs;
     }

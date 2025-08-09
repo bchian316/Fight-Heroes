@@ -18,9 +18,9 @@ public class Mummy extends Enemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
-        for (int i = 0; i < 3; i++) {
-            newProjs.add(new Projectile(this.getCenterX() + Game.getVectorX(angle + Math.PI/2, Mummy.ATTKOFFSET * (i-1)), this.getCenterY() + Game.getVectorY(angle + Math.PI/2, Mummy.ATTKOFFSET * (i-1.5)), angle,
-                new AttackStats(4, 30, 12, 400, 1, 20, new Color(145, 104, 0))));
+        for (int i = -1; i <= 1; i++) {
+            newProjs.add(new Projectile(this.getCenterX() + Game.getVectorX(angle + Math.PI/2, Mummy.ATTKOFFSET * i), this.getCenterY() + Game.getVectorY(angle + Math.PI/2, Mummy.ATTKOFFSET * i), angle,
+                new AttackStats(4, 30, 12, 400, 1, 20, new Color(145, 104, 0)), null));
         }
         return newProjs;
     }

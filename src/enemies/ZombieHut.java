@@ -1,7 +1,5 @@
 package enemies;
 
-import game.Game;
-import game.AttackStats;
 import game.Projectile;
 
 import java.util.ArrayList;
