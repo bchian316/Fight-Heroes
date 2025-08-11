@@ -42,7 +42,7 @@ public class PlasmaMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
-                new AttackStats(0, 40, 9, 350, 1, 25, new Color(0, 104, 240), true, true,
+                new AttackStats(0, 40, 9, 350, 1, 25, new Color(0, 104, 240), true, true, false,
                         new AttackStats(
                                 new StatusEffect("Fatigue", 0, 0, 0, -0.5, -0.6, 4000, new Color(0, 8, 240)),
                                 6, 15, 8, 125, 1, 5, new Color(0, 8, 240))),

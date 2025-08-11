@@ -295,4 +295,8 @@ public class Game extends JPanel {
     public static double getVectorY(double angle, double magnitude) {
         return Math.sin(angle) * magnitude;
     }
+
+    public static double getRandomAngle() { //radians
+        return Math.random() * Math.PI * 2;
+    }
 }

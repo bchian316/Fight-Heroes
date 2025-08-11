@@ -47,7 +47,7 @@ public class Ryan extends SpawnerEnemy {
         //one more range elongation
         for (int i = 0; i < 4; i++) {
             newProjs.add(new Projectile(x, y, angle + Math.toRadians(i*90), splitStats,
-                    (x1, y1, angle1, splitStats1, hitObjects1) -> evenEvenMoreAttack(x1, y1, angle1, splitStats1, hitObjects, hitObjects1)));
+                    (x1, y1, angle1, splitStats1, hitObjects1) -> evenEvenMoreAttack(x1, y1, angle1, splitStats1, hitObjects1), hitObjects));
             
         }
         return newProjs;
@@ -75,7 +75,7 @@ public class Ryan extends SpawnerEnemy {
         switch (spawnRandom) {
             case 0 -> {//spawn zombie horde
                 for (int i = 0; i < 7; i++) {
-                    double randAngle = Math.random() * Math.PI * 2; // in radians
+                    double randAngle = Game.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 450;
                     newEnemies.add(new Zombie((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                             (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
@@ -83,12 +83,12 @@ public class Ryan extends SpawnerEnemy {
             }
             case 1 -> {//wraith and a few ghosties
                 this.heal(75);
-                double randAngle = Math.random() * Math.PI * 2; // in radians
+                double randAngle = Game.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
                 newEnemies.add(new Wraith((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
                 for (int i = 0; i < 3; i++) {
-                    randAngle = Math.random() * Math.PI * 2; // in radians
+                    randAngle = Game.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 200;
                     newEnemies.add(new Ghost((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                             (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
@@ -96,7 +96,7 @@ public class Ryan extends SpawnerEnemy {
             }
             case 2 -> { //wight and ghoul
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Math.random() * Math.PI * 2; // in radians
+                    double randAngle = Game.getRandomAngle(); // in radians
                     if (Math.random() >= 0.5) {
                         double randMagnitude = Math.random() * 250;
                         newEnemies.add(new Wight((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
@@ -109,12 +109,12 @@ public class Ryan extends SpawnerEnemy {
                 }
             }
             case 3 -> {//skeletons and frankenstein
-                double randAngle = Math.random() * Math.PI * 2; // in radians
+                double randAngle = Game.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
                 newEnemies.add(new Frankenstein((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
                 for (int i = 0; i < 3; i++) {
-                    randAngle = Math.random() * Math.PI * 2; // in radians
+                    randAngle = Game.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 350;
                     newEnemies.add(new Skeleton((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                             (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
@@ -123,7 +123,7 @@ public class Ryan extends SpawnerEnemy {
             
             case 4 -> {//skeleton shamans
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Math.random() * Math.PI * 2; // in radians
+                    double randAngle = Game.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 150;
                     newEnemies.add(new SkeletonShaman((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                             (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
@@ -131,13 +131,13 @@ public class Ryan extends SpawnerEnemy {
             }
             case 5 -> {//Zombie huts, vampires
                 this.heal(50);
-                double randAngle = Math.random() * Math.PI * 2; // in radians
+                double randAngle = Game.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 400;
                     newEnemies.add(new ZombieHut((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
                 
                 for (int i = 0; i < 2; i++) {
-                    randAngle = Math.random() * Math.PI * 2; // in radians
+                    randAngle = Game.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 500;
                     newEnemies.add(new Vampire((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
@@ -147,7 +147,7 @@ public class Ryan extends SpawnerEnemy {
             case 6 -> { //mummies
                 this.heal(75);
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Math.random() * Math.PI * 2; // in radians
+                    double randAngle = Game.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 600;
                     newEnemies.add(new Mummy((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));

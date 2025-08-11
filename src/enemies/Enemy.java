@@ -62,7 +62,7 @@ public abstract class Enemy extends Entity {
     private void setMoveTarget(Map map, double playerX, double playerY) {
         //manuever if hit wall, no manuever if pursuing player, can't select space in wall
         do {
-            double randAngle = Math.random() * Math.PI * 2; //in radians
+            double randAngle = Game.getRandomAngle(); //in radians
             if (this.maneuvering) {
                 double randMagnitude = Math.random() * (Enemy.MAX_MANUEVER_DISTANCE + this.getSize());
                 this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + this.getCenterX());
@@ -103,7 +103,7 @@ public abstract class Enemy extends Entity {
     private void flowFromWall(Map map) {
         while (this.stuckInWall(map)) {
             //spawned in wall
-            double randAngle = Math.random() * Math.PI * 2;
+            double randAngle = Game.getRandomAngle();
             
             double dx = Game.getVectorX(randAngle, Tile.SIZE);
             double dy = Game.getVectorY(randAngle, Tile.SIZE);

@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 public class Wraith extends SpawnerEnemy {
     public Wraith(int x, int y) {
-        super("Wraith", x, y, 60, 100, 3, 1750, 600, 2500, 7);
+        super("Wraith", x, y, 60, 100, 3, 1750, 600, 3000, 7);
     }
 
     @Override

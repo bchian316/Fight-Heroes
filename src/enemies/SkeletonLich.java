@@ -52,7 +52,7 @@ public class SkeletonLich extends SpawnerEnemy {
             newEnemies.add(new SkeletonShaman((int) this.getCenterX(), (int) this.getCenterY()));
         } else {
             for (int i = 0; i < 3; i++) {
-                double randAngle = Math.random() * Math.PI * 2; // in radians
+                double randAngle = Game.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
                 newEnemies.add(new Skeleton((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                         (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));

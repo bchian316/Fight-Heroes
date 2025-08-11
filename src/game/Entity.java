@@ -215,7 +215,10 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         int damageDealt = damage + (int) (this.defenseChange() * damage);
         if (damageDealt >= 0) { //max the damage change
             this.health -= damageDealt;
-            return new DamageCounter(this.getCenterX(), this.getCenterY(), damageDealt, c);
+            double randAngle = Game.getRandomAngle();
+            double randMagnitude = Math.random() * this.size / 2;
+            return new DamageCounter(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude),
+                    this.getCenterY() + Game.getVectorY(randAngle, randMagnitude), damageDealt, c);
         }
         return null;
     }

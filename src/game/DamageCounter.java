@@ -11,7 +11,7 @@ public class DamageCounter implements Drawable {
     private final String damage;
     private final Color color;
 
-    private final double randAngle = Math.random() * Math.PI * 2; // in radians
+    private final double randAngle = Game.getRandomAngle(); // in radians
 
     private final Timer lifetimer = new Timer(LIFETIME);
 

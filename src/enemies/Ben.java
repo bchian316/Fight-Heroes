@@ -44,7 +44,7 @@ public class Ben extends SpawnerEnemy {
     public ArrayList<Enemy> spawn() {
         this.resetSpawnTimer();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
-        double randAngle = Math.random() * Math.PI * 2; // in radians
+        double randAngle = Game.getRandomAngle(); // in radians
         double randMagnitude = Math.random() * Ben.SPAWN_RANGE;
         newEnemies.add(new Mummy((int)(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
                 (int)(this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
