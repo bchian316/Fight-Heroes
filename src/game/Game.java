@@ -7,24 +7,24 @@ import java.util.Arrays;
 import java.util.Scanner;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.awt.Color;
 
 import enemies.Enemy;
 import enemies.SpawnerEnemy;
 import mages.*;
 
 public class Game extends JPanel {
-    public static final double FPS = 30.0;
-    public static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
+    private static final double FPS = 30.0;
+
+    private static final Mage[] mages = { new DarkMage(), new EarthMage(), new ExplodyMage(),
             new FireMage(), new IceMage(), new LightMage(), new LightningMage(), new NatureMage(), new PlasmaMage(),
             new PulseMage(), new WaterMage(), new WaveMage(), new WindMage(), new CloudMage(), new DonovanMage()};
     
 
     private static final Font FONT = new Font("harrington", Font.BOLD, 30);
     private final Player player;
-    
-    public final static int NUM_LEVELS = Level.LEVELS.length;
 
-    private final Map map = new Map(GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
+    private final Map map = new Map();
     
     private final Listener l = new Listener(this);
     private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
@@ -34,6 +34,8 @@ public class Game extends JPanel {
     private final ArrayList<DamageCounter> damageCounters = new ArrayList<>();
 
     private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Tile.SIZE);
+
+    private double offsetX, offsetY;
     
     public Game() {
         super();
@@ -52,13 +54,14 @@ public class Game extends JPanel {
             this.player = new Player(Game.mages[scanner.nextInt()]);
         }
 
-        this.requestFocusInWindow();
+        this.updateOffsets();
+
+        this.loadLevel(this.player.getLevelNumber()); //make sure this is before the timer creation or else portal will appear while enemies is empty
 
         new Timer((int) (1000.0 / Game.FPS), _ -> this.update()).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
         //no need reference to timer cuz it already does stuff itself
         
-        this.loadLevel(this.player.getLevelNumber());
         this.requestFocusInWindow();
     }
 
@@ -68,16 +71,17 @@ public class Game extends JPanel {
 
 
     public void attemptPlayerAttack(double targetX, double targetY) {
+        //targetX and targetY are mouse coords, add offsets to get game coords
         if (this.player.isLoaded()) {
             Game.addProjectiles(this.playerProjectiles,
-                    this.player.attack(targetX, targetY));
+                    this.player.attack(targetX + this.offsetX, targetY + this.offsetY));
         }
     }
 
     public void attemptPlayerSpecial(double targetX, double targetY) {
         if (this.player.isSpecialLoaded()) {
             Game.addProjectiles(this.playerProjectiles,
-                    this.player.special(targetX, targetY));
+                    this.player.special(targetX + this.offsetX, targetY + this.offsetY));
         }
     }
 
@@ -94,6 +98,8 @@ public class Game extends JPanel {
             System.exit(0);
         }
 
+        this.updateOffsets();
+
         //update entities
         this.addDamageCounter(this.player.update(l.getPressedKeys(), this.map));
         this.updateEnemies(); //will add damage counters
@@ -103,7 +109,7 @@ public class Game extends JPanel {
         this.checkProjectileCollision(this.enemies, this.playerProjectiles);
         Game.updateProjectiles(this.playerProjectiles, this.map);
         this.map.checkProjectiles(this.playerProjectiles); //hit walls
-        
+
         //bad guy projectiles
         this.checkProjectileCollision(this.player, this.enemyProjectiles);
         Game.updateProjectiles(this.enemyProjectiles, this.map);
@@ -111,7 +117,7 @@ public class Game extends JPanel {
 
         this.updateDamageCounters();
 
-        if (this.enemies.isEmpty() && this.player.getLevelNumber() < Level.LEVELS.length-1) {
+        if (this.enemies.isEmpty() && this.player.getLevelNumber() < Level.LEVELS.length - 1) {
             this.portal.show();
         }
         if (this.portal.isVisible() && this.portal.inPortal(this.player.getCenterX(), this.player.getCenterY())) {
@@ -119,6 +125,11 @@ public class Game extends JPanel {
         }
 
         repaint();
+    }
+    
+    private void updateOffsets() {
+        this.offsetX = this.player.getCenterX() - GameRunner.SCREENWIDTH/2;
+        this.offsetY = this.player.getCenterY() - GameRunner.SCREENHEIGHT/2;
     }
 
     private void passThroughPortal() {
@@ -238,36 +249,27 @@ public class Game extends JPanel {
     @Override
     public void paintComponent(Graphics g) {//draw stuff
         super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, GameRunner.SCREENWIDTH, GameRunner.SCREENHEIGHT);
         g.drawString("", 0, 0); //initialize the font
-        
-        this.map.draw(g);
-        
-        Game.drawProjectiles(g, this.playerProjectiles);
-        Game.drawProjectiles(g, this.enemyProjectiles);
-        
-        this.player.draw(g);
-        
-        this.drawEnemies(g);
 
-        this.portal.draw(g);
+        this.map.draw(g, this.offsetX, this.offsetY);
 
-        this.drawDamageCounters(g);
+        this.drawDrawables(g, this.playerProjectiles);
+        this.drawDrawables(g, this.enemyProjectiles);
+
+        this.player.draw(g, this.offsetX, this.offsetY);
+
+        this.drawDrawables(g, this.enemies);
+
+        this.portal.draw(g, this.offsetX, this.offsetY);
+
+        this.drawDrawables(g, this.damageCounters);
     }
-    private static void drawProjectiles(Graphics g, ArrayList<Projectile> projectiles) {
-        for (Projectile p : projectiles) {
-            p.draw(g);
-        }
-    }
-
-    private void drawEnemies(Graphics g) {
-        for (Enemy e : this.enemies) {
-            e.draw(g);
-        }
-    }
-
-    private void drawDamageCounters(Graphics g) {
-        for (DamageCounter d : this.damageCounters) {
-            d.draw(g);
+    
+    private void drawDrawables(Graphics g, ArrayList<? extends Drawable> drawables) {
+        for (Drawable d : drawables) {
+            d.draw(g, this.offsetX, this.offsetY);
         }
     }
     

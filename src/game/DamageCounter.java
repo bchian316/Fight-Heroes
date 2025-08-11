@@ -23,13 +23,13 @@ public class DamageCounter implements Drawable {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, double offsetX, double offsetY) {
         int textWidth = g.getFontMetrics(g.getFont()).stringWidth(this.damage);
 
         int textHeight = g.getFontMetrics(g.getFont()).getHeight();
 
         g.setColor(this.color);
-        g.drawString(this.damage, (int) this.x - textWidth / 2, (int) this.y + textHeight/2);
+        g.drawString(this.damage, (int)(this.x - textWidth/2 - offsetX), (int)(this.y - textHeight/2 - offsetY));
     }
     
     public boolean lifetimeOver() {

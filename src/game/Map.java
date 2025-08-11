@@ -3,23 +3,22 @@ package game;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class Map implements Drawable{
-    private final int WIDTH, HEIGHT;
+public class Map implements Drawable {
+    public static final int MAP_WIDTH = 1000;
+    public static final int MAP_HEIGHT = 1000;
     
     private final Tile[][] map;
 
-    public Map(int WIDTH, int HEIGHT) {
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
+    public Map() {
         this.map = new Tile[this.getWallY() / Tile.SIZE + 1][this.getWallX() / Tile.SIZE + 1];
     }
 
     public final int getWallX() {
-        return this.WIDTH - Tile.SIZE;
+        return MAP_WIDTH - Tile.SIZE;
     }
 
     public final int getWallY() {
-        return this.HEIGHT - Tile.SIZE;
+        return MAP_HEIGHT - Tile.SIZE;
     }
     
     public final void setMap(Tile[] walls) {
@@ -41,10 +40,10 @@ public class Map implements Drawable{
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, double offsetX, double offsetY) {
         for (int i = 0; i <= this.getWallY(); i += Tile.SIZE) {
             for (int j = 0; j <= this.getWallX(); j += Tile.SIZE) {
-                this.map[i / Tile.SIZE][j / Tile.SIZE].draw(g);
+                this.map[i / Tile.SIZE][j / Tile.SIZE].draw(g, offsetX, offsetY);
             }
         }
     }
@@ -77,16 +76,16 @@ public class Map implements Drawable{
             lowestX = 0;
         }
         double highestX = centerX + (size / 2);
-        if (highestX > GameRunner.SCREENWIDTH) {
-            highestX = GameRunner.SCREENWIDTH; //prevent > 750
+        if (highestX > MAP_WIDTH) {
+            highestX = MAP_WIDTH; //prevent > 750
         }
         double lowestY = centerY - (size / 2);
         if (lowestY < 0) {
             lowestY = 0;
         }
         double highestY = centerY + (size / 2);
-        if (highestY > GameRunner.SCREENHEIGHT) {
-            highestY = GameRunner.SCREENHEIGHT; //prevent > 550
+        if (highestY > MAP_HEIGHT) {
+            highestY = MAP_HEIGHT; //prevent > 550
         }
         //lowestXY and highestXY will be coords - check all walls between these ranges
         for (int i = (int) (lowestY / Tile.SIZE); i < highestY / Tile.SIZE; i++) {//rows first
@@ -105,8 +104,8 @@ public class Map implements Drawable{
     public boolean inMap(double centerX, double centerY) {
         //returns true if in map
         return centerX >= 0
-                && centerX <= GameRunner.SCREENWIDTH
+                && centerX <= MAP_WIDTH
                 && centerY >= 0
-                && centerY <= GameRunner.SCREENHEIGHT;
+                && centerY <= MAP_HEIGHT;
     }
 }

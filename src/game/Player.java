@@ -13,8 +13,8 @@ import mages.Mage;
 import java.awt.Image;
 
 public final class Player extends Entity {
-    public static final int PLAYERSTARTX = GameRunner.SCREENWIDTH / 2;
-    public static final int PLAYERSTARTY = GameRunner.SCREENHEIGHT - 115;
+    public static final int PLAYERSTARTX = 400;
+    public static final int PLAYERSTARTY = 475;
 
     private static final Image STAT_FRAME = new ImageIcon("assets/Stat Frame.png").getImage();
     private static final int BAROFFSET = 5;
@@ -171,11 +171,11 @@ public final class Player extends Entity {
     }
     
     @Override
-    public void draw(Graphics g) {
-        super.draw(g);
-        this.drawHealthBar(g);
-        this.drawReloadBar(g);
-        this.drawSpecialBar(g);
+    public void draw(Graphics g, double offsetX, double offsetY) {
+        super.draw(g, offsetX, offsetY);
+        this.drawHealthBar(g, offsetX, offsetY);
+        this.drawReloadBar(g, offsetX, offsetY);
+        this.drawSpecialBar(g, offsetX, offsetY);
 
         g.drawImage(STAT_FRAME, 0, 0, null);
         if (this.isHealing) {
@@ -190,59 +190,59 @@ public final class Player extends Entity {
     }
 
     @Override
-    public void drawHealthBar(Graphics g) {
+    public void drawHealthBar(Graphics g, double offsetX, double offsetY) {
         //call in draw method
         g.setColor(HEALTHBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH / 2, (int) this.getY() + this.getSize() + BAROFFSET,
+        g.fillRect((int)(this.getCenterX() - Player.HEALTHBARWIDTH / 2 - offsetX), (int)(this.getY() + this.getSize() + BAROFFSET - offsetY),
                 Player.HEALTHBARWIDTH, Player.HEALTHBARHEIGHT);
         if (this.isHealing) {
             g.setColor(HEALTHBAR_REGENCOLOR);
-            g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH / 2,
-                    (int) this.getY() + this.getSize() + BAROFFSET,
+            g.fillRect((int)(this.getCenterX() - Player.HEALTHBARWIDTH / 2 - offsetX),
+                    (int)(this.getY() + this.getSize() + BAROFFSET - offsetY),
                     Player.HEALTHBARWIDTH, Player.HEALTHBARHEIGHT);
         }
         g.setColor(HEALTHBAR_MGCOLOR);
-        g.fillRect((int) this.getCenterX() - Player.HEALTHBARWIDTH / 2, (int) this.getY() + this.getSize() + BAROFFSET,
+        g.fillRect((int)(this.getCenterX() - Player.HEALTHBARWIDTH/2 - offsetX), (int)(this.getY() + this.getSize() + BAROFFSET - offsetY),
                 (int) (Player.HEALTHBARWIDTH * this.getHealthFraction()), Player.HEALTHBARHEIGHT);
     }
 
     
     
-    private void drawReloadBar(Graphics g) { //to the right of player
+    private void drawReloadBar(Graphics g, double offsetX, double offsetY) { //to the right of player
         g.setColor(Player.RELOADBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET,
-                (int) this.getCenterY() - Player.RELOADBARHEIGHT / 2,
+        g.fillRect((int)(this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET - offsetX),
+                (int)(this.getCenterY() - Player.RELOADBARHEIGHT / 2 - offsetY),
                 Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);
         g.setColor(Player.RELOADBAR_MGCOLOR);
-        g.fillRect((int) this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET,
-                (int) this.getCenterY() + Player.RELOADBARHEIGHT / 2
+        g.fillRect((int)(this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET - offsetX),
+                (int)(this.getCenterY() + Player.RELOADBARHEIGHT / 2 - offsetY)
                 - (int) (Player.RELOADBARHEIGHT * this.getReloadFraction()),
                 Player.RELOADBARWIDTH,
                 (int) (Player.RELOADBARHEIGHT * this.getReloadFraction()));
         if (this.isLoaded()) {
             g.setColor(Player.RELOADBAR_FGCOLOR);
-            g.fillRect((int) this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET,
-                    (int) this.getCenterY() - Player.RELOADBARHEIGHT / 2,
+            g.fillRect((int)(this.getCenterX() + this.getSize() / 2 + Player.BAROFFSET - offsetX),
+                    (int)(this.getCenterY() - Player.RELOADBARHEIGHT / 2 - offsetY),
                     Player.RELOADBARWIDTH, Player.RELOADBARHEIGHT);
         }
     }
 
 
-    private void drawSpecialBar(Graphics g) { //to the right of player
+    private void drawSpecialBar(Graphics g, double offsetX, double offsetY) { //to the right of player
         g.setColor(Player.SPECIALBAR_BGCOLOR);
-        g.fillRect((int) this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH,
-                (int) this.getCenterY() - Player.SPECIALBARHEIGHT / 2,
+        g.fillRect((int)(this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH - offsetX),
+                (int)(this.getCenterY() - Player.SPECIALBARHEIGHT / 2 - offsetY),
                 Player.SPECIALBARWIDTH, Player.SPECIALBARHEIGHT);
         g.setColor(Player.SPECIALBAR_MGCOLOR);
-        g.fillRect((int) this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH,
-                (int) this.getCenterY() + Player.SPECIALBARHEIGHT / 2
+        g.fillRect((int)(this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH - offsetX),
+                (int)(this.getCenterY() + Player.SPECIALBARHEIGHT / 2 - offsetY)
                         - (int) (Player.SPECIALBARHEIGHT * this.getSpecialFraction()),
                 Player.SPECIALBARWIDTH,
                 (int) (Player.SPECIALBARHEIGHT * this.getSpecialFraction()));
         if (this.isSpecialLoaded()) {
             g.setColor(Player.SPECIALBAR_FGCOLOR);
-            g.fillRect((int) this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH,
-                    (int) this.getCenterY() - Player.SPECIALBARHEIGHT / 2,
+            g.fillRect((int)(this.getCenterX() - this.getSize() / 2 - Player.BAROFFSET - Player.SPECIALBARWIDTH - offsetX),
+                    (int)(this.getCenterY() - Player.SPECIALBARHEIGHT / 2 - offsetY),
                     Player.SPECIALBARWIDTH, Player.SPECIALBARHEIGHT);
         }
     }

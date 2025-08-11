@@ -100,8 +100,8 @@ public class Tile implements Drawable, HasHealth {
     }
 
     @Override
-    public void draw(Graphics g) {
-        g.drawImage(this.image, this.x, this.y, null);
+    public void draw(Graphics g, double offsetX, double offsetY) {
+        g.drawImage(this.image, (int)(this.x - offsetX), (int)(this.y - offsetY), null);
         if (!this.isDead() && this.breakable) {//is a wall
             g.drawImage(Tile.WALL_IMAGES[Tile.NUM_WALL_IMAGES
                     - ((this.health + Tile.WALL_HEALTH_INTERVAL - 1) / Tile.WALL_HEALTH_INTERVAL)], this.x, this.y, null);
@@ -109,7 +109,7 @@ public class Tile implements Drawable, HasHealth {
     }
 
     @Override
-    public void drawHealthBar(Graphics g) {}
+    public void drawHealthBar(Graphics g, double offsetX, double offsetY) {}
     
     public final void setImage() {
         if (!this.breakable) {

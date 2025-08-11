@@ -76,19 +76,19 @@ public abstract class Enemy extends Entity {
     }
 
     @Override
-    public void drawHealthBar(Graphics g) {
+    public void drawHealthBar(Graphics g, double offsetX, double offsetY) {
         //call in draw method
         g.setColor(HEALTHBAR_BGCOLOR);
-        g.fillRect((int) this.getX(), (int) this.getY() + this.getSize() + BAROFFSETY, this.getSize(), HEALTHBARHEIGHT);
+        g.fillRect((int)(this.getX() - offsetX), (int)(this.getY() + this.getSize() + BAROFFSETY - offsetY), this.getSize(), HEALTHBARHEIGHT);
         g.setColor(HEALTHBAR_FGCOLOR);
-        g.fillRect((int) this.getX(), (int) this.getY() + this.getSize() + BAROFFSETY,
+        g.fillRect((int)(this.getX() - offsetX), (int)(this.getY() + this.getSize() + BAROFFSETY - offsetY),
                 (int) (this.getSize() * this.getHealthFraction()), HEALTHBARHEIGHT);
     }
 
     @Override
-    public void draw(Graphics g) {
-        super.draw(g);
-        this.drawHealthBar(g);
+    public void draw(Graphics g, double offsetX, double offsetY) {
+        super.draw(g, offsetX, offsetY);
+        this.drawHealthBar(g, offsetX, offsetY);
         //g.fillOval((int)(this.moveTargetX-5), (int)(this.moveTargetY-5), 10, 10);
     }
 

@@ -36,8 +36,8 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
     public Entity(String name, String addOn, int x, int y, int size, int health, int speed, int reload) {
         this.name = name;
         //no going out of screen
-        this.x = Math.max(Math.min(x - size/2, GameRunner.SCREENWIDTH - size - Tile.SIZE), Tile.SIZE + size/2);
-        this.y = Math.max(Math.min(y - size/2, GameRunner.SCREENHEIGHT - size - Tile.SIZE), Tile.SIZE + size/2);
+        this.x = Math.max(Math.min(x - size/2, Map.MAP_WIDTH - size - Tile.SIZE), Tile.SIZE + size/2);
+        this.y = Math.max(Math.min(y - size/2, Map.MAP_HEIGHT - size - Tile.SIZE), Tile.SIZE + size/2);
         this.size = size;
         this.health = health;
         this.maxHealth = health;
@@ -229,10 +229,10 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
     }
 
     @Override
-    public void draw(Graphics g) {
-        g.drawImage(this.images[this.animationIndex], (int) this.x, (int) this.y, null);
+    public void draw(Graphics g, double offsetX, double offsetY) {
+        g.drawImage(this.images[this.animationIndex], (int)(this.x - offsetX), (int)(this.y - offsetY), null);
         //draw health bars by overriding
-        this.drawStatusEffects(g);
+        this.drawStatusEffects(g, offsetX, offsetY);
     }
 
     @Override
@@ -249,14 +249,14 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
 
     //StatusEffect methods
     
-    private void drawStatusEffects(Graphics g) {
+    private void drawStatusEffects(Graphics g, double offsetX, double offsetY) {
         //for 1 item, we want 0
         //2 item: -0.5, 0.5
         //3 item: -1, 0, 1
         int index = 0;
         for (double i = -(this.statusEffects.size()-1)/2.0; i <= (this.statusEffects.size()-1)/2.0; i++) {
-            this.statusEffects.get(index).drawIcon(g, (int)(this.getCenterX() + (i * STATUS_EFFECT_CUSHION)),
-                    (int) this.getCenterY() - this.getSize()/2 - Entity.STATUS_EFFECT_OFFSET);
+            this.statusEffects.get(index).drawIcon(g, (int)(this.getCenterX() + (i * STATUS_EFFECT_CUSHION) - offsetX),
+                    (int)(this.getCenterY() - this.getSize()/2 - Entity.STATUS_EFFECT_OFFSET - offsetY));
             index++;
         }
     }

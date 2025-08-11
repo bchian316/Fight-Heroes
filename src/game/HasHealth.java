@@ -5,7 +5,7 @@ import java.awt.Color;
 
 public interface HasHealth {
     //everything that has health should have a draw health bar method
-    public void drawHealthBar(Graphics g);
+    public void drawHealthBar(Graphics g, double offsetX, double offsetY);
 
     public DamageCounter getDamaged(int damage, Color c);
 

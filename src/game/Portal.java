@@ -24,9 +24,9 @@ public class Portal implements Drawable{
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, double offsetX, double offsetY) {
         if (this.visible) {
-            g.drawImage(this.image, this.x, this.y, null);
+            g.drawImage(this.image, (int)(this.x - offsetX), (int)(this.y - offsetY), null);
         }
     }
 
