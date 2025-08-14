@@ -46,7 +46,7 @@ public class SkeletonLich extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         if (Math.random() >= 0.35) {
             newEnemies.add(new SkeletonShaman((int) this.getCenterX(), (int) this.getCenterY()));

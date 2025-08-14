@@ -12,7 +12,7 @@ public class Tile implements Drawable, HasHealth {
     public static final int NUM_GROUND_IMAGES = 6;
     public static final int NUM_BORDER_IMAGES = 4;
     public static final int NUM_WALL_IMAGES = 16;
-    public static final int SIZE = 50;
+    public static final int SIZE = 25;
 
     public static final int WALL_MAX_HEALTH = 240;
     public static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / NUM_WALL_IMAGES;
@@ -45,8 +45,13 @@ public class Tile implements Drawable, HasHealth {
     public Tile(int x, int y, int health) {
         this.x = x;
         this.y = y;
-        this.health = health;
-        this.breakable = true;
+        if (health == -1) {
+            this.health = 1;
+            this.breakable = false;
+        } else {
+            this.health = health;
+            this.breakable = true;
+        }
         this.setImage();
     }
 
@@ -101,10 +106,13 @@ public class Tile implements Drawable, HasHealth {
 
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
-        g.drawImage(this.image, (int)(this.x - offsetX), (int)(this.y - offsetY), null);
-        if (!this.isDead() && this.breakable) {//is a wall
-            g.drawImage(Tile.WALL_IMAGES[Tile.NUM_WALL_IMAGES
-                    - ((this.health + Tile.WALL_HEALTH_INTERVAL - 1) / Tile.WALL_HEALTH_INTERVAL)], this.x, this.y, null);
+        if (Drawable.inScreen(offsetX, offsetY, this.x, this.y, Tile.SIZE, Tile.SIZE)) {
+            g.drawImage(this.image, (int)(this.x - offsetX), (int)(this.y - offsetY), null);
+            if (!this.isDead() && this.breakable) {//is a wall
+                g.drawImage(Tile.WALL_IMAGES[Tile.NUM_WALL_IMAGES
+                        - ((this.health + Tile.WALL_HEALTH_INTERVAL - 1) / Tile.WALL_HEALTH_INTERVAL)],
+                                (int)(this.x - offsetX), (int)(this.y - offsetY), null);
+            }
         }
     }
 

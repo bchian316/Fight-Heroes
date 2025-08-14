@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class WindMage extends Mage {
     public WindMage() {
-        super("Wind Mage", 60, 100, 25, 8, 1500, 6000);
+        super("Wind Mage", 60, 100, 25, 7, 1500, 6000);
     }
 
     @Override

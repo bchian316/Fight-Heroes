@@ -13,7 +13,7 @@ import mages.Mage;
 import java.awt.Image;
 
 public final class Player extends Entity {
-    public static final int PLAYERSTARTX = 400;
+    public static final int PLAYERSTARTX = 375;
     public static final int PLAYERSTARTY = 475;
 
     private static final Image STAT_FRAME = new ImageIcon("assets/Stat Frame.png").getImage();
@@ -48,7 +48,7 @@ public final class Player extends Entity {
 
     private final Timer specialTimer;
 
-    private int levelNumber = 0;
+    private int levelNumber = 19;
     
     private final int regenRate;
     private static final int REGENTIME = 3000; //3secs for regen
@@ -172,6 +172,7 @@ public final class Player extends Entity {
     
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
+        //always in screen, dont have to check inScreen
         super.draw(g, offsetX, offsetY);
         this.drawHealthBar(g, offsetX, offsetY);
         this.drawReloadBar(g, offsetX, offsetY);

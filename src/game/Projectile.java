@@ -34,8 +34,10 @@ public class Projectile implements Drawable{
     
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
-        g.setColor(this.attk.color());
-        g.fillOval((int)(this.x - offsetX), (int)(this.y - offsetY), this.attk.size(), this.attk.size());
+        if (Drawable.inScreen(offsetX, offsetY, this.x, this.y, this.getSize(), this.getSize())) {
+            g.setColor(this.attk.color());
+            g.fillOval((int)(this.x - offsetX), (int)(this.y - offsetY), this.attk.size(), this.attk.size());
+        }
     }
     
     public void update() {

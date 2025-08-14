@@ -51,9 +51,11 @@ public class Wraith extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
-        newEnemies.add(new Ghost((int) this.getCenterX(), (int) this.getCenterY()));
+        if (Math.random() >= 0.5) {
+            newEnemies.add(new Ghost((int) this.getCenterX(), (int) this.getCenterY()));
+        }
         return newEnemies;
     }
 

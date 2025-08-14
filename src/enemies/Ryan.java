@@ -69,7 +69,7 @@ public class Ryan extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         int spawnRandom = (int) (Math.random() * 7);
         switch (spawnRandom) {

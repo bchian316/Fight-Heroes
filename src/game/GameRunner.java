@@ -1,3 +1,5 @@
+//MAKE SURE WE ARE IN Desktop/Fight Heroes> Directory
+
 package game;
 
 import javax.swing.JFrame;

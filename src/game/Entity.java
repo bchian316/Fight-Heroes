@@ -105,13 +105,6 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
 
         Tile xTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
         if (xTile != null || !map.inMap(this.getCenterX(), this.getCenterY())) {
-            //the vectorX expression sets the centerX to where it should be, subtract half of size to get the x (top left corner)
-            /*double centerX = xTile.getX() + Tile.SIZE + Game.getVectorX(
-                    Game.getAngle(xTile.getClosestX(this.getCenterX()), xTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
-                    this.size / 2.0); //where the centerX should be
-            System.out.print("CenterX:");
-            System.out.println(centerX);
-            this.x = centerX - this.size / 2.0; */
             if (wallCollide) {
                 this.x -= dx;
             }
@@ -121,13 +114,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         this.y += dy;
 
         Tile yTile = map.returnWallCollided(this.getCenterX(), this.getCenterY(), this.size);
-        if (yTile != null || !map.inMap(this.getCenterX(), this.getCenterY())) { //set y border
-            /*double centerY = yTile.getY() + Tile.SIZE + Game.getVectorY(
-                    Game.getAngle(yTile.getClosestX(this.getCenterX()), yTile.getClosestY(this.getCenterY()), this.getCenterX(), this.getCenterY()),
-                    this.size / 2.0); //where the centerY should be
-            System.out.print("CenterY:");
-            System.out.println(centerY);
-            this.y = centerY - this.size/2.0; */
+        if (yTile != null || !map.inMap(this.getCenterX(), this.getCenterY())) {
             if (wallCollide) {
                 this.y -= dy; //cancel movement
             }
@@ -230,9 +217,11 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
 
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
-        g.drawImage(this.images[this.animationIndex], (int)(this.x - offsetX), (int)(this.y - offsetY), null);
-        //draw health bars by overriding
-        this.drawStatusEffects(g, offsetX, offsetY);
+        if(Drawable.inScreen(offsetX, offsetY, this.x, this.y, this.size, this.size)){
+            g.drawImage(this.images[this.animationIndex], (int)(this.x - offsetX), (int)(this.y - offsetY), null);
+            //draw health bars by overriding
+            this.drawStatusEffects(g, offsetX, offsetY);
+        }
     }
 
     @Override

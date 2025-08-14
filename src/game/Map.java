@@ -1,16 +1,19 @@
 package game;
 
 import java.awt.Graphics;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Map implements Drawable {
-    public static final int MAP_WIDTH = 1000;
-    public static final int MAP_HEIGHT = 1000;
+    public static final int MAP_WIDTH = 1500;
+    public static final int MAP_HEIGHT = 1500;
     
     private final Tile[][] map;
 
     public Map() {
-        this.map = new Tile[this.getWallY() / Tile.SIZE + 1][this.getWallX() / Tile.SIZE + 1];
+        this.map = new Tile[MAP_HEIGHT / Tile.SIZE][MAP_WIDTH / Tile.SIZE];
     }
 
     public final int getWallX() {
@@ -30,12 +33,28 @@ public class Map implements Drawable {
                 } else {
                     this.map[i / Tile.SIZE][j / Tile.SIZE] = new Tile(j, i, 0);
                 }
-                this.map[i / Tile.SIZE][j / Tile.SIZE].setImage();
+                //this.map[i / Tile.SIZE][j / Tile.SIZE].setImage();
             }
         }
         for (Tile t : walls) {
             this.map[t.getY() / Tile.SIZE][t.getX() / Tile.SIZE] = t;
             t.setImage();
+        }
+    }
+
+    public final void setMap(String filename) {
+        
+        try (Scanner reader = new Scanner(new File(filename))) {
+            int y = 0;
+            while (reader.hasNextLine()) {
+                String[] data = reader.nextLine().split(" ");
+                for (int x = 0; x < data.length; x++) {
+                    this.map[y][x] = new Tile(x*Tile.SIZE, y*Tile.SIZE, Integer.parseInt(data[x]));
+                }
+                y++;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("FILE NOT FOUND");
         }
     }
 

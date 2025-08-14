@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import game.DamageCounter;
+import game.Drawable;
 import game.Entity;
 import game.Game;
 import game.Map;
@@ -88,8 +89,10 @@ public abstract class Enemy extends Entity {
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
         super.draw(g, offsetX, offsetY);
-        this.drawHealthBar(g, offsetX, offsetY);
-        //g.fillOval((int)(this.moveTargetX-5), (int)(this.moveTargetY-5), 10, 10);
+        if (Drawable.inScreen(offsetX, offsetY, this.getX(), this.getY(), this.getSize(), this.getSize())) {
+            this.drawHealthBar(g, offsetX, offsetY);
+            //g.fillOval((int)(this.moveTargetX-5), (int)(this.moveTargetY-5), 10, 10);
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@ public class Ben extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         double randAngle = Game.getRandomAngle(); // in radians
         double randMagnitude = Math.random() * Ben.SPAWN_RANGE;

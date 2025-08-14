@@ -21,13 +21,16 @@ public abstract class SpawnerEnemy extends Enemy {
         
     }
 
-    public abstract ArrayList<Enemy> spawn();
+    public ArrayList<Enemy> spawn() {
+        this.resetSpawnTimer();
+        return new ArrayList<>();
+    }
 
     public boolean spawnLoaded() {
         return spawnTimer.isDone();
     }
 
-    public void resetSpawnTimer() {
+    private void resetSpawnTimer() {
         this.spawnTimer.reset();
     }
 

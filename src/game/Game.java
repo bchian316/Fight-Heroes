@@ -35,7 +35,7 @@ public class Game extends JPanel {
 
     private final Portal portal = new Portal((GameRunner.SCREENWIDTH - Portal.SIZE) / 2, Tile.SIZE);
 
-    private double offsetX, offsetY;
+    private double offsetX, offsetY; //this is the game coordinates of the top left corner of the screen
     
     public Game() {
         super();
@@ -86,7 +86,8 @@ public class Game extends JPanel {
     }
 
     private void loadLevel(int levelNumber) {
-        this.map.setMap(Level.LEVELS[levelNumber].getWalls());
+        //this.map.setMap(Level.LEVELS[levelNumber].getWalls());
+        this.map.setMap("src/game/Map.txt");
         this.enemies.clear();
         this.enemies.addAll(Arrays.asList(Level.LEVELS[levelNumber].getEnemies()));
     }
@@ -128,25 +129,10 @@ public class Game extends JPanel {
     }
     
     private void updateOffsets() {
-        this.offsetX = this.player.getCenterX() - GameRunner.SCREENWIDTH/2;
-        this.offsetY = this.player.getCenterY() - GameRunner.SCREENHEIGHT/2;
+        this.offsetX = Math.min(Math.max(0, this.player.getCenterX() - GameRunner.SCREENWIDTH/2), Map.MAP_WIDTH-GameRunner.SCREENWIDTH);
+        this.offsetY = Math.min(Math.max(0, this.player.getCenterY() - GameRunner.SCREENHEIGHT/2), Map.MAP_HEIGHT-GameRunner.SCREENHEIGHT);
     }
-
-    private void passThroughPortal() {
-        this.enemies.clear();
-        this.playerProjectiles.clear();
-        this.enemyProjectiles.clear();
-
-        this.player.incrementLevelNumber();
-        this.loadLevel(this.player.getLevelNumber());
-        this.portal.hide();
-        this.player.setToStartCoords();
-        this.player.fullHeal();
-        this.player.load();
-        this.player.loadSpecial();
-        this.player.clearStatusEffects();
-    }
-
+    
     
     private static void updateProjectiles(ArrayList<Projectile> projectiles, Map map) {
         for (int i = projectiles.size() - 1; i >= 0; i--) {
@@ -271,6 +257,22 @@ public class Game extends JPanel {
         for (Drawable d : drawables) {
             d.draw(g, this.offsetX, this.offsetY);
         }
+    }
+
+    private void passThroughPortal() {
+        this.enemies.clear();
+        this.playerProjectiles.clear();
+        this.enemyProjectiles.clear();
+        this.damageCounters.clear();
+
+        this.player.incrementLevelNumber();
+        this.loadLevel(this.player.getLevelNumber());
+        this.portal.hide();
+        this.player.setToStartCoords();
+        this.player.fullHeal();
+        this.player.load();
+        this.player.loadSpecial();
+        this.player.clearStatusEffects();
     }
     
     public static double getAngle(double startX, double startY, double targetX, double targetY) {

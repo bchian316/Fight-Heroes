@@ -77,6 +77,8 @@ public class StatusEffect {
 
     public void drawIcon(Graphics g, int x, int y) {
         //draws in middle of x, y
+        //if(Drawable.inScreen(x - StatusEffect.ICON_SIZE/2, y - StatusEffect.ICON_SIZE/2, StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE))
+        //dont need, the player and entities checks if he is drawable
         g.setColor(this.color);
         g.fillOval(x - StatusEffect.ICON_SIZE/2, y - StatusEffect.ICON_SIZE/2, StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE);
         g.drawImage(this.image, x - StatusEffect.ICON_SIZE/2, y - StatusEffect.ICON_SIZE/2, null);

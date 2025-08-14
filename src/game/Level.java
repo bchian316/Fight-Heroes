@@ -9,7 +9,7 @@ public class Level {
             new Level(new Enemy[] { new Zombie(100, 150),
                                     new Zombie(250, 150),
                                     new Grave(400, 325)},
-                    new Tile[] {    new Tile(350, 300),
+                    new Tile[] {    new Tile(350, 300, 240),
                                     new Tile(400, 300)}),
             new Level(new Enemy[] { new Zombie(400, 150), //introduce skeleton
                                     new Skeleton(200, 75),

@@ -25,8 +25,7 @@ public class SkeletonShaman extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.heal(25);
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         newEnemies.add(new Skeleton((int)this.getCenterX(), (int)this.getCenterY()));
         return newEnemies;

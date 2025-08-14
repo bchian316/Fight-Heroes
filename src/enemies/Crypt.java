@@ -46,7 +46,7 @@ public class Crypt extends SpawnerEnemy {
 
     @Override
     public ArrayList<Enemy> spawn() {
-        this.resetSpawnTimer();
+        super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
         newEnemies.add(new Skeleton((int) this.getCenterX(), (int) this.getCenterY()));
         return newEnemies;
