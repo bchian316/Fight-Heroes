@@ -48,7 +48,7 @@ public final class Player extends Entity {
 
     private final Timer specialTimer;
 
-    private int levelNumber = 19;
+    private int levelNumber = 0;
     
     private final int regenRate;
     private static final int REGENTIME = 3000; //3secs for regen

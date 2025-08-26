@@ -49,7 +49,7 @@ public class Map implements Drawable {
             while (reader.hasNextLine()) {
                 String[] data = reader.nextLine().split(" ");
                 for (int x = 0; x < data.length; x++) {
-                    this.map[y][x] = new Tile(x*Tile.SIZE, y*Tile.SIZE, Integer.parseInt(data[x]));
+                    this.map[y][x] = new Tile(x*Tile.SIZE, y*Tile.SIZE, Integer.parseInt(data[x].substring(1)), data[x].charAt(0));
                 }
                 y++;
             }
@@ -89,6 +89,7 @@ public class Map implements Drawable {
     }
 
     public Tile returnWallCollided(double centerX, double centerY, int size) {
+        //only returns solid tiles that are not dead
         //doesn't work for only ground tiles
         double lowestX = centerX - (size / 2);
         if (lowestX < 0) {
@@ -118,6 +119,10 @@ public class Map implements Drawable {
             }
         }
         return null;
+    }
+
+    public Tile returnTile(double centerX, double centerY){
+        return this.map[(int)(centerY/Tile.SIZE)][(int)(centerX/Tile.SIZE)];
     }
     
     public boolean inMap(double centerX, double centerY) {

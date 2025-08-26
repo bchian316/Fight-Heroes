@@ -1,5 +1,8 @@
 package game;
 
+import enemies.Enemy;
+import enemies.SpawnerEnemy;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -7,10 +10,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import java.awt.Color;
-
-import enemies.Enemy;
-import enemies.SpawnerEnemy;
 import mages.*;
 
 public class Game extends JPanel {

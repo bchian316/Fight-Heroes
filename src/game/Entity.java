@@ -32,8 +32,9 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
     private final Timer reloadTimer;
     
     private final ArrayList<StatusEffect> statusEffects = new ArrayList<>();
+    private Tile currentTile = new Tile(0, 0); //the tile the Entity is standing on
     
-    public Entity(String name, String addOn, int x, int y, int size, int health, int speed, int reload) {
+    public Entity(String name, String addOn, int x, int y, int size, int health, double speed, int reload) {
         this.name = name;
         //no going out of screen
         this.x = Math.max(Math.min(x - size/2, Map.MAP_WIDTH - size - Tile.SIZE), Tile.SIZE + size/2);
@@ -138,8 +139,11 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
                 }
             }
         }
-        return collisions; //if is 2, then the entity is stuck (cuz it is blocked on 2 sides)
-        //if is one, then he only hit one wall and is 'sliding'
+
+        this.currentTile = map.returnTile(this.getCenterX(), this.getCenterY()); //reset currentTile
+
+        return collisions; //if is 3, then the entity is stuck (cuz it is blocked on 2 sides)
+        //if is 1 or 2, then he only hit one wall and is 'sliding'
     }
 
     

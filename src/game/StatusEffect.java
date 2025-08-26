@@ -89,7 +89,7 @@ public class StatusEffect {
         }
     }
 
-    public boolean updateTickDamageTimer() {
+    private boolean updateTickDamageTimer() {
         if (this.tickDamageTimer.update()) {
             this.tickDamageTimer.reset();
             return true;

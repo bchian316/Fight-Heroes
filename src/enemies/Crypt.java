@@ -1,11 +1,10 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
+import game.Projectile;
 import game.StatusEffect;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;

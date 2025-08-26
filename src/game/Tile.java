@@ -3,6 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 public class Tile implements Drawable, HasHealth {
@@ -21,12 +22,18 @@ public class Tile implements Drawable, HasHealth {
     public static final Image[] BORDER_IMAGES = new Image[NUM_BORDER_IMAGES];
     public static final Image[] WALL_IMAGES = new Image[NUM_WALL_IMAGES];
 
+    private static final HashMap<Character, StatusEffect> STATUS_EFFECTS = new HashMap<>();
+    private static final StatusEffect MUD_EFFECT = new StatusEffect("Slow", 0, 0, 0, -0.3, 0, 0, new Color(138, 88, 8));
+
     private final int x, y; //should be the coords
     private int health;
     private final boolean breakable;
     private Image image = null; //should only be border or ground, not wall
 
+    private final StatusEffect statusEffect; //never update so it doesn't expire, never call updateAndExpire
+
     static {
+        //load images
         for (int i = 0; i < Tile.NUM_BORDER_IMAGES; i++) {
             Tile.BORDER_IMAGES[i] = new ImageIcon("assets/terrain/border/" + Integer.toString(i + 1) + ".png").getImage()
                     .getScaledInstance(Tile.SIZE, Tile.SIZE, Image.SCALE_DEFAULT);
@@ -40,6 +47,10 @@ public class Tile implements Drawable, HasHealth {
             Tile.WALL_IMAGES[i] = new ImageIcon("assets/terrain/wall/" + Integer.toString(i + 1) + ".png").getImage()
                     .getScaledInstance(Tile.SIZE, Tile.SIZE, Image.SCALE_DEFAULT);
         }
+
+        //load statuseffects
+        STATUS_EFFECTS.put('x', null); //for no status effect
+        STATUS_EFFECTS.put('m', MUD_EFFECT); //for mud
     }
 
     public Tile(int x, int y, int health) {
@@ -52,6 +63,21 @@ public class Tile implements Drawable, HasHealth {
             this.health = health;
             this.breakable = true;
         }
+        this.statusEffect = null;
+        this.setImage();
+    }
+
+    public Tile(int x, int y, int health, char c) {
+        this.x = x;
+        this.y = y;
+        if (health == -1) {
+            this.health = 1;
+            this.breakable = false;
+        } else {
+            this.health = health;
+            this.breakable = true;
+        }
+        this.statusEffect = STATUS_EFFECTS.get(c);
         this.setImage();
     }
 
@@ -60,6 +86,7 @@ public class Tile implements Drawable, HasHealth {
         this.y = y;
         this.health = 1;
         this.breakable = false;
+        this.statusEffect = null;
         this.setImage();
     }
 
@@ -79,6 +106,10 @@ public class Tile implements Drawable, HasHealth {
     @Override
     public double getCenterY() {
         return this.y + Tile.SIZE/2;
+    }
+
+    public int getTickHealthChange(){
+        return this.statusEffect.getTickHealthChange();
     }
     
     @Override
@@ -127,7 +158,7 @@ public class Tile implements Drawable, HasHealth {
         this.image = Tile.GROUND_IMAGES[(int) (Math.random() * Tile.NUM_GROUND_IMAGES)];
     }
 
-    public double getClosestX(double circleX) {
+    private double getClosestX(double circleX) {
         double closestX;
         if (circleX > this.x && circleX < this.x + Tile.SIZE) {
             closestX = circleX;
@@ -138,7 +169,7 @@ public class Tile implements Drawable, HasHealth {
         }
         return closestX;
     }
-    public double getClosestY(double circleY) {
+    private double getClosestY(double circleY) {
         double closestY;
         if (circleY > this.y && circleY < this.y + Tile.SIZE) {
             closestY = circleY;
