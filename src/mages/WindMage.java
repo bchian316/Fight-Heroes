@@ -26,7 +26,8 @@ public class WindMage extends Mage {
     }
 
     @Override
-    public ArrayList<Projectile> special(Player p, double targetX, double targetY){
+    public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
+        p.startHealing();
         p.addStatusEffect(new StatusEffect("Swift", 0, 0, 0, 0.35, 0, 2000, new Color(170, 170, 170)));
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

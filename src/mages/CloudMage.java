@@ -40,8 +40,7 @@ public class CloudMage extends Mage {
     @Override
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         p.heal(15);
-        p.addStatusEffect(new StatusEffect("Constitution", 0, 0.9, 0, 0, 0, 6000, new Color(111, 255, 79)));
-        p.startHealing();
+        p.addStatusEffect(new StatusEffect("Constitution", 0, 0.9, -1.5, 0, 0, 2000, new Color(111, 255, 79)));
         return new ArrayList<>();
     }
     

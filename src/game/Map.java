@@ -23,8 +23,7 @@ public class Map implements Drawable {
     public final int getWallY() {
         return MAP_HEIGHT - Tile.SIZE;
     }
-    
-    public final void setMap(Tile[] walls) {
+    /*public final void setMap(Tile[] walls) {
         //called every new level - takes custom walls
         for (int i = 0; i <= this.getWallY(); i += Tile.SIZE) {
             for (int j = 0; j <= this.getWallX(); j += Tile.SIZE) {
@@ -40,7 +39,8 @@ public class Map implements Drawable {
             this.map[t.getY() / Tile.SIZE][t.getX() / Tile.SIZE] = t;
             t.setImage();
         }
-    }
+    } */
+    
 
     public final void setMap(String filename) {
         

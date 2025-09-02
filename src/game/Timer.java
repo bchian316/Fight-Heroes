@@ -46,6 +46,9 @@ public class Timer {
             this.timer += Game.updateDelay() + (int) (Game.updateDelay() * reduction);
             if (this.timer > this.time) {
                 this.timer = this.time;
+            } else if (this.timer < 0) {
+                //in case for unreloader abilities
+                this.timer = 0;
             }
         }
         return this.isDone();

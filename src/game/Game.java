@@ -5,9 +5,15 @@ import enemies.SpawnerEnemy;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import mages.*;
@@ -301,5 +307,20 @@ public class Game extends JPanel {
 
     public static double getRandomAngle() { //radians
         return Math.random() * Math.PI * 2;
+    }
+
+    public static Image[] imageLoader(String path, int size) {
+        Image[] images;
+        try {
+            BufferedImage fullImage = ImageIO.read(new File(path));
+            images = new Image[fullImage.getWidth() / fullImage.getHeight()];
+            for (int i = 0; i < images.length; i++) {
+                images[i] = fullImage.getSubimage(i * fullImage.getHeight(), 0, fullImage.getHeight(), fullImage.getHeight()).getScaledInstance(size, size, Image.SCALE_DEFAULT);
+            }
+        } catch (IOException ex) {
+            images = new Image[0];
+            System.out.println("io exception");
+        }
+        return images;
     }
 }

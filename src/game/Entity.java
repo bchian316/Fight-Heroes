@@ -32,7 +32,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
     private final Timer reloadTimer;
     
     private final ArrayList<StatusEffect> statusEffects = new ArrayList<>();
-    private Tile currentTile = new Tile(0, 0); //the tile the Entity is standing on
+    private Tile currentTile = new Tile(0, 0, 0, 'x'); //the tile the Entity is standing on
     
     public Entity(String name, String addOn, int x, int y, int size, int health, double speed, int reload) {
         this.name = name;
@@ -45,16 +45,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         this.speed = speed;
         this.reload = reload;
         this.reloadTimer = new Timer(this.reload, (int) (Math.random() * this.reload));
-        try {
-            BufferedImage fullImage = ImageIO.read(new File("assets/" + addOn + "/" + this.name + ".png"));
-            this.images = new Image[fullImage.getWidth() / fullImage.getHeight()];
-            for (int i = 0; i < this.images.length; i++) {
-                this.images[i] = fullImage.getSubimage(i * fullImage.getHeight(), 0, fullImage.getHeight(), fullImage.getHeight()).getScaledInstance(this.size, this.size, Image.SCALE_DEFAULT);
-            }
-        } catch (IOException ex) {
-            this.images = new Image[0];
-            System.out.println("io exception");
-        }
+        this.images = Game.imageLoader("assets/" + addOn + "/" + this.name + ".png", this.size);
     }
 
     public Entity(String addOn, int x, int y, Mage mage) {
@@ -210,6 +201,8 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
             double randMagnitude = Math.random() * this.size / 2;
             return new DamageCounter(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude),
                     this.getCenterY() + Game.getVectorY(randAngle, randMagnitude), damageDealt, c);
+        } else {
+            this.heal(-damageDealt);
         }
         return null;
     }
@@ -291,40 +284,50 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
                 this.heal(t);
             }
         }
+        int t = this.currentTile.getTickHealthChange();
+        if (t < 0) {
+            damageCounters.add(this.getDamaged(-t, this.currentTile.getColor()));
+        } else if (t > 0) {
+            this.heal(t);
+        }
         return damageCounters;
     }
     
     private double regenChange() {
-        //will be used in the regenerate method
+        //will be used in the regenerate method, minimum -1 to prevent getting damaged from regen
         double counter = 0;
         for (StatusEffect e : this.statusEffects) {
             counter += e.getRegenChange();
         }
-        return counter;
+        counter += this.currentTile.getRegenChange();
+        return Math.max(-1, counter);
     }
 
-    private double defenseChange() { //will be a percentage
+    private double defenseChange() { //will be a percentage, -0.4 is -40% damage, no minimum so there is healing from damage
         double counter = 0;
         for (StatusEffect e : this.statusEffects) {
             counter += e.getDefenseChange();
         }
+        counter += this.currentTile.getDefenseChange();
         return counter;
     }
 
-    private double speedChange() { //will be a percentage, maximum 1
+    private double speedChange() { //will be a percentage, min -1 to prevent moving backwards
         //returns something like 0.8, 80% speed buff
         double counter = 0;
         for (StatusEffect e : this.statusEffects) {
             counter += e.getSpeedChange();
         }
-        return counter;
+        counter += this.currentTile.getSpeedChange();
+        return Math.max(-1, counter);
     }
 
-    private double reloadChange() { //will be a percentage, maximum 1
+    private double reloadChange() { //will be a percentage, can be below -1 to unreload
         double counter = 0;
         for (StatusEffect e : this.statusEffects) {
             counter += e.getReloadChange();
         }
+        counter += this.currentTile.getReloadChange();
         return counter;
     }
 

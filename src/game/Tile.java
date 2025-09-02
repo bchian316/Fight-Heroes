@@ -4,89 +4,59 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
-import javax.swing.ImageIcon;
 
 public class Tile implements Drawable, HasHealth {
-    //3 types of wall: ground, border, and wall
-    public static final int COLLISION_CUSHION = 8; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
 
-    public static final int NUM_GROUND_IMAGES = 6;
-    public static final int NUM_BORDER_IMAGES = 4;
-    public static final int NUM_WALL_IMAGES = 16;
+    public static final int COLLISION_CUSHION = 8; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
     public static final int SIZE = 25;
 
-    public static final int WALL_MAX_HEALTH = 240;
-    public static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / NUM_WALL_IMAGES;
-
-    public static final Image[] GROUND_IMAGES = new Image[NUM_GROUND_IMAGES];
-    public static final Image[] BORDER_IMAGES = new Image[NUM_BORDER_IMAGES];
-    public static final Image[] WALL_IMAGES = new Image[NUM_WALL_IMAGES];
-
+    private static final Image[] WALL_IMAGES = Game.imageLoader("assets/terrain/wall.png", SIZE);
+    
+    private static final HashMap<Character, Image[]> TERRAIN_IMAGES = new HashMap<>();
+    private static final Image[] GROUND_IMAGES = Game.imageLoader("assets/terrain/ground.png", SIZE);
+    private static final Image[] BORDER_IMAGES = Game.imageLoader("assets/terrain/border.png", SIZE);
+    private static final Image[] MUD_IMAGES = Game.imageLoader("assets/terrain/mud.png", SIZE);
+    private static final Image[] WATER_IMAGES = Game.imageLoader("assets/terrain/water.png", SIZE);
+    
     private static final HashMap<Character, StatusEffect> STATUS_EFFECTS = new HashMap<>();
-    private static final StatusEffect MUD_EFFECT = new StatusEffect("Slow", 0, 0, 0, -0.3, 0, 0, new Color(138, 88, 8));
+    private static final StatusEffect MUD_EFFECT = new StatusEffect(null, 0, 0, 0, -0.6, 0, 0, new Color(138, 88, 8));
+    private static final StatusEffect WATER_EFFECT = new StatusEffect(null, 0, 0, 0, -0.4, -1, 0, new Color(0, 121, 170));
+    
+    private static final int WALL_MAX_HEALTH = 240;
+    private static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / WALL_IMAGES.length;
+    
+    static {
+
+        //load statuseffects
+        STATUS_EFFECTS.put('x', null); //for no status effect
+        STATUS_EFFECTS.put('u', null); //for wall
+        STATUS_EFFECTS.put('m', MUD_EFFECT); //for mud
+        STATUS_EFFECTS.put('w', WATER_EFFECT); //for water
+
+        //load terrain images
+        TERRAIN_IMAGES.put('x', GROUND_IMAGES);
+        TERRAIN_IMAGES.put('u', BORDER_IMAGES);
+        TERRAIN_IMAGES.put('m', MUD_IMAGES);
+        TERRAIN_IMAGES.put('w', WATER_IMAGES);
+    }
 
     private final int x, y; //should be the coords
     private int health;
     private final boolean breakable;
+    private final char c;
     private Image image = null; //should only be border or ground, not wall
 
     private final StatusEffect statusEffect; //never update so it doesn't expire, never call updateAndExpire
 
-    static {
-        //load images
-        for (int i = 0; i < Tile.NUM_BORDER_IMAGES; i++) {
-            Tile.BORDER_IMAGES[i] = new ImageIcon("assets/terrain/border/" + Integer.toString(i + 1) + ".png").getImage()
-                    .getScaledInstance(Tile.SIZE, Tile.SIZE, Image.SCALE_DEFAULT);
-        }
-        for (int i = 0; i < Tile.NUM_GROUND_IMAGES; i++) {
-            Tile.GROUND_IMAGES[i] = new ImageIcon("assets/terrain/ground/" + Integer.toString(i + 1) + ".png")
-                    .getImage()
-                    .getScaledInstance(Tile.SIZE, Tile.SIZE, Image.SCALE_DEFAULT);
-        }
-        for (int i = 0; i < Tile.NUM_WALL_IMAGES; i++) {
-            Tile.WALL_IMAGES[i] = new ImageIcon("assets/terrain/wall/" + Integer.toString(i + 1) + ".png").getImage()
-                    .getScaledInstance(Tile.SIZE, Tile.SIZE, Image.SCALE_DEFAULT);
-        }
-
-        //load statuseffects
-        STATUS_EFFECTS.put('x', null); //for no status effect
-        STATUS_EFFECTS.put('m', MUD_EFFECT); //for mud
-    }
-
-    public Tile(int x, int y, int health) {
-        this.x = x;
-        this.y = y;
-        if (health == -1) {
-            this.health = 1;
-            this.breakable = false;
-        } else {
-            this.health = health;
-            this.breakable = true;
-        }
-        this.statusEffect = null;
-        this.setImage();
-    }
-
     public Tile(int x, int y, int health, char c) {
+        //char will determine the "terrain" such as border, mud, ground, not the wall health
+        //any type of tile can have wall health
         this.x = x;
         this.y = y;
-        if (health == -1) {
-            this.health = 1;
-            this.breakable = false;
-        } else {
-            this.health = health;
-            this.breakable = true;
-        }
+        this.health = health;
+        this.breakable = c != 'u';
+        this.c = c;
         this.statusEffect = STATUS_EFFECTS.get(c);
-        this.setImage();
-    }
-
-    public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.health = 1;
-        this.breakable = false;
-        this.statusEffect = null;
         this.setImage();
     }
 
@@ -105,11 +75,49 @@ public class Tile implements Drawable, HasHealth {
 
     @Override
     public double getCenterY() {
-        return this.y + Tile.SIZE/2;
+        return this.y + Tile.SIZE / 2;
     }
 
-    public int getTickHealthChange(){
+    public Color getColor() {
+        if (this.statusEffect == null) {
+            return new Color(0, 0, 0);//default black
+        }
+        return this.statusEffect.getColor();
+    }
+
+    public int getTickHealthChange() {
+        if (this.statusEffect == null) {
+            return 0;
+        }
         return this.statusEffect.getTickHealthChange();
+    }
+
+    public double getRegenChange() {
+        if (this.statusEffect == null) {
+            return 0;
+        }
+        return this.statusEffect.getRegenChange();
+    }
+
+    public double getDefenseChange() {
+        if (this.statusEffect == null) {
+            return 0;
+        }
+        return this.statusEffect.getDefenseChange();
+    }
+
+    public double getSpeedChange() {
+        if (this.statusEffect == null) {
+            return 0;
+        }
+        return this.statusEffect.getSpeedChange();
+    }
+
+    public double getReloadChange() {
+        if (this.statusEffect == null) {
+            return 0;
+        }
+        return this.statusEffect.getReloadChange();
     }
     
     @Override
@@ -140,7 +148,7 @@ public class Tile implements Drawable, HasHealth {
         if (Drawable.inScreen(offsetX, offsetY, this.x, this.y, Tile.SIZE, Tile.SIZE)) {
             g.drawImage(this.image, (int)(this.x - offsetX), (int)(this.y - offsetY), null);
             if (!this.isDead() && this.breakable) {//is a wall
-                g.drawImage(Tile.WALL_IMAGES[Tile.NUM_WALL_IMAGES
+                g.drawImage(Tile.WALL_IMAGES[Tile.WALL_IMAGES.length
                         - ((this.health + Tile.WALL_HEALTH_INTERVAL - 1) / Tile.WALL_HEALTH_INTERVAL)],
                                 (int)(this.x - offsetX), (int)(this.y - offsetY), null);
             }
@@ -151,11 +159,15 @@ public class Tile implements Drawable, HasHealth {
     public void drawHealthBar(Graphics g, double offsetX, double offsetY) {}
     
     public final void setImage() {
-        if (!this.breakable) {
-            this.image = Tile.BORDER_IMAGES[(int) (Math.random() * Tile.NUM_BORDER_IMAGES)];
+        if (!this.breakable) { //is a border
+            this.image = randImage(BORDER_IMAGES);
             return;
         }
-        this.image = Tile.GROUND_IMAGES[(int) (Math.random() * Tile.NUM_GROUND_IMAGES)];
+        this.image = randImage(TERRAIN_IMAGES.get(this.c));
+    }
+
+    private static Image randImage(Image[] images) {
+        return images[(int) (Math.random() * images.length)];
     }
 
     private double getClosestX(double circleX) {

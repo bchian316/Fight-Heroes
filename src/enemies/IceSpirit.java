@@ -27,7 +27,7 @@ public class IceSpirit extends Enemy {
                         new AttackStats(
                                 new StatusEffect("Freeze", 0, 0, 0, -0.5, 0, 750,
                                         new Color(0, 134, 230)),
-                            10, 30, 8, 100, 1, 10, new Color(0, 140, 230)), null));
+                            10, 25, 10, 100, 1, 10, new Color(0, 140, 230)), null));
                 
             }
         }

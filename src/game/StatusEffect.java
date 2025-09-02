@@ -30,9 +30,13 @@ public class StatusEffect {
         this.time = time;
         
         this.timer = new Timer(this.time);
-        
-        this.image = new ImageIcon("assets/status effects/" + this.name + ".png").getImage()
-                .getScaledInstance(StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE, Image.SCALE_DEFAULT);
+        if (name == null) {
+            this.image = null;
+        } else {
+            this.image = new ImageIcon("assets/status effects/" + this.name + ".png").getImage()
+                    .getScaledInstance(StatusEffect.ICON_SIZE, StatusEffect.ICON_SIZE, Image.SCALE_DEFAULT);
+            
+        }
         this.color = color;
     }
 
