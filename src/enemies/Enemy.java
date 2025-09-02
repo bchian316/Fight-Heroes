@@ -68,7 +68,6 @@ public abstract class Enemy extends Entity {
                 double randMagnitude = Math.random() * Enemy.MAX_MANUEVER_DISTANCE;
                 this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + this.getCenterX());
                 this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + this.getCenterY());
-                return;
             }
             double randMagnitude = Math.random() * this.passiveRange;
             this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + playerX);
