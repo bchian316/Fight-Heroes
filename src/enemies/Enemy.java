@@ -156,9 +156,12 @@ public abstract class Enemy extends Entity {
 
         } else if (Game.getDistance(this.moveTargetX, this.moveTargetY, playerX, playerY) > this.desiredRange) {
             //priority three: enemy wants to stay within desired range unless obstructed by wall
-            //player has left the spot outside of desired range, find new spot
-            //enemy is not wall obstructed and within aggroRange
+            //enemy is not wall obstructed and within aggroRange but outside desired range
             this.maneuvering = false;
+            this.setMoveTarget(map, playerX, playerY);
+        } else {
+            //priority four: enemy is within desired range, dont manuever, follow player
+            this.manuevering = false;
         }
         if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) <= this.getSpeed()) {
             //separate code, should run no matter what
