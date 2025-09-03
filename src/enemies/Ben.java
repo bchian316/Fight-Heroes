@@ -1,10 +1,9 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
-
+import game.Projectile;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,7 +12,7 @@ import java.util.HashSet;
 public class Ben extends SpawnerEnemy {
     private final static int SPAWN_RANGE = 200;
     public Ben(int x, int y) {
-        super("Ben", x, y, 150, 450, 2, 3500, 800, 12000, 25);
+        super("Ben", x, y, 150, 450, 2, 3500, 800, 1000, 12000, 25);
     }
 
 

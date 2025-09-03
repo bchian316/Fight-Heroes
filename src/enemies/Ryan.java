@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
-
+import game.Projectile;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Ryan extends SpawnerEnemy {
     public Ryan(int x, int y) {
-        super("Ryan", x, y, 150, 650, 3, 6000, 800, 10000, 50);
+        super("Ryan", x, y, 150, 650, 3, 6000, 800, 10000, 10000, 50);
     }
 
 

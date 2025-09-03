@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -63,7 +62,7 @@ public class Game extends JPanel {
 
         this.loadLevel(this.player.getLevelNumber()); //make sure this is before the timer creation or else portal will appear while enemies is empty
 
-        new Timer((int) (1000.0 / Game.FPS), _ -> this.update()).start(); // Do action FPS times in one second
+        new Timer((int) (1000.0 / Game.FPS), e -> this.update()).start(); // Do action FPS times in one second
         //1000/FPS is the delay (time between each frame)
         //no need reference to timer cuz it already does stuff itself
         

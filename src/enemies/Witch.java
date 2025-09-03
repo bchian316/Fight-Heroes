@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
 import game.StatusEffect;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Witch extends Enemy {
     public static final int ATTKOFFSET = 35;
     public Witch(int x, int y) {
-        super("Witch", x, y, 50, 50, 1, 1250, 450, 4);
+        super("Witch", x, y, 50, 50, 1, 1250, 400, 550, 4);
     }
 
 

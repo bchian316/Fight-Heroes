@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
 import game.StatusEffect;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class IceSpirit extends Enemy {
 
     public IceSpirit(int x, int y) {
-        super("Ice Spirit", x, y, 40, 45, 5, 200, 150, 2);
+        super("Ice Spirit", x, y, 40, 45, 5, 200, 150, 200, 2);
     }
 
 

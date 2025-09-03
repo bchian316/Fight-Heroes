@@ -1,16 +1,15 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Vampire extends Enemy {
 
     public Vampire(int x, int y) {
-        super("Vampire", x, y, 35, 40, 3, 3500, 600, 4);
+        super("Vampire", x, y, 35, 40, 3, 3500, 400, 650, 4);
     }
 
 

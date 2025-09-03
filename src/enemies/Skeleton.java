@@ -1,16 +1,15 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Skeleton extends Enemy {
 
     public Skeleton(int x, int y) {
-        super("Skeleton", x, y, 50, 30, 2, 1500, 400, 1);
+        super("Skeleton", x, y, 50, 30, 2, 1500, 400, 500, 1);
     }
 
 

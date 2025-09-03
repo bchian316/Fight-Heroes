@@ -1,15 +1,14 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Grave extends SpawnerEnemy {
     public Grave(int x, int y) {
-        super("Grave", x, y, 50, 55, 0, 1500, 500, 3000, 3);
+        super("Grave", x, y, 50, 55, 0, 1500, 500, 3000, 0, 3);
     }
 
 

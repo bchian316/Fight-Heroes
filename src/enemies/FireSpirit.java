@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
 import game.StatusEffect;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class FireSpirit extends Enemy {
 
     public FireSpirit(int x, int y) {
-        super("Fire Spirit", x, y, 40, 35, 6, 100, 150, 2);
+        super("Fire Spirit", x, y, 40, 35, 6, 100, 150, 200, 2);
     }
 
 

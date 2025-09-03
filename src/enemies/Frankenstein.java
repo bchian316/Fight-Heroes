@@ -1,10 +1,9 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
-
+import game.Projectile;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import java.util.HashSet;
 public class Frankenstein extends Enemy {
 
     public Frankenstein(int x, int y) {
-        super("Frankenstein", x, y, 115, 175, 2, 1750, 300, 4);
+        super("Frankenstein", x, y, 115, 175, 2, 1750, 300, 400, 4);
     }
 
     @Override

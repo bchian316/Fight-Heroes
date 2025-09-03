@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
-
+import game.Projectile;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Wraith extends SpawnerEnemy {
     public Wraith(int x, int y) {
-        super("Wraith", x, y, 60, 100, 3, 1750, 600, 3000, 7);
+        super("Wraith", x, y, 60, 100, 3, 1750, 300, 400, 3000, 7);
     }
 
     @Override

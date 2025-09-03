@@ -1,9 +1,8 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public class Zombie extends Enemy {
 
     public Zombie(int x, int y) {
-        super("Zombie", x, y, 50, 50, 3, 2000, 125, 1);
+        super("Zombie", x, y, 50, 50, 3, 2000, 125, 150, 1);
     }
 
 

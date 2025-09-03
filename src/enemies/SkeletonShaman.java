@@ -1,15 +1,14 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class SkeletonShaman extends SpawnerEnemy {
     public SkeletonShaman(int x, int y) {
-        super("Skeleton Shaman", x, y, 65, 55, 3, 1000, 400, 4000, 5);
+        super("Skeleton Shaman", x, y, 65, 55, 3, 1000, 300, 450, 4000, 5);
     }
 
 

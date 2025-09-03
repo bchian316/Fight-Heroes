@@ -1,16 +1,15 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Ghoul extends Enemy {
 
     public Ghoul(int x, int y) {
-        super("Ghoul", x, y, 65, 100, 4, 1500, 450, 5);
+        super("Ghoul", x, y, 65, 100, 4, 1500, 450, 600, 5);
     }
 
 

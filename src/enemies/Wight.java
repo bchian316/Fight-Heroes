@@ -1,16 +1,15 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
+import game.Game;
 import game.Projectile;
-
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Wight extends Enemy {
     public static final int ATTKOFFSET = 35;
     public Wight(int x, int y) {
-        super("Wight", x, y, 75, 60, 5, 1500, 500, 4);
+        super("Wight", x, y, 75, 60, 5, 1500, 500, 600, 4);
     }
 
     @Override

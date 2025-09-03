@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class Tile implements Drawable, HasHealth {
 
-    public static final int COLLISION_CUSHION = 8; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
+    public static final int COLLISION_CUSHION = 10; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
     public static final int SIZE = 25;
 
     private static final Image[] WALL_IMAGES = Game.imageLoader("assets/terrain/wall.png", SIZE);

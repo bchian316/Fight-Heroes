@@ -7,19 +7,14 @@ import game.Timer;
 import java.util.ArrayList;
 
 public abstract class SpawnerEnemy extends Enemy {
-    private Timer spawnTimer;
+    private final Timer spawnTimer;
 
-    public SpawnerEnemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange,
-            int regen, int regenTick, int spawnTime, int power) {
-        super(name, x, y, size, health, speed, reload, passiveRange, regen, regenTick, power);
+    public SpawnerEnemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange, int aggroRange,
+            int spawnTime, int power) {
+        super(name, x, y, size, health, speed, reload, passiveRange, aggroRange, power);
         this.spawnTimer = new Timer(spawnTime, (int) (Math.random() * spawnTime));
     }
     
-    public SpawnerEnemy(String name, int x, int y, int size, int health, int speed, int reload, int passiveRange,
-            int spawnTime, int power) {
-        this(name, x, y, size, health, speed, reload, passiveRange, 0, 0, spawnTime, power);
-        
-    }
 
     public ArrayList<Enemy> spawn() {
         this.resetSpawnTimer();

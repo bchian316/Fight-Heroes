@@ -1,17 +1,16 @@
 package enemies;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
+import game.Game;
 import game.HasHealth;
-
+import game.Projectile;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SkeletonLich extends SpawnerEnemy {
     public SkeletonLich(int x, int y) {
-        super("SkeletonLich", x, y, 85, 125, 1, 1500, 550, 9000, 7);
+        super("Skeleton Lich", x, y, 85, 125, 1, 1500, 350, 400, 9000, 7);
     }
 
     @Override
