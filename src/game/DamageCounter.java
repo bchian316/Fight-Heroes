@@ -1,9 +1,11 @@
 package game;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 public class DamageCounter implements Drawable {
+    //private static final FontMetrics FONT_METRICS = g.get
     private static final int SPEED = 3;
     private static final int LIFETIME = 1000;
     
@@ -24,10 +26,11 @@ public class DamageCounter implements Drawable {
 
     @Override
     public void draw(Graphics g, double offsetX, double offsetY) {
-        int textWidth = g.getFontMetrics(g.getFont()).stringWidth(this.damage);
-        int textHeight = g.getFontMetrics(g.getFont()).getHeight();
+        FontMetrics fontMetrics = g.getFontMetrics(g.getFont());
+        int textWidth = fontMetrics.stringWidth(this.damage);
+        int textHeight = fontMetrics.getHeight();
         double leftX = this.x - textWidth / 2;
-        double topY = this.y - textHeight / 2;
+        double topY = this.y - textHeight / 2 + fontMetrics.getAscent();
         
         if (Drawable.inScreen(offsetX, offsetY, leftX, topY, textWidth, textHeight)) {
             g.setColor(this.color);

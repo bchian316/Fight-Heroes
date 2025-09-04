@@ -6,7 +6,8 @@ public class Level {
     public static final Level[] LEVELS = {
             new Level(new Enemy[] { new IceSpirit(200, 500),
                                     new FireSpirit(100, 500),
-                                    new Witch(150, 700)}), //introduce zombie
+                                    new Witch(150, 700),
+                                    new ZombieHut(250, 850)}), //introduce zombie
             new Level(new Enemy[] { new Zombie(100, 150),
                                     new Zombie(250, 150),
                                     new Grave(400, 325)}),

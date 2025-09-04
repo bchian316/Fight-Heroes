@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SkeletonLich extends SpawnerEnemy {
+    private static final int SPAWN_LIMIT = 6; //does not have infinite spawn limit, just has a different way of calculated spawnlimitreached
+    //do spawn limit 0 not -1 when alternate way to calculate spawn limit
+
     public SkeletonLich(int x, int y) {
-        super("Skeleton Lich", x, y, 85, 125, 1, 1500, 350, 400, 9000, 7);
+        super("Skeleton Lich", x, y, 85, 125, 1, 1500, 350, 400, 9000, 0, 7);
     }
 
     @Override
@@ -41,6 +44,19 @@ public class SkeletonLich extends SpawnerEnemy {
             AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         this.heal(6);
         return new ArrayList<>();
+    }
+
+    @Override
+    public boolean spawnLimitReached(){
+        int counter = 0;
+        for (Enemy e : this.getSpawnedEnemies()){
+            if(e instanceof Skeleton){
+                counter++;
+            } else if(e instanceof SkeletonShaman){
+                counter+=3;
+            }
+        }
+        return counter >= SPAWN_LIMIT;
     }
 
     @Override

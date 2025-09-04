@@ -103,7 +103,6 @@ public class Game extends JPanel {
         //update entities
         this.addDamageCounter(this.player.update(l.getPressedKeys(), this.map));
         this.updateEnemies(); //will add damage counters
-        this.spawnEnemies();
 
         //check good guy projectiles
         this.checkProjectileCollision(this.enemies, this.playerProjectiles);
@@ -187,20 +186,14 @@ public class Game extends JPanel {
             }
             this.addDamageCounter(enemies.get(i).update(this.player.getCenterX(), this.player.getCenterY(), this.enemyProjectiles, this.map));
             //if currentproj is colliding with enemy
-        }
-    }
-    
-    private void spawnEnemies() {
-        //when enemies spawn more enemies
-        for (int i = enemies.size() - 1; i >= 0; i--) {
-
-            if (enemies.get(i) instanceof SpawnerEnemy) {
-                SpawnerEnemy spawnerEnemy = (SpawnerEnemy) (enemies.get(i));
+            if (currentEnemy instanceof SpawnerEnemy) {
+                SpawnerEnemy spawnerEnemy = (SpawnerEnemy) (currentEnemy);
                 if (spawnerEnemy.spawnLoaded()) {
-                    enemies.addAll(spawnerEnemy.spawn());
+                    ArrayList<Enemy> newEnemies = spawnerEnemy.spawn();
+                    enemies.addAll(newEnemies);
+                    spawnerEnemy.addSpawnedEnemies(newEnemies);
                 }
             }
-            //if currentproj is colliding with enemy
         }
     }
 

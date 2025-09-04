@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class Crypt extends SpawnerEnemy {
     private static final int SPLITANGLE = 40;
     public Crypt(int x, int y) {
-        super("Crypt", x, y, 100, 80, 0, 1000, 0, 0, 3000, 7);
+        super("Crypt", x, y, 100, 80, 0, 1000, 0, 0, 3000, 3, 7);
     }
 
     @Override

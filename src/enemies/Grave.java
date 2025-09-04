@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Grave extends SpawnerEnemy {
     public Grave(int x, int y) {
-        super("Grave", x, y, 50, 55, 0, 1500, 500, 3000, 0, 3);
+        super("Grave", x, y, 50, 55, 0, 1500, 0, 0, 3000, 1, 3);
     }
 
 

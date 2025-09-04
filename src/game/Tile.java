@@ -17,10 +17,12 @@ public class Tile implements Drawable, HasHealth {
     private static final Image[] BORDER_IMAGES = Tools.imageLoader("assets/terrain/border.png", SIZE);
     private static final Image[] MUD_IMAGES = Tools.imageLoader("assets/terrain/mud.png", SIZE);
     private static final Image[] WATER_IMAGES = Tools.imageLoader("assets/terrain/water.png", SIZE);
+    private static final Image[] LAVA_IMAGES = Tools.imageLoader("assets/terrain/lava.png", SIZE);
     
     private static final HashMap<Character, StatusEffect> STATUS_EFFECTS = new HashMap<>();
     private static final StatusEffect MUD_EFFECT = new StatusEffect(null, 0, 0, 0, -0.6, 0, 0, new Color(138, 88, 8));
     private static final StatusEffect WATER_EFFECT = new StatusEffect(null, 0, 0, 0, -0.4, -1, 0, new Color(0, 121, 170));
+    private static final StatusEffect LAVA_EFFECT = new StatusEffect(null, -5, 0, 0, 0, 0, 0, new Color(240, 17, 0));
     
     private static final int WALL_MAX_HEALTH = 240;
     private static final int WALL_HEALTH_INTERVAL = WALL_MAX_HEALTH / WALL_IMAGES.length;
@@ -32,12 +34,14 @@ public class Tile implements Drawable, HasHealth {
         STATUS_EFFECTS.put('u', null); //for wall
         STATUS_EFFECTS.put('m', MUD_EFFECT); //for mud
         STATUS_EFFECTS.put('w', WATER_EFFECT); //for water
+        STATUS_EFFECTS.put('l', LAVA_EFFECT); //for water
 
         //load terrain images
         TERRAIN_IMAGES.put('x', GROUND_IMAGES);
         TERRAIN_IMAGES.put('u', BORDER_IMAGES);
         TERRAIN_IMAGES.put('m', MUD_IMAGES);
         TERRAIN_IMAGES.put('w', WATER_IMAGES);
+        TERRAIN_IMAGES.put('l', LAVA_IMAGES);
     }
 
     private final int x, y; //should be the coords

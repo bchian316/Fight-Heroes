@@ -5,7 +5,7 @@ NUM_OF_TILES = 60
 SCREEN_SIZE = 700
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 tileSize = SCREEN_SIZE/NUM_OF_TILES
-colorDict = {'x': (255, 255, 255), 'u' : (120, 120, 120), 'm' : (138, 88, 8), 'w' : (0, 120, 171)}
+colorDict = {'x': (255, 255, 255), 'u' : (120, 120, 120), 'm' : (138, 88, 8), 'w' : (0, 120, 171), 'l' : (240, 17, 0)}
 running = True
 
 array2d = []
@@ -68,10 +68,10 @@ while running:
             array2d[y][x][1] = 1
         elif(pressed_keys[pygame.K_w]): #water
             array2d[y][x][0] = 'w'
-            array2d[y][x][1] = 0
         elif(pressed_keys[pygame.K_m]): #mud
             array2d[y][x][0] = 'm'
-            array2d[y][x][1] = 0
+        elif(pressed_keys[pygame.K_l]): #mud
+            array2d[y][x][0] = 'l'
 
         #increment health if not unbreakable
         elif(array2d[y][x][0] != 'u'):
