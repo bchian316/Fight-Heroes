@@ -3,10 +3,10 @@ package enemies;
 import game.DamageCounter;
 import game.Drawable;
 import game.Entity;
-import game.Game;
 import game.Map;
 import game.Projectile;
 import game.Tile;
+import game.Tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -17,7 +17,8 @@ import java.util.ArrayList;
 
 public abstract class Enemy extends Entity {
 
-    private static final int MAX_MANUEVER_DISTANCE = Tile.SIZE * 4;
+    private static final int MANUEVER_MULTIPLIER = 25;
+    private static final int MANUEVER_MINIMUM = 50;
 
     private static final int BAROFFSETY = 5;
     private static final int HEALTHBARHEIGHT = 10;
@@ -33,7 +34,7 @@ public abstract class Enemy extends Entity {
     private final int desiredRange; //should always stay within this range
     private final int aggroRange; //if player is outside, then enemies ignore
 
-    private boolean maneuvering = false; //if the enemy is doing random movements
+    private boolean passive = false; //if the enemy is doing random movements
 
     /**
      * 
@@ -48,7 +49,7 @@ public abstract class Enemy extends Entity {
      * @param aggroRange the sight range of the enemy
      * @param power general identification of enemy strength
      */
-    public Enemy(String name, int x, int y, int size, int health, int speed, int reload, int desiredRange, int aggroRange, int power) {
+    public Enemy(String name, int x, int y, int size, int health, double speed, int reload, int desiredRange, int aggroRange, int power) {
         super(name, "enemies", x, y, size, health, speed, reload);
 
         this.desiredRange = desiredRange; //even stationary enemies should have >0 passive range to move out of walls
@@ -59,6 +60,10 @@ public abstract class Enemy extends Entity {
         this.moveTargetX = this.getCenterX();
         this.moveTargetY = this.getCenterY();
     }
+
+    private static double manueverDistance(double speed){
+        return Math.random() * speed * Enemy.MANUEVER_MULTIPLIER + Enemy.MANUEVER_MINIMUM;
+    }
     
 
     private boolean isWiggling(int collisions) {
@@ -66,21 +71,23 @@ public abstract class Enemy extends Entity {
                 || (collisions == 2 && Math.abs(this.getCenterX() - this.moveTargetX) <= this.getSpeed());
     }
 
-    //so it can't be overridden
-    private void setMoveTarget(Map map, double playerX, double playerY) {
-        //manuever if hit wall, no manuever if pursuing player, can't select space in wall
-        do {
-            double randAngle = Game.getRandomAngle(); //in radians
-            if (this.maneuvering) {
-                double randMagnitude = Math.random() * Enemy.MAX_MANUEVER_DISTANCE;
-                this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + this.getCenterX());
-                this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + this.getCenterY());
-            } else {
-                double randMagnitude = Math.random() * this.desiredRange;
-                this.moveTargetX = (int) (Game.getVectorX(randAngle, randMagnitude) + playerX);
-                this.moveTargetY = (int) (Game.getVectorY(randAngle, randMagnitude) + playerY);
-            }
-        } while (map.returnWallCollided(this.moveTargetX, this.moveTargetY, 1) != null);
+    /**
+     * Sets the move target of the Enemy to a new location depending on if the enemy is passive or aggro
+     * @param playerX center x of Entity
+     * @param playerY center y of Entity
+     */
+    private void setMoveTarget(double playerX, double playerY) {
+        double randAngle = Tools.getRandomAngle(); //in radians
+        if (this.passive) {
+            double randMagnitude = Math.random() * Enemy.manueverDistance(this.getSpeed());
+            this.moveTargetX = (int) (Tools.getVectorX(randAngle, randMagnitude) + this.getCenterX());
+            this.moveTargetY = (int) (Tools.getVectorY(randAngle, randMagnitude) + this.getCenterY());
+            return;
+        }
+        double randMagnitude = Math.random() * this.desiredRange;
+        this.moveTargetX = (int) (Tools.getVectorX(randAngle, randMagnitude) + playerX);
+        this.moveTargetY = (int) (Tools.getVectorY(randAngle, randMagnitude) + playerY);
+        
     }
 
     @Override
@@ -98,7 +105,13 @@ public abstract class Enemy extends Entity {
         super.draw(g, offsetX, offsetY);
         if (Drawable.inScreen(offsetX, offsetY, this.getX(), this.getY(), this.getSize(), this.getSize())) {
             this.drawHealthBar(g, offsetX, offsetY);
-            g.fillOval((int)(this.moveTargetX-5-offsetX), (int)(this.moveTargetY-5-offsetY), 10, 10);
+            if(this.passive){
+                g.setColor(Color.GREEN);
+                g.fillOval((int)(this.moveTargetX-5-offsetX), (int)(this.moveTargetY-5-offsetY), 10, 10);
+            } else {
+                g.setColor(Color.RED);
+                g.fillOval((int)(this.moveTargetX-5-offsetX), (int)(this.moveTargetY-5-offsetY), 10, 10);
+            }
         }
     }
 
@@ -113,10 +126,10 @@ public abstract class Enemy extends Entity {
     private void flowFromWall(Map map) {
         while (this.stuckInWall(map)) {
             //spawned in wall
-            double randAngle = Game.getRandomAngle();
+            double randAngle = Tools.getRandomAngle();
             
-            double dx = Game.getVectorX(randAngle, Tile.SIZE);
-            double dy = Game.getVectorY(randAngle, Tile.SIZE);
+            double dx = Tools.getVectorX(randAngle, Tile.SIZE);
+            double dy = Tools.getVectorY(randAngle, Tile.SIZE);
             
             this.setBorders(map, dx, dy, false);
         }
@@ -133,11 +146,11 @@ public abstract class Enemy extends Entity {
 
         //set directions
 
-        double dx = Game.getVectorX(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+        double dx = Tools.getVectorX(
+                Tools.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
                 this.getSpeed());
-        double dy = Game.getVectorY(
-                Game.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
+        double dy = Tools.getVectorY(
+                Tools.getAngle(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY),
                 this.getSpeed());
 
         int collisions = this.setBorders(map, dx, dy, true);
@@ -147,32 +160,39 @@ public abstract class Enemy extends Entity {
         if (collisions == 3 || this.isWiggling(collisions)) {
             //priority one: doesn't matter where enemy is, must execute wall collision behavior. override everything
             //is collliding with 2 wall or is wiggling
-            this.maneuvering = true;
-            setMoveTarget(map, playerX, playerY);
+            this.passive = true;
+            setMoveTarget(playerX, playerY);
 
-        } else if (Game.getDistance(this.moveTargetX, this.moveTargetY, playerX, playerY) > this.aggroRange) {
+        } else if (Tools.getDistance(this.moveTargetX, this.moveTargetY, playerX, playerY) > this.aggroRange) {
             //priotity two: enemy cant do anything if too far away
-            this.maneuvering = true;
+            if(!this.passive){
+                //if was aggro, turn passive
+                this.passive = true;
+                this.setMoveTarget(playerX, playerY);
+            }
 
-        } else if (Game.getDistance(this.moveTargetX, this.moveTargetY, playerX, playerY) > this.desiredRange) {
+        } else if (Tools.getDistance(this.moveTargetX, this.moveTargetY, playerX, playerY) > this.desiredRange) {
             //priority three: enemy wants to stay within desired range unless obstructed by wall
             //enemy is not wall obstructed and within aggroRange but outside desired range
-            this.maneuvering = false;
-            this.setMoveTarget(map, playerX, playerY);
+            if(this.passive){//range just switched, become aggro
+                this.passive = false;
+                this.setMoveTarget(playerX, playerY);
+            }
         } else {
-            //priority four: enemy is within desired range, dont manuever, follow player
-            this.manuevering = false;
+            //priority four: enemy is not wall colliding and within desired range, dont manuever, follow player
+            //no range switch
+            this.passive = false;
         }
-        if (Game.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) <= this.getSpeed()) {
+        if (Tools.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) <= this.getSpeed()) {
             //separate code, should run no matter what
             //if arrived, set new target
-            this.setMoveTarget(map, playerX, playerY);
+            this.setMoveTarget(playerX, playerY);
         }
         
         
         //attack if loaded
         if (this.isLoaded()) {
-            Game.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
+            Tools.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.unload();
         }
 

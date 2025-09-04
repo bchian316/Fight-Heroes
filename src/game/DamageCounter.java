@@ -11,7 +11,7 @@ public class DamageCounter implements Drawable {
     private final String damage;
     private final Color color;
 
-    private final double randAngle = Game.getRandomAngle(); // in radians
+    private final double randAngle = Tools.getRandomAngle(); // in radians
 
     private final Timer lifetimer = new Timer(LIFETIME);
 
@@ -41,8 +41,8 @@ public class DamageCounter implements Drawable {
     
     public boolean update() {
         this.lifetimer.update();
-        this.x += Game.getVectorX(randAngle, SPEED);
-        this.y += Game.getVectorY(randAngle, SPEED);
+        this.x += Tools.getVectorX(randAngle, SPEED);
+        this.y += Tools.getVectorY(randAngle, SPEED);
         return this.lifetimeOver();
     }
 }

@@ -41,7 +41,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         this.speed = speed;
         this.reload = reload;
         this.reloadTimer = new Timer(this.reload, (int) (Math.random() * this.reload));
-        this.images = Game.imageLoader("assets/" + addOn + "/" + this.name + ".png", this.size);
+        this.images = Tools.imageLoader("assets/" + addOn + "/" + this.name + ".png", this.size);
     }
 
     public Entity(String addOn, int x, int y, Mage mage) {
@@ -193,10 +193,10 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         int damageDealt = damage + (int) (this.defenseChange() * damage);
         if (damageDealt >= 0) { //max the damage change
             this.health -= damageDealt;
-            double randAngle = Game.getRandomAngle();
+            double randAngle = Tools.getRandomAngle();
             double randMagnitude = Math.random() * this.size / 2;
-            return new DamageCounter(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude),
-                    this.getCenterY() + Game.getVectorY(randAngle, randMagnitude), damageDealt, c);
+            return new DamageCounter(this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude),
+                    this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude), damageDealt, c);
         } else {
             this.heal(-damageDealt);
         }
@@ -225,7 +225,7 @@ public abstract class Entity implements CanAttack, HasHealth, Drawable {
         if (this.isDead()) {
             return false;
         }
-        return Game.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(),
+        return Tools.getDistance(p.getCenterX(), p.getCenterY(), this.getCenterX(),
                 this.getCenterY()) < (p.getSize() + this.size) / 2.0;
     }
 

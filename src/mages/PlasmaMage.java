@@ -1,12 +1,11 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +18,7 @@ public class PlasmaMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
                 new AttackStats(13, 25, 10, 200, 1, 25, new Color(255, 115, 115), true, true, false,
                 new AttackStats(8, 15, 8, 75, 1, 5, new Color(255, 115, 115))),
@@ -40,7 +39,7 @@ public class PlasmaMage extends Mage {
     @Override
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
                 new AttackStats(0, 40, 9, 350, 1, 25, new Color(0, 104, 240), true, true, false,
                         new AttackStats(

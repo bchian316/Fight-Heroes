@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
 import game.Player;
-
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ public class WindMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -1; i <= 1; i += 2) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + i * Math.toRadians(15),
+            newProjs.add(new Projectile(x, y, Tools.getAngle(x, y, targetX, targetY) + i * Math.toRadians(15),
                     new AttackStats(20, 40, 5, 200, -1, 1, new Color(125, 125, 125)), null));
             
         }
@@ -32,7 +31,7 @@ public class WindMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(),
-                    Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY) + i * Math.toRadians(72),
+                    Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY) + i * Math.toRadians(72),
                     new AttackStats(10, 60, 3, 125, -1, 1, new Color(70, 70, 70)), null));
             
         }

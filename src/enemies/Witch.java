@@ -1,9 +1,9 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.Projectile;
 import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class Witch extends Enemy {
         }; //5 damage every 3 seconds for 10 seconds
         //slow by half for 5 seconds
         //reduce attack damage by 2 for 8 seconds
-        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
+        newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
                 new AttackStats(randomEffect, 0, 25, 8, 300, 1, 20, randomEffect.getColor()), null));
         
         return newProjs;

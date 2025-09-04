@@ -1,12 +1,11 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +18,7 @@ public class NatureMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle, 
                 new AttackStats(35, 50, 10, 100, -1, 20, new Color(0, 200, 0), false, true, true,
                 new AttackStats(25, 30, 12, 100, -1, 10, new Color(0, 255, 0), false, true, true,

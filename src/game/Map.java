@@ -23,24 +23,6 @@ public class Map implements Drawable {
     public final int getWallY() {
         return MAP_HEIGHT - Tile.SIZE;
     }
-    /*public final void setMap(Tile[] walls) {
-        //called every new level - takes custom walls
-        for (int i = 0; i <= this.getWallY(); i += Tile.SIZE) {
-            for (int j = 0; j <= this.getWallX(); j += Tile.SIZE) {
-                if (i == 0 || j == 0 || i >= this.getWallY() || j >= this.getWallX()) {//sets unbreakable walls in border
-                    this.map[i / Tile.SIZE][j / Tile.SIZE] = new Tile(j, i);
-                } else {
-                    this.map[i / Tile.SIZE][j / Tile.SIZE] = new Tile(j, i, 0);
-                }
-                //this.map[i / Tile.SIZE][j / Tile.SIZE].setImage();
-            }
-        }
-        for (Tile t : walls) {
-            this.map[t.getY() / Tile.SIZE][t.getX() / Tile.SIZE] = t;
-            t.setImage();
-        }
-    } */
-    
 
     public final void setMap(String filename) {
         
@@ -78,7 +60,7 @@ public class Map implements Drawable {
                 //no splitting (like if gene shoots a wall)
                 t.getDamaged(projectiles.remove(i).getDamage(), p.getColor());
                 if (p.splitsOnImpact()) {//if they split ON IMPACT, then they can split off a wall. Otherwise, if they only split from range, they dont split
-                    Game.addProjectiles(projectiles, p.split());
+                    Tools.addProjectiles(projectiles, p.split());
                 }
             }
         }

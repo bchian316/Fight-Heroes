@@ -1,9 +1,9 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.Projectile;
 import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -19,10 +19,10 @@ public class FireSpirit extends Enemy {
 
         ArrayList<Projectile> newProjs = new ArrayList<>();
 
-        if (Game.getDistance(this.getCenterX(), this.getCenterY(), targetX, targetY) <= 65) {
+        if (Tools.getDistance(this.getCenterX(), this.getCenterY(), targetX, targetY) <= 65) {
             this.getDamaged(35, new Color(230, 23, 0));
 
-            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY),
                     new AttackStats(
                             new StatusEffect("Burn", -5, 0, 0, 0, 0, 2000,
                                     new Color(230, 23, 0)),

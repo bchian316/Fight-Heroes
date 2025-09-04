@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,17 +20,17 @@ public class LightningMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY), new AttackStats(60, 75, 20, 350, 2, 20, new Color(178, 78, 204)), null));
+        newProjs.add(new Projectile(x, y, Tools.getAngle(x, y, targetX, targetY), new AttackStats(60, 75, 20, 350, 2, 20, new Color(178, 78, 204)), null));
         return newProjs;
     }
     @Override
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         for (int i = -1; i <= 1; i++) {
             newProjs.add(new Projectile(
-                    p.getCenterX() + i * Game.getVectorX(angle + Math.PI / 2, SPECIAL_SPREAD),
-                    p.getCenterY() + i * Game.getVectorY(angle + Math.PI / 2, SPECIAL_SPREAD),
+                    p.getCenterX() + i * Tools.getVectorX(angle + Math.PI / 2, SPECIAL_SPREAD),
+                    p.getCenterY() + i * Tools.getVectorY(angle + Math.PI / 2, SPECIAL_SPREAD),
                     angle - Math.toRadians(SPECIAL_ANGLE/2),
                     new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164), false, true, true,
                     new AttackStats(20, 20, 10, 200, 3, 10, new Color(148, 48, 164), false, true, true,

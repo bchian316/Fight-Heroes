@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
 import game.Player;
-
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -19,10 +18,10 @@ public class WaveMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         for (double i = -2.5; i <= 2.5; i++) {
-            newProjs.add(new Projectile(x + Game.getVectorX(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i),
-                    y + Game.getVectorY(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i), angle,
+            newProjs.add(new Projectile(x + Tools.getVectorX(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i),
+                    y + Tools.getVectorY(angle + Math.PI / 2, WaveMage.ATTKOFFSET * i), angle,
                     new AttackStats(6, 15, 13, 250, 3, 2, new Color(36, 227, 144)), null));
         }
         return newProjs;
@@ -31,10 +30,10 @@ public class WaveMage extends Mage {
     @Override
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         for (double i = -1.5; i <= 1.5; i++) {
-            newProjs.add(new Projectile(p.getCenterX() + Game.getVectorX(angle + Math.PI / 2, WaveMage.SUPEROFFSET * i),
-                    p.getCenterY() + Game.getVectorY(angle + Math.PI / 2, WaveMage.SUPEROFFSET * i), angle,
+            newProjs.add(new Projectile(p.getCenterX() + Tools.getVectorX(angle + Math.PI / 2, WaveMage.SUPEROFFSET * i),
+                    p.getCenterY() + Tools.getVectorY(angle + Math.PI / 2, WaveMage.SUPEROFFSET * i), angle,
                     new AttackStats(
                             new StatusEffect("Disease", -4, -0.8, 0, 0, 0, 8000, new Color(36, 227, 144)),
                             9, 30, 18, 350, -1, 2, new Color(16, 207, 125)), null));

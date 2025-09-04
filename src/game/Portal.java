@@ -34,7 +34,7 @@ public class Portal implements Drawable{
         if (this.visible == false) {
             return false;
         }
-        return Game.getDistance(this.getCenterX(), this.getCenterY(), playerX, playerY) <= Portal.SIZE / 2;
+        return Tools.getDistance(this.getCenterX(), this.getCenterY(), playerX, playerY) <= Portal.SIZE / 2;
     }
 
     public void show() {

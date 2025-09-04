@@ -1,12 +1,11 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +19,7 @@ public class DonovanMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            double angle = Game.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i);
+            double angle = Tools.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i);
             newProjs.add(new Projectile(x, y, angle,
                     new AttackStats(20, 30, 12, 100, 1, 10, new Color(214, 15, 15), true, true, false,
                     new AttackStats(10, 20, 12, 100, 1, 7, new Color(0, 0, 200), true, true, false,

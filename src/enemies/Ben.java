@@ -1,9 +1,9 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.HasHealth;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class Ben extends SpawnerEnemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (double i = -1.5; i <= 1.5; i++) {
-            double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
+            double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
                     + Math.toRadians(i * 30);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
                     new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false, true, false,
@@ -43,10 +43,10 @@ public class Ben extends SpawnerEnemy {
     public ArrayList<Enemy> spawn() {
         super.spawn();
         ArrayList<Enemy> newEnemies = new ArrayList<>();
-        double randAngle = Game.getRandomAngle(); // in radians
+        double randAngle = Tools.getRandomAngle(); // in radians
         double randMagnitude = Math.random() * Ben.SPAWN_RANGE;
-        newEnemies.add(new Mummy((int)(this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                (int)(this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+        newEnemies.add(new Mummy((int)(this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                (int)(this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
         return newEnemies;
     }
     

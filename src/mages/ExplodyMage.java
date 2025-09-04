@@ -1,12 +1,11 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +19,7 @@ public class ExplodyMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true, true, false,
                 new AttackStats(30, 125, 1, 15, -1, 1, new Color(194, 48, 0))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
@@ -32,8 +31,8 @@ public class ExplodyMage extends Mage {
     public ArrayList<Projectile> createMoreProjectiles(double x, double y, double angle,
             AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x - Game.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
-                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
+        newProjs.add(new Projectile(x - Tools.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
+                y - Tools.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
 
         return newProjs;
     }
@@ -41,7 +40,7 @@ public class ExplodyMage extends Mage {
     @Override
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
                 new AttackStats(5, 25, 10, 225, 1, 25, new Color(255, 40, 38), true, true, false,
                         new AttackStats(new StatusEffect("Burn", -5, 0.8, 0.2, 0, 0, 7000, new Color(232, 78, 12)), 60,
@@ -53,8 +52,8 @@ public class ExplodyMage extends Mage {
     public ArrayList<Projectile> special2(double x, double y, double angle,
             AttackStats splitStats, HashSet<HasHealth> hitObjects) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        newProjs.add(new Projectile(x - Game.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
-                y - Game.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
+        newProjs.add(new Projectile(x - Tools.getVectorX(angle, ExplodyMage.EXPLOSION_OFFSET),
+                y - Tools.getVectorY(angle, ExplodyMage.EXPLOSION_OFFSET), angle, splitStats, hitObjects));
 
         return newProjs;
     }

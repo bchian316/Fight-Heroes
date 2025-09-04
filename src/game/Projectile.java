@@ -103,10 +103,10 @@ public class Projectile implements Drawable{
         //spawn new projs
         //center x and center y
         if (this.splitInheritance()) { //more bad, children cant hit already hit objects
-            return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), this.hitObjects);
+            return this.split.split(this.getCenterX(), this.getCenterY(), Tools.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), this.hitObjects);
             
         }
-        return this.split.split(this.getCenterX(), this.getCenterY(), Game.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), null);
+        return this.split.split(this.getCenterX(), this.getCenterY(), Tools.getAngle(0, 0, this.velX, this.velY), this.attk.getSplitStats(), null);
     }
 
     public boolean canSplit() {

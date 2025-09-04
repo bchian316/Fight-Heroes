@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
 import game.Player;
-
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -19,7 +18,7 @@ public class EarthMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            newProjs.add(new Projectile(x, y, Game.getAngle(x, y, targetX, targetY) + Math.toRadians(i * 36),
+            newProjs.add(new Projectile(x, y, Tools.getAngle(x, y, targetX, targetY) + Math.toRadians(i * 36),
                     new AttackStats(7, 40, 20, 200, 1, 15, new Color(125, 78, 16)), null));
         }
         return newProjs;

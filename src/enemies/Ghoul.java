@@ -1,8 +1,8 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class Ghoul extends Enemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -3; i <= 3; i++) {
-            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i*12),
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i*12),
                     new AttackStats(8, 30, 6, 250, 2, 7, new Color(31, 122, 240)), null));
         }
         return newProjs;

@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.StatusEffect;
-import game.Projectile;
 import game.Player;
-
+import game.Projectile;
+import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ public class PulseMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x + PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
         newProjs.add(new Projectile(x - PulseMage.ATTKOFFSET, y, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
         newProjs.add(new Projectile(x, y + PulseMage.ATTKOFFSET, angle, new AttackStats(10, 15, 15, 175, 2, 1, new Color(0, 115, 0)), null));
@@ -30,7 +29,7 @@ public class PulseMage extends Mage {
     public ArrayList<Projectile> special(Player p, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(),
-                Game.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY),
+                Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY),
                 new AttackStats(new StatusEffect("Fragility", 0, 0, 1, 0, 0, 5000, new Color(50, 50, 50)),
                 0, 25, 12, 100, 1, 1, new Color(35, 70, 35)), null));
         return newProjs;

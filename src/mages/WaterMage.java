@@ -1,11 +1,10 @@
 package mages;
 
-import game.Game;
 import game.AttackStats;
-import game.Projectile;
-import game.Player;
 import game.HasHealth;
-
+import game.Player;
+import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +19,7 @@ public class WaterMage extends Mage {
     @Override
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(x, y, targetX, targetY);
+        double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
                 new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false, true, false,
                 new AttackStats(8, 10, 15, 125, 1, 10, new Color(0, 25, 217))),
@@ -46,8 +45,8 @@ public class WaterMage extends Mage {
 
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45.0);
-            newProjs.add(new Projectile(targetX + Game.getVectorX(angle + Math.PI, SPECIAL_DISTANCE),
-                    targetY + Game.getVectorY(angle + Math.PI, SPECIAL_DISTANCE), angle, 
+            newProjs.add(new Projectile(targetX + Tools.getVectorX(angle + Math.PI, SPECIAL_DISTANCE),
+                    targetY + Tools.getVectorY(angle + Math.PI, SPECIAL_DISTANCE), angle, 
                     new AttackStats(8, 15, 8, SPECIAL_DISTANCE + 50, 2, 10, new Color(25, 25, 225)), null));
         }
 

@@ -5,14 +5,9 @@ import enemies.SpawnerEnemy;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import mages.*;
@@ -77,14 +72,14 @@ public class Game extends JPanel {
     public void attemptPlayerAttack(double targetX, double targetY) {
         //targetX and targetY are mouse coords, add offsets to get game coords
         if (this.player.isLoaded()) {
-            Game.addProjectiles(this.playerProjectiles,
+            Tools.addProjectiles(this.playerProjectiles,
                     this.player.attack(targetX + this.offsetX, targetY + this.offsetY));
         }
     }
 
     public void attemptPlayerSpecial(double targetX, double targetY) {
         if (this.player.isSpecialLoaded()) {
-            Game.addProjectiles(this.playerProjectiles,
+            Tools.addProjectiles(this.playerProjectiles,
                     this.player.special(targetX + this.offsetX, targetY + this.offsetY));
         }
     }
@@ -143,7 +138,7 @@ public class Game extends JPanel {
             Projectile currentProj = projectiles.get(i);
             if (currentProj.doneTraveling()) {
                 if (currentProj.canSplit() && currentProj.splitsAtEnd()) { //this is for splitting without impact (Gene)
-                    Game.addProjectiles(projectiles, currentProj.split());
+                    Tools.addProjectiles(projectiles, currentProj.split());
                 }
                 projectiles.remove(i);
                 continue;
@@ -154,10 +149,6 @@ public class Game extends JPanel {
             currentProj.update();
             //if currentproj is colliding with enemy
         }
-    }
-    
-    public static void addProjectiles(ArrayList<Projectile> projectiles, ArrayList<Projectile> newProjectiles) {
-        projectiles.addAll(newProjectiles);
     }
 
     private void checkProjectileCollision(ArrayList<? extends Entity> entities, ArrayList<Projectile> projectiles) {
@@ -170,7 +161,7 @@ public class Game extends JPanel {
                     currentProj.addHitEnemy(e);
 
                     if (currentProj.splitsOnImpact()) {
-                        Game.addProjectiles(projectiles, currentProj.split());
+                        Tools.addProjectiles(projectiles, currentProj.split());
                     }
                     if (currentProj.donePierce()) {//by piercing too many entities
                         projectiles.remove(i);
@@ -277,49 +268,5 @@ public class Game extends JPanel {
         this.player.load();
         this.player.loadSpecial();
         this.player.clearStatusEffects();
-    }
-    
-    public static double getAngle(double startX, double startY, double targetX, double targetY) {
-        //returns angle IN RADIANS
-        if (startX == targetX) {
-            //prevent division by 0
-            return 0;
-        }
-        return Math.atan2(targetY - startY, targetX - startX);
-    }
-
-    public static double getDistance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    }
-    
-    public static double getDistance(double dx, double dy) {
-        return getDistance(0, 0, dx, dy);
-    }
-    
-    public static double getVectorX(double angle, double magnitude) {
-        return Math.cos(angle) * magnitude;
-    }
-
-    public static double getVectorY(double angle, double magnitude) {
-        return Math.sin(angle) * magnitude;
-    }
-
-    public static double getRandomAngle() { //radians
-        return Math.random() * Math.PI * 2;
-    }
-
-    public static Image[] imageLoader(String path, int size) {
-        Image[] images;
-        try {
-            BufferedImage fullImage = ImageIO.read(new File(path));
-            images = new Image[fullImage.getWidth() / fullImage.getHeight()];
-            for (int i = 0; i < images.length; i++) {
-                images[i] = fullImage.getSubimage(i * fullImage.getHeight(), 0, fullImage.getHeight(), fullImage.getHeight()).getScaledInstance(size, size, Image.SCALE_DEFAULT);
-            }
-        } catch (IOException ex) {
-            images = new Image[0];
-            System.out.println("io exception");
-        }
-        return images;
     }
 }

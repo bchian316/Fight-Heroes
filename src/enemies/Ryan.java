@@ -1,9 +1,9 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.HasHealth;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class Ryan extends SpawnerEnemy {
         //targetX will remain constant for all child bullets - game.getangle will be current direction
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -1; i <= 1; i++) {
-            double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
+            double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
                             + Math.toRadians(i * 45);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     angle,
@@ -74,82 +74,82 @@ public class Ryan extends SpawnerEnemy {
         switch (spawnRandom) {
             case 0 -> {//spawn zombie horde
                 for (int i = 0; i < 7; i++) {
-                    double randAngle = Game.getRandomAngle(); // in radians
+                    double randAngle = Tools.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 450;
-                    newEnemies.add(new Zombie((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                            (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new Zombie((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                            (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
             }
             case 1 -> {//wraith and a few ghosties
                 this.heal(75);
-                double randAngle = Game.getRandomAngle(); // in radians
+                double randAngle = Tools.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
-                newEnemies.add(new Wraith((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                newEnemies.add(new Wraith((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 for (int i = 0; i < 3; i++) {
-                    randAngle = Game.getRandomAngle(); // in radians
+                    randAngle = Tools.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 200;
-                    newEnemies.add(new Ghost((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                            (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new Ghost((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                            (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
             }
             case 2 -> { //wight and ghoul
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Game.getRandomAngle(); // in radians
+                    double randAngle = Tools.getRandomAngle(); // in radians
                     if (Math.random() >= 0.5) {
                         double randMagnitude = Math.random() * 250;
-                        newEnemies.add(new Wight((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                                (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                        newEnemies.add(new Wight((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                                (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                     } else {
                         double randMagnitude = Math.random() * 100;
-                        newEnemies.add(new Ghoul((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                                (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                        newEnemies.add(new Ghoul((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                                (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                     }
                 }
             }
             case 3 -> {//skeletons and frankenstein
-                double randAngle = Game.getRandomAngle(); // in radians
+                double randAngle = Tools.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
-                newEnemies.add(new Frankenstein((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                newEnemies.add(new Frankenstein((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 for (int i = 0; i < 3; i++) {
-                    randAngle = Game.getRandomAngle(); // in radians
+                    randAngle = Tools.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 350;
-                    newEnemies.add(new Skeleton((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                            (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new Skeleton((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                            (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
             }
             
             case 4 -> {//skeleton shamans
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Game.getRandomAngle(); // in radians
+                    double randAngle = Tools.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 150;
-                    newEnemies.add(new SkeletonShaman((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                            (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new SkeletonShaman((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                            (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
             }
             case 5 -> {//Zombie huts, vampires
                 this.heal(50);
-                double randAngle = Game.getRandomAngle(); // in radians
+                double randAngle = Tools.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 400;
-                    newEnemies.add(new ZombieHut((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new ZombieHut((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 
                 for (int i = 0; i < 2; i++) {
-                    randAngle = Game.getRandomAngle(); // in radians
+                    randAngle = Tools.getRandomAngle(); // in radians
                     randMagnitude = Math.random() * 500;
-                    newEnemies.add(new Vampire((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new Vampire((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
                 
             }
             case 6 -> { //mummies
                 this.heal(75);
                 for (int i = 0; i < 2; i++) {
-                    double randAngle = Game.getRandomAngle(); // in radians
+                    double randAngle = Tools.getRandomAngle(); // in radians
                     double randMagnitude = Math.random() * 600;
-                    newEnemies.add(new Mummy((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                    newEnemies.add(new Mummy((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
                 }
             }
         }

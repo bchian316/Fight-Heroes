@@ -10,13 +10,13 @@ public class Tile implements Drawable, HasHealth {
     public static final int COLLISION_CUSHION = 10; //the wall has an up-to (exclusive) 8 pixel cushion for entities, not projectiles
     public static final int SIZE = 25;
 
-    private static final Image[] WALL_IMAGES = Game.imageLoader("assets/terrain/wall.png", SIZE);
+    private static final Image[] WALL_IMAGES = Tools.imageLoader("assets/terrain/wall.png", SIZE);
     
     private static final HashMap<Character, Image[]> TERRAIN_IMAGES = new HashMap<>();
-    private static final Image[] GROUND_IMAGES = Game.imageLoader("assets/terrain/ground.png", SIZE);
-    private static final Image[] BORDER_IMAGES = Game.imageLoader("assets/terrain/border.png", SIZE);
-    private static final Image[] MUD_IMAGES = Game.imageLoader("assets/terrain/mud.png", SIZE);
-    private static final Image[] WATER_IMAGES = Game.imageLoader("assets/terrain/water.png", SIZE);
+    private static final Image[] GROUND_IMAGES = Tools.imageLoader("assets/terrain/ground.png", SIZE);
+    private static final Image[] BORDER_IMAGES = Tools.imageLoader("assets/terrain/border.png", SIZE);
+    private static final Image[] MUD_IMAGES = Tools.imageLoader("assets/terrain/mud.png", SIZE);
+    private static final Image[] WATER_IMAGES = Tools.imageLoader("assets/terrain/water.png", SIZE);
     
     private static final HashMap<Character, StatusEffect> STATUS_EFFECTS = new HashMap<>();
     private static final StatusEffect MUD_EFFECT = new StatusEffect(null, 0, 0, 0, -0.6, 0, 0, new Color(138, 88, 8));
@@ -194,6 +194,6 @@ public class Tile implements Drawable, HasHealth {
     }
 
     public boolean circleCollided(double cX, double cY, double cSize) {
-        return Game.getDistance(this.getClosestX(cX), this.getClosestY(cY), cX, cY) + Tile.COLLISION_CUSHION < cSize/2.0;
+        return Tools.getDistance(this.getClosestX(cX), this.getClosestY(cY), cX, cY) + Tile.COLLISION_CUSHION < cSize/2.0;
     }
 }

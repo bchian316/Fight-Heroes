@@ -1,9 +1,9 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.HasHealth;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ public class SkeletonLich extends SpawnerEnemy {
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
         for (int i = -1; i <= 1; i++) {
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     angle + Math.toRadians(35)*i,
@@ -51,10 +51,10 @@ public class SkeletonLich extends SpawnerEnemy {
             newEnemies.add(new SkeletonShaman((int) this.getCenterX(), (int) this.getCenterY()));
         } else {
             for (int i = 0; i < 3; i++) {
-                double randAngle = Game.getRandomAngle(); // in radians
+                double randAngle = Tools.getRandomAngle(); // in radians
                 double randMagnitude = Math.random() * 100;
-                newEnemies.add(new Skeleton((int) (this.getCenterX() + Game.getVectorX(randAngle, randMagnitude)),
-                        (int) (this.getCenterY() + Game.getVectorY(randAngle, randMagnitude))));
+                newEnemies.add(new Skeleton((int) (this.getCenterX() + Tools.getVectorX(randAngle, randMagnitude)),
+                        (int) (this.getCenterY() + Tools.getVectorY(randAngle, randMagnitude))));
             }
         }
         return newEnemies;

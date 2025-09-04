@@ -1,8 +1,8 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ public class Grave extends SpawnerEnemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
-            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i * 45),
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(i * 45),
                     new AttackStats(7, 30, 18, 300, 1, 20, new Color(57, 57, 57)), null));
         }
         return newProjs;

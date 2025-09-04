@@ -1,8 +1,8 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.Projectile;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ public class SkeletonShaman extends SpawnerEnemy {
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         for (int i = -1; i <= 1; i += 2) {
-            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(10)*i,
+            newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY) + Math.toRadians(10)*i,
                     new AttackStats(8, 25, 13, 200, 1, 20, new Color(200, 207, 8)), null));
         }
         return newProjs;

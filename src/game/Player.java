@@ -2,15 +2,12 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Set;
-
 import javax.swing.ImageIcon;
-
 import mages.Mage;
-
-import java.awt.Image;
 
 public final class Player extends Entity {
     public static final int PLAYERSTARTX = 375;
@@ -126,7 +123,7 @@ public final class Player extends Entity {
         if (pressedKeys.contains(KeyEvent.VK_D)) {
             dx += 1;
         }
-        double magnitude = Game.getDistance(dx, dy);
+        double magnitude = Tools.getDistance(dx, dy);
         if (magnitude != 0) {//prevent division by 0
             dx /= magnitude;
             dy /= magnitude;

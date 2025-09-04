@@ -1,10 +1,10 @@
 package enemies;
 
 import game.AttackStats;
-import game.Game;
 import game.HasHealth;
 import game.Projectile;
 import game.StatusEffect;
+import game.Tools;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ public class Crypt extends SpawnerEnemy {
     @Override
     public ArrayList<Projectile> attack(double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
-        double angle = Game.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
+        double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
                 new AttackStats(new StatusEffect("Poison", -10, 0, 0, 0, 0, 3000, new Color(101, 161, 48)),
                         10, 30, 7, 250, 1, 30, new Color(89, 200, 54), true, true, false,
