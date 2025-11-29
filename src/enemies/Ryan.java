@@ -23,9 +23,9 @@ public class Ryan extends SpawnerEnemy {
                             + Math.toRadians(i * 45);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     angle,
-                    new AttackStats(18, 75, 6, 350, 1, 75, new Color(235, 20, 5), true, true, false,
-                    new AttackStats(8, 50, 8, 275, 1, 20, new Color(235, 77, 5), true, true, false,
-                    new AttackStats(6, 25, 10, 200, 1, 20, new Color(235, 112, 5), false, true, false,
+                    new AttackStats(18, 75, 6, 350, 1, 75, new Color(235, 20, 5), true, true, true, false,
+                    new AttackStats(8, 50, 8, 275, 1, 20, new Color(235, 77, 5), true, true, true, false,
+                    new AttackStats(6, 25, 10, 200, 1, 20, new Color(235, 112, 5), false, false, true, false,
                     new AttackStats(5, 15, 3, 100, 1, 1, new Color(235, 162, 5))))),
                     (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         }

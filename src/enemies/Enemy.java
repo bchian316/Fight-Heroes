@@ -16,9 +16,13 @@ import java.util.ArrayList;
  */
 
 public abstract class Enemy extends Entity {
-
+    /**Maximum distance the enemy can manuever is this number * speed */
     private static final int MANUEVER_MULTIPLIER = 25;
+    /**Minimum manuever distance */
     private static final int MANUEVER_MINIMUM = 50;
+
+    /**Don't update enemy when he is this far away from player */
+    private static final int NO_UPDATE_DISTANCE = 1500;
 
     private static final int BAROFFSETY = 5;
     private static final int HEALTHBARHEIGHT = 10;
@@ -37,7 +41,6 @@ public abstract class Enemy extends Entity {
     private boolean passive = false; //if the enemy is doing random movements
 
     /**
-     * 
      * @param name name for this enemy type
      * @param x starting x coordinate
      * @param y starting y coordinate
@@ -138,6 +141,10 @@ public abstract class Enemy extends Entity {
 
     public ArrayList<DamageCounter> update(double playerX, double playerY, ArrayList<Projectile> enemyProjectiles, Map map) {
 
+        if(Tools.getDistance(this.getCenterX(), this.getCenterY(), playerX, playerY) > NO_UPDATE_DISTANCE){
+            return new ArrayList<>();
+        }
+
         if (this.justSpawned) {
             this.flowFromWall(map);
             //enemy is now guaranteed to not be in wall
@@ -182,6 +189,7 @@ public abstract class Enemy extends Entity {
             //priority four: enemy is not wall colliding and within desired range, dont manuever, follow player
             //no range switch
             this.passive = false;
+            
         }
         if (Tools.getDistance(this.getCenterX(), this.getCenterY(), this.moveTargetX, this.moveTargetY) <= this.getSpeed()) {
             //separate code, should run no matter what
@@ -189,12 +197,12 @@ public abstract class Enemy extends Entity {
             this.setMoveTarget(playerX, playerY);
         }
         
-        
-        //attack if loaded
-        if (this.isLoaded()) {
+        //attack if loaded and is aggro
+        if (this.isLoaded() && !this.passive) {
             Tools.addProjectiles(enemyProjectiles, this.attack(playerX, playerY));
             this.unload();
         }
+        
 
         return super.update();
     }

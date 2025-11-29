@@ -21,7 +21,7 @@ public class WaterMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
-                new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false, true, false,
+                new AttackStats(15, 25, 15, 150, 1, 20, new Color(0, 25, 217), false, false, true, false,
                 new AttackStats(8, 10, 15, 125, 1, 10, new Color(0, 25, 217))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;

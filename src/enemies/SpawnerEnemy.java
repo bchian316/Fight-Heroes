@@ -50,6 +50,9 @@ public abstract class SpawnerEnemy extends Enemy {
         this.spawnTimer.reset();
     }
 
+    /**
+     * Updates the spawnedEnemies attribute, which keeps track of how many enemies this guy spawned
+     */
     private void removeSpawnedEnemies(){
         for (int i = spawnedEnemies.size() - 1; i >= 0; i--) {
             if(spawnedEnemies.get(i).isDead()){

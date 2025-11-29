@@ -113,8 +113,12 @@ public class Projectile implements Drawable{
         return this.split != null;
     }
 
-    public boolean splitsOnImpact() {
-        return this.attk.splitsOnImpact();
+    public boolean splitsOnEnemy() {
+        return this.attk.splitsOnEnemy();
+    }
+    
+    public boolean splitsOnWall() {
+        return this.attk.splitsOnWall();
     }
     
     public boolean splitsAtEnd() {

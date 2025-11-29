@@ -23,8 +23,8 @@ public class SkeletonLich extends SpawnerEnemy {
         for (int i = -1; i <= 1; i++) {
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(),
                     angle + Math.toRadians(35)*i,
-                    new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false, true, false,
-                        new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false, true, false,
+                    new AttackStats(10, 35, 14, 325, 2, 35, new Color(0, 82, 94), false, true, true, false,
+                        new AttackStats(10, 35, 21, 325, 2, 35, new Color(0, 82, 94), false, false, true, false,
                                 new AttackStats(6, 20, 20, 175, 1, 3, new Color(196, 73, 16)))),
                     (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         }

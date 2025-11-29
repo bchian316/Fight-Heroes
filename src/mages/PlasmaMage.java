@@ -20,7 +20,7 @@ public class PlasmaMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
-                new AttackStats(13, 25, 10, 200, 1, 25, new Color(255, 115, 115), true, true, false,
+                new AttackStats(13, 25, 10, 200, 1, 25, new Color(255, 115, 115), true, true, true, false,
                 new AttackStats(8, 15, 8, 75, 1, 5, new Color(255, 115, 115))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
@@ -41,7 +41,7 @@ public class PlasmaMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
-                new AttackStats(0, 40, 9, 350, 1, 25, new Color(0, 104, 240), true, true, false,
+                new AttackStats(0, 40, 9, 350, 1, 25, new Color(0, 104, 240), true, true, true, false,
                         new AttackStats(
                                 new StatusEffect("Fatigue", 0, 0, 0, -0.5, -0.6, 4000, new Color(0, 8, 240)),
                                 6, 15, 8, 125, 1, 5, new Color(0, 8, 240))),

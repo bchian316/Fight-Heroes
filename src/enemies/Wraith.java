@@ -18,8 +18,8 @@ public class Wraith extends SpawnerEnemy {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
-                        new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false, true, false,
-                        new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false, true, false,
+                        new AttackStats(20, 40, 15, 200, 1, 40, new Color(102, 102, 102), false, false, true, false,
+                        new AttackStats(15, 25, 10, 200, 2, 25, new Color(4, 189, 35), false, false, true, false,
                         new AttackStats(10, 20, 8, 200, 2, 20, new Color(0, 105, 17)))),
                 (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         

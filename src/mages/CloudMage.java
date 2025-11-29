@@ -20,7 +20,7 @@ public class CloudMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle,
-                new AttackStats(15, 35, 15, 300, -1, 25, new Color(255, 255, 255), false, true, false,
+                new AttackStats(15, 35, 15, 300, -1, 25, new Color(255, 255, 255), false, true, true, false,
                 new AttackStats(15, 35, 20, 300, -1, 25, new Color(255, 255, 255))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;

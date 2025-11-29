@@ -21,8 +21,8 @@ public class DonovanMage extends Mage {
         for (int i = 0; i < 6; i++) {
             double angle = Tools.getAngle(x, y, targetX, targetY) + Math.toRadians(60.0*i);
             newProjs.add(new Projectile(x, y, angle,
-                    new AttackStats(20, 30, 12, 100, 1, 10, new Color(214, 15, 15), true, true, false,
-                    new AttackStats(10, 20, 12, 100, 1, 7, new Color(0, 0, 200), true, true, false,
+                    new AttackStats(20, 30, 12, 100, 1, 10, new Color(214, 15, 15), true, true, true, false,
+                    new AttackStats(10, 20, 12, 100, 1, 7, new Color(0, 0, 200), true, true, true, false,
                     new AttackStats(5, 10, 12, 100, 1, 5, new Color(0, 200, 0)))),
                     (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         }

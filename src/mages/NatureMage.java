@@ -20,8 +20,8 @@ public class NatureMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(x, y, targetX, targetY);
         newProjs.add(new Projectile(x, y, angle, 
-                new AttackStats(35, 50, 10, 100, -1, 20, new Color(0, 200, 0), false, true, true,
-                new AttackStats(25, 30, 12, 100, -1, 10, new Color(0, 255, 0), false, true, true,
+                new AttackStats(35, 50, 10, 100, -1, 20, new Color(0, 200, 0), false, false, true, true,
+                new AttackStats(25, 30, 12, 100, -1, 10, new Color(0, 255, 0), false, false, true, true,
                 new AttackStats(15, 10, 15, 100, -1, 5, new Color(0, 255, 0)))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;

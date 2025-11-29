@@ -32,8 +32,8 @@ public class LightningMage extends Mage {
                     p.getCenterX() + i * Tools.getVectorX(angle + Math.PI / 2, SPECIAL_SPREAD),
                     p.getCenterY() + i * Tools.getVectorY(angle + Math.PI / 2, SPECIAL_SPREAD),
                     angle - Math.toRadians(SPECIAL_ANGLE/2),
-                    new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164), false, true, true,
-                    new AttackStats(20, 20, 10, 200, 3, 10, new Color(148, 48, 164), false, true, true,
+                    new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164), false, false, true, true,
+                    new AttackStats(20, 20, 10, 200, 3, 10, new Color(148, 48, 164), false, false, true, true,
                     new AttackStats(20, 20, 10, 100, 3, 10, new Color(148, 48, 164)))),
                     (x1, y1, angle1, splitStats, hitObjects) -> special2(x1, y1, angle1, splitStats, hitObjects), null));
         }

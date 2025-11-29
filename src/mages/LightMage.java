@@ -33,7 +33,7 @@ public class LightMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(),
                 Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY),
-                new AttackStats(10, 35, 10, 300, -1, 20, new Color(255, 255, 0), true, false, false,
+                new AttackStats(10, 35, 10, 300, -1, 20, new Color(255, 255, 0), true, false, false, false,
                         new AttackStats(7, 20, 4, 125, -1, 20, new Color(225, 225, 0))),
                 (x1, y1, angle1, splitStats, hitObjects) -> special2(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;

@@ -59,7 +59,7 @@ public class Map implements Drawable {
             if (t != null) {
                 //no splitting (like if gene shoots a wall)
                 t.getDamaged(projectiles.remove(i).getDamage(), p.getColor());
-                if (p.splitsOnImpact()) {//if they split ON IMPACT, then they can split off a wall. Otherwise, if they only split from range, they dont split
+                if (p.splitsOnWall()) {//if they split ON IMPACT, then they can split off a wall. Otherwise, if they only split from range, they dont split
                     Tools.addProjectiles(projectiles, p.split());
                 }
             }

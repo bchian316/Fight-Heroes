@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Mummy extends Enemy {
     public static final int ATTKOFFSET = 35;
     public Mummy(int x, int y) {
-        super("Mummy", x, y, 75, 75, 0, 750, 0, 0, 3);
+        super("Mummy", x, y, 75, 75, 0, 750, 0, 400, 3);
     }
 
 

@@ -159,7 +159,7 @@ public class Game extends JPanel {
                     e.addStatusEffect(currentProj.getStatusEffect());
                     currentProj.addHitEnemy(e);
 
-                    if (currentProj.splitsOnImpact()) {
+                    if (currentProj.splitsOnEnemy()) {
                         Tools.addProjectiles(projectiles, currentProj.split());
                     }
                     if (currentProj.donePierce()) {//by piercing too many entities

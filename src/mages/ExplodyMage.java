@@ -20,7 +20,7 @@ public class ExplodyMage extends Mage {
     public ArrayList<Projectile> createProjectiles(double x, double y, double targetX, double targetY) {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(x, y, targetX, targetY);
-        newProjs.add(new Projectile(x, y, angle, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true, true, false,
+        newProjs.add(new Projectile(x, y, angle, new AttackStats(5, 25, 10, 225, 1, 25, new Color(227, 84, 18), true, true, true, false,
                 new AttackStats(30, 125, 1, 15, -1, 1, new Color(194, 48, 0))),
                 (x1, y1, angle1, splitStats, hitObjects) -> createMoreProjectiles(x1, y1, angle1, splitStats, hitObjects), null));
         return newProjs;
@@ -42,7 +42,7 @@ public class ExplodyMage extends Mage {
         ArrayList<Projectile> newProjs = new ArrayList<>();
         double angle = Tools.getAngle(p.getCenterX(), p.getCenterY(), targetX, targetY);
         newProjs.add(new Projectile(p.getCenterX(), p.getCenterY(), angle,
-                new AttackStats(5, 25, 10, 225, 1, 25, new Color(255, 40, 38), true, true, false,
+                new AttackStats(5, 25, 10, 225, 1, 25, new Color(255, 40, 38), true, true, true, false,
                         new AttackStats(new StatusEffect("Burn", -5, 0.8, 0.2, 0, 0, 7000, new Color(232, 78, 12)), 60,
                                 250, 1, 20, -1, 1, new Color(250, 20, 30))),
                 (x1, y1, angle1, splitStats, hitObjects) -> special2(x1, y1, angle1, splitStats, hitObjects), null));

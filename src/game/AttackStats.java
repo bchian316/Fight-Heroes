@@ -14,12 +14,13 @@ public class AttackStats {
     private final int collisionRadius; //minimum 1, only for wall peeking, lower is better
     private final Color color;
     private final AttackStats splitStats;
-    private final boolean splitsOnImpact; //splits on impact with walls and enemies
+    private final boolean splitsOnEnemy; //splits on Wall with walls and enemies
+    private final boolean splitsOnWall; //splits on impact with walls and enemies
     private final boolean splitsAtEnd; //splits at end of range
     private final boolean splitInheritance; //split projs retain same hit enemies as parents
 
     public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce,
-            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
+            int collisionRadius, Color color, boolean splitsOnEnemy, boolean splitsOnWall, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
         this.statusEffect = statusEffect;
         this.damage = damage;
         this.size = size;
@@ -28,23 +29,24 @@ public class AttackStats {
         this.maxPierce = maxPierce;
         this.collisionRadius = collisionRadius;
         this.color = color;
-        this.splitsOnImpact = splitsOnImpact;
+        this.splitsOnEnemy = splitsOnEnemy;
+        this.splitsOnWall = splitsOnWall;
         this.splitsAtEnd = splitsAtEnd;
         this.splitStats = splitStats;
         this.splitInheritance = splitInheritance;
     }
 
     public AttackStats(int damage, int size, int speed, int range, int maxPierce,
-            int collisionRadius, Color color, boolean splitsOnImpact, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
-        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, splitsOnImpact, splitsAtEnd, splitInheritance, splitStats);
+            int collisionRadius, Color color, boolean splitsOnEnemy, boolean splitsOnWall, boolean splitsAtEnd, boolean splitInheritance, AttackStats splitStats) {
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, splitsOnEnemy, splitsOnWall, splitsAtEnd, splitInheritance, splitStats);
     }
 
     public AttackStats(StatusEffect statusEffect, int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
-        this(statusEffect, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, null);
+        this(statusEffect, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, false, null);
     }
 
     public AttackStats(int damage, int size, int speed, int range, int maxPierce, int collisionRadius, Color color) {
-        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, null);
+        this(null, damage, size, speed, range, maxPierce, collisionRadius, color, false, false, false, false, null);
     }
     
     public StatusEffect statusEffect() {
@@ -83,8 +85,12 @@ public class AttackStats {
         return this.splitStats;
     }
 
-    public boolean splitsOnImpact() {
-        return this.splitsOnImpact;
+    public boolean splitsOnEnemy() {
+        return this.splitsOnEnemy;
+    }
+
+    public boolean splitsOnWall() {
+        return this.splitsOnWall;
     }
 
     public boolean splitsAtEnd() {

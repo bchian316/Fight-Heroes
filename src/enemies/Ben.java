@@ -23,7 +23,7 @@ public class Ben extends SpawnerEnemy {
             double angle = Tools.getAngle(this.getCenterX(), this.getCenterY(), targetX, targetY)
                     + Math.toRadians(i * 30);
             newProjs.add(new Projectile(this.getCenterX(), this.getCenterY(), angle,
-                    new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false, true, false,
+                    new AttackStats(16, 50, 10, 250, 1, 30, new Color(222, 140, 15), false, true, true, false,
                             new AttackStats(5, 25, 8, 500, 2, 10, new Color(252, 170, 45))),
                         (x1, y1, angle1, splitStats, hitObjects) -> moreAttack(x1, y1, angle1, splitStats, hitObjects), null));
         }
